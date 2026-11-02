@@ -292,6 +292,31 @@ create policy "admin read" on rating_answers for select using (is_admin());
 create policy "public insert" on rating_answers for insert with check (true);
 
 -- ============================================================================
+-- admin_audit_log
+-- Who changed what, when — for the admin actions that actually reach the
+-- public site (publishing/removing content, overriding an event's
+-- cover/accent/Q&A toggle). Append-only on purpose: no update/delete
+-- policy at all, not even for admins — an audit log an admin can edit is
+-- not an audit log. See lib/supabase/auditLog.ts.
+-- ============================================================================
+create table admin_audit_log (
+  id uuid primary key default gen_random_uuid(),
+  actor_id uuid not null,
+  actor_email text not null,
+  action text not null,
+  resource text not null,
+  metadata jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index admin_audit_log_created_at_idx on admin_audit_log (created_at desc);
+
+alter table admin_audit_log enable row level security;
+
+create policy "admin read" on admin_audit_log for select using (is_admin());
+create policy "admin insert" on admin_audit_log for insert with check (is_admin());
+
+-- ============================================================================
 -- Storage
 -- Single public bucket for every uploaded image/video (event covers,
 -- gallery items, news covers/media) — see sanitizeFileName() call sites in

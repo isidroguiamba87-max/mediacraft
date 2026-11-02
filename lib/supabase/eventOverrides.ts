@@ -1,5 +1,6 @@
 import { createClient } from "./server";
 import { processImageUpload } from "./mediaUpload";
+import { logAdminAction } from "./auditLog";
 
 export interface AdminEventOverride {
   eventId: string;
@@ -79,7 +80,12 @@ export async function saveEventOverride(
     .single();
 
   if (error) throw error;
-  return mapRow(data as EventOverrideRow);
+  const saved = mapRow(data as EventOverrideRow);
+  await logAdminAction("event_override.save", `event_overrides:${eventId}`, {
+    coverImageUrl: saved.coverImageUrl,
+    accentColor: saved.accentColor,
+  });
+  return saved;
 }
 
 /** Drops the override entirely — the event goes back to showing exactly
@@ -88,6 +94,7 @@ export async function clearEventOverride(eventId: string): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.from("event_overrides").delete().eq("event_id", eventId);
   if (error) throw error;
+  await logAdminAction("event_override.clear", `event_overrides:${eventId}`);
 }
 
 /** Kept separate from `saveEventOverride`: toggled from the admin's
@@ -104,6 +111,7 @@ export async function setQaEnabled(eventId: string, enabled: boolean): Promise<v
       { onConflict: "event_id" },
     );
   if (error) throw error;
+  await logAdminAction("event_override.set_qa_enabled", `event_overrides:${eventId}`, { enabled });
 }
 
 export async function uploadEventCover(file: File): Promise<string> {

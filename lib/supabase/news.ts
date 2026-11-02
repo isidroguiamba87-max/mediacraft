@@ -1,6 +1,7 @@
 import { createClient } from "./server";
 import { sanitizeFileName } from "@/lib/utils";
 import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
+import { logAdminAction } from "./auditLog";
 
 export type NewsStatus = "draft" | "scheduled" | "published";
 
@@ -99,7 +100,9 @@ export async function createNews(input: NewsInput): Promise<AdminNewsItem> {
     .single();
 
   if (error) throw error;
-  return mapRow(data as NewsRow);
+  const created = mapRow(data as NewsRow);
+  await logAdminAction("news.create", `news:${created.id}`, { title: created.title, status: created.status });
+  return created;
 }
 
 export async function updateNews(id: string, input: NewsInput): Promise<AdminNewsItem> {
@@ -122,13 +125,16 @@ export async function updateNews(id: string, input: NewsInput): Promise<AdminNew
     .single();
 
   if (error) throw error;
-  return mapRow(data as NewsRow);
+  const updated = mapRow(data as NewsRow);
+  await logAdminAction("news.update", `news:${updated.id}`, { title: updated.title, status: updated.status });
+  return updated;
 }
 
 export async function deleteNews(id: string): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.from("news").delete().eq("id", id);
   if (error) throw error;
+  await logAdminAction("news.delete", `news:${id}`);
 }
 
 /** Uploads a cover image to the shared `media` Storage bucket (see the

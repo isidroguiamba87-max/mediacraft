@@ -1,6 +1,7 @@
 import { createClient } from "./server";
 import { sanitizeFileName } from "@/lib/utils";
 import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
+import { logAdminAction } from "./auditLog";
 
 export type GalleryMediaType = "image" | "video";
 
@@ -154,4 +155,5 @@ export async function deleteGalleryItem(id: string): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.from("gallery_media").delete().eq("id", id);
   if (error) throw error;
+  await logAdminAction("gallery.delete", `gallery_media:${id}`);
 }

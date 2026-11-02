@@ -1,7 +1,21 @@
 import { MfaEnrollment } from "@/components/admin/MfaEnrollment";
 import { SignOutEverywhere } from "@/components/admin/SignOutEverywhere";
+import { listRecentAuditLog } from "@/lib/supabase/auditLog";
+import { formatDate } from "@/lib/utils";
 
-export default function AdminSecurityPage() {
+const ACTION_LABELS: Record<string, string> = {
+  "news.create": "Criou uma novidade",
+  "news.update": "Editou uma novidade",
+  "news.delete": "Apagou uma novidade",
+  "gallery.delete": "Apagou um item da galeria",
+  "event_override.save": "Alterou a capa/cor de um evento",
+  "event_override.clear": "Repôs a capa/cor de um evento",
+  "event_override.set_qa_enabled": "Ligou/desligou Perguntas de um evento",
+};
+
+export default async function AdminSecurityPage() {
+  const log = await listRecentAuditLog().catch(() => []);
+
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-8">
       <div>
@@ -27,6 +41,39 @@ export default function AdminSecurityPage() {
         <div className="mt-4">
           <SignOutEverywhere />
         </div>
+      </section>
+
+      <section>
+        <h2 className="font-display text-lg text-brand-navy">Atividade recente</h2>
+        <p className="mt-1 text-sm text-slate">
+          As últimas ações administrativas que mudam o que o site público mostra.
+        </p>
+        {log.length === 0 ? (
+          <p className="mt-4 text-sm text-slate">Ainda sem registos.</p>
+        ) : (
+          <ul className="mt-4 flex flex-col gap-3">
+            {log.map((entry) => (
+              <li
+                key={entry.id}
+                className="flex flex-col gap-0.5 rounded-brand border border-line bg-paper-2 px-4 py-3 text-sm"
+              >
+                <span className="font-medium text-ink">
+                  {ACTION_LABELS[entry.action] ?? entry.action}
+                </span>
+                <span className="text-xs text-slate">
+                  {entry.actorEmail} · {entry.resource} ·{" "}
+                  {formatDate(entry.createdAt, "pt", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );
