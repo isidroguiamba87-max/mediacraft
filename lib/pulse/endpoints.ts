@@ -183,7 +183,11 @@ export async function getPublicEvents(
       { next: { revalidate: 60 } },
     );
     return { events, usedFallback: false };
-  } catch {
+  } catch (err) {
+    // Logged (not just silently swallowed) so a genuine Pulse outage shows
+    // up in Vercel's runtime logs instead of looking identical to "Pulse
+    // not running yet" during local dev.
+    console.error("[pulse] getPublicEvents failed, falling back to mock data:", err);
     return { events: filterByStatus(MOCK_EVENTS, params.status), usedFallback: true };
   }
 }
@@ -213,7 +217,8 @@ export async function getEvent(
       { next: { revalidate: 60 } },
     );
     return { event, usedFallback: false };
-  } catch {
+  } catch (err) {
+    console.error(`[pulse] getEvent(${eventId}) failed, falling back to mock data:`, err);
     return { event: findMockEvent(eventId) ?? null, usedFallback: true };
   }
 }
