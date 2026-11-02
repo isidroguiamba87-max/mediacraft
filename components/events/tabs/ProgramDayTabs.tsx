@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { MapPin } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 import { Link } from "@/config/i18n";
 import { cn } from "@/lib/utils";
 import { usePageLoadSeed } from "@/hooks/usePageLoadSeed";
@@ -24,15 +24,15 @@ function dayLabelParts(date: string, locale: string) {
   };
 }
 
-/** First session's start to last session's end across a day's panels, in
- * their original (already chronological) order — a real, derived summary
- * rather than invented metadata, shown under the day's section titles the
- * same way the reference project shows a time chip under each event card. */
-function timeRange(panels: Panel[]): string | null {
-  const from = panels.find((p) => p.timeFrom)?.timeFrom;
-  const to = [...panels].reverse().find((p) => p.timeTo)?.timeTo;
-  if (!from && !to) return null;
-  return [from, to].filter(Boolean).join(" – ");
+/** "{count} sessões · Room A · Room B" — total sessions across every
+ * section that day, plus the distinct room names actually used (derived
+ * from `panel.rooms`, same data the per-item location pill already shows,
+ * just deduplicated and rolled up to the day level). */
+function daySummary(day: DayGroup, t: ReturnType<typeof useTranslations>): string | null {
+  const panels = day.sections.flatMap((s) => s.panels);
+  if (panels.length === 0) return null;
+  const venues = [...new Set(panels.flatMap((p) => p.rooms.map((r) => r.title)))];
+  return [t("programSessions", { count: panels.length }), ...venues].join(" · ");
 }
 
 /**
@@ -76,7 +76,7 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
         <div
           role="tablist"
           aria-label={t("program")}
-          className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3"
+          className="flex flex-wrap gap-2.5"
         >
           {days.map((d, i) => {
             const active = activeIdx === i;
@@ -90,9 +90,9 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
                 aria-selected={active}
                 onClick={() => setActiveIdx(i)}
                 className={cn(
-                  "relative flex items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-colors",
+                  "relative flex items-center gap-2 rounded-full border px-3.5 py-2 text-left transition-colors",
                   active
-                    ? "border-brand-navy bg-brand-navy shadow-brand"
+                    ? "border-brand-red bg-brand-navy shadow-brand"
                     : "border-line bg-paper hover:border-brand-red/40",
                 )}
               >
@@ -100,7 +100,7 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
                   <>
                     <span
                       className={cn(
-                        "font-display text-3xl leading-none font-bold tabular-nums",
+                        "font-display text-xl leading-none font-bold tabular-nums",
                         active ? "text-white" : "text-brand-navy",
                       )}
                     >
@@ -109,13 +109,12 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
                     <span className="flex flex-col leading-tight">
                       <span
                         className={cn(
-                          "font-mono text-[10px] font-semibold tracking-[0.14em] uppercase",
-                          active ? "text-white/80" : "text-brand-red",
+                          "font-mono text-[9px] font-semibold tracking-[0.12em] text-brand-red uppercase",
                         )}
                       >
                         {parts.weekday}
                       </span>
-                      <span className={cn("text-xs", active ? "text-white/60" : "text-slate")}>
+                      <span className={cn("text-[11px]", active ? "text-white/60" : "text-slate")}>
                         {parts.month}
                       </span>
                     </span>
@@ -136,33 +135,30 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
         </div>
       )}
 
-      {day.sections.map((section) => {
-        const range = timeRange(section.panels);
+      {/* "{count} sessões · venue1 · venue2" — only what's actually
+       * derivable from this day's own panels (room titles), nothing
+       * invented (no theme/title field exists on a Pulse day). */}
+      {daySummary(day, t) && <p className="text-sm text-slate">{daySummary(day, t)}</p>}
+
+      {(() => {
+        // One continuous timeline for the whole day — each card carries
+        // its own section/category pill now (see ProgramItem), so the big
+        // per-section header+rail break this used to have was just the
+        // same information shown twice.
+        const dayPanels = day.sections.flatMap((s) => s.panels);
         return (
-          <div key={section.title} className="flex flex-col gap-1">
-            {section.title && (
-              <p className="font-mono text-[11px] font-semibold tracking-[0.14em] text-brand-red uppercase">
-                {section.title}
-              </p>
-            )}
-            {range && (
-              <p className="text-xs text-slate">
-                {range} · {t("programSessions", { count: section.panels.length })}
-              </p>
-            )}
-            <ol className="relative mt-3 flex flex-col">
-              {section.panels.map((panel, i) => (
-                <ProgramItem
-                  key={panel.key}
-                  eventId={eventId}
-                  panel={panel}
-                  last={i === section.panels.length - 1}
-                />
-              ))}
-            </ol>
-          </div>
+          <ol className="relative flex flex-col">
+            {dayPanels.map((panel, i) => (
+              <ProgramItem
+                key={panel.key}
+                eventId={eventId}
+                panel={panel}
+                last={i === dayPanels.length - 1}
+              />
+            ))}
+          </ol>
         );
-      })}
+      })()}
     </div>
   );
 }
@@ -187,9 +183,11 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
           aria-hidden
         />
         <span
-          className="relative z-10 mt-4 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-brand-red bg-paper"
+          className="relative z-10 mt-4 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 border-brand-red bg-paper"
           aria-hidden
-        />
+        >
+          <Check size={8} strokeWidth={3} className="text-brand-red" />
+        </span>
       </div>
 
       {/* session card */}
@@ -198,6 +196,11 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
           href={`/eventos/${eventId}/paineis/${panel.key}`}
           className="block rounded-brand border border-line bg-paper px-4 py-3.5 transition-colors hover:border-brand-red/40 hover:bg-paper-2"
         >
+          {panel.sectionTitle && (
+            <p className="mb-1.5 inline-block rounded-full bg-brand-red/10 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-[0.1em] text-brand-red uppercase">
+              {panel.sectionTitle}
+            </p>
+          )}
           {panel.rooms.length > 0 && (
             <p className="mb-1.5 flex items-center gap-1.5 text-[11px] text-slate">
               <MapPin size={12} className="shrink-0 text-brand-red" />
@@ -206,20 +209,37 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
           )}
           <p className="font-display text-base leading-snug text-brand-navy">{panel.title}</p>
 
-          {panel.speakers.length > 0 && (
-            <div className="mt-3 flex -space-x-2.5">
-              {panel.speakers.slice(0, 4).map((sp, i) => (
-                <Avatar key={i} photoUrl={sp.photoUrl} name={sp.name} size={32} ring />
-              ))}
-              {overflow > 0 && (
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-brand-navy font-mono text-[10px] text-white">
-                  +{overflow}
-                </span>
-              )}
-            </div>
+          {panel.speakers.length === 1 ? (
+            <SingleSpeakerRow speaker={panel.speakers[0]!} />
+          ) : (
+            panel.speakers.length > 1 && (
+              <div className="mt-3 flex -space-x-2.5">
+                {panel.speakers.slice(0, 4).map((sp, i) => (
+                  <Avatar key={i} photoUrl={sp.photoUrl} name={sp.name} size={32} ring />
+                ))}
+                {overflow > 0 && (
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-brand-navy font-mono text-[10px] text-white">
+                    +{overflow}
+                  </span>
+                )}
+              </div>
+            )
           )}
         </Link>
       </div>
     </li>
+  );
+}
+
+function SingleSpeakerRow({ speaker }: { speaker: Panel["speakers"][number] }) {
+  const role = [speaker.occupation, speaker.company].filter(Boolean).join(" · ");
+  return (
+    <div className="mt-3 flex items-center gap-2.5">
+      <Avatar photoUrl={speaker.photoUrl} name={speaker.name} size={32} />
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold text-ink">{speaker.name}</p>
+        {role && <p className="truncate text-[11px] text-slate">{role}</p>}
+      </div>
+    </div>
   );
 }
