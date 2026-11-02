@@ -34,7 +34,15 @@ export function AnimatedCounter({
   const locale = useLocale();
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  // Vertical-only margin — a 4-side value also shrinks the left/right
+  // bounds, and on a narrow viewport a left-column counter's own
+  // (narrow, text-width) box can end up never overlapping what's left of
+  // the horizontally-shrunk root, so it never fires (confirmed live,
+  // 2026-11-03: the left column of NumbersStation's 2-col mobile grid
+  // stuck at 0 while the right column counted up normally). This is
+  // meant to gate on scroll position anyway, never on horizontal
+  // placement.
+  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
   const count = useMotionValue(0);
   const format = (n: number) =>
     new Intl.NumberFormat(locale).format(Math.round(n));
