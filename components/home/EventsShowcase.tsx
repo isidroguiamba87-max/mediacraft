@@ -13,7 +13,7 @@ export async function EventsShowcase() {
 
   return (
     <section className="bg-paper-2">
-      <div className="mx-auto max-w-container px-6 pt-10 pb-20 lg:px-10">
+      <div className="mx-auto max-w-container px-6 pt-10 pb-10 sm:pb-20 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead title={t("title")} />
           <Link

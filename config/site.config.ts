@@ -17,8 +17,8 @@ export const siteConfig = {
     },
   },
   developer: {
-    name: "Smart Business Partner Technology",
-    url: "https://smartbusinesspartner.co.mz",
+    name: "SmartBP Tech",
+    url: "https://www.smartbp.tech/",
   },
 } as const;
 

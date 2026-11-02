@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Heart } from "lucide-react";
 import { LinkedinIcon, InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
 import { Link } from "@/config/i18n";
 import { mainNav, siteConfig } from "@/config/site.config";
@@ -134,13 +134,15 @@ export function Footer() {
           <p>
             © {year} {siteConfig.legalName}. {t("rights")}
           </p>
-          <p>
-            {t("developedBy")}{" "}
+          <p className="flex items-center gap-1">
+            {t("developedBy")}
+            <Heart size={12} className="fill-brand-red text-brand-red" aria-hidden />
+            {t("by")}{" "}
             <a
               href={siteConfig.developer.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/70 hover:text-white"
+              className="font-medium text-white/70 hover:text-white"
             >
               {siteConfig.developer.name}
             </a>

@@ -427,7 +427,8 @@
     "contact": "Contact",
     "follow": "Suivez-nous",
     "rights": "Tous droits réservés.",
-    "developedBy": "Développé par"
+    "developedBy": "Développé avec",
+    "by": "par"
   },
   "notFound": {
     "title": "Page non trouvée",
