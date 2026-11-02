@@ -243,7 +243,7 @@ export function ServicesOrbit() {
           the wheel would be showing (`active`), advanced by its own
           "Seguinte" button here (plus the same auto-advance timer as the
           wheel). Logo stays put; only the title/info/photo change. */}
-      <div className="orbit-list mx-auto max-w-container px-6 pt-10 pb-20 lg:px-10 lg:pt-20">
+      <div className="orbit-list mx-auto max-w-container px-6 pt-10 pb-10 sm:pb-20 lg:px-10 lg:pt-20">
         <h2 className="max-w-2xl font-display text-3xl leading-tight tracking-wide text-brand-navy uppercase sm:text-4xl">
           {t("eyebrow")}
         </h2>

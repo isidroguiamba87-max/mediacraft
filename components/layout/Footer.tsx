@@ -130,11 +130,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
-          <p>
+        <div className="mt-12 grid grid-cols-1 items-center gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:grid-cols-[1fr_auto_1fr]">
+          <p className="text-center sm:text-left">
             © {year} {siteConfig.legalName}. {t("rights")}
           </p>
-          <p className="flex items-center gap-1">
+          {/* Centered independently of the copyright line's length (the
+           * 1fr/auto/1fr grid, not justify-between) — 2026-11-03: "podes
+           * ser possível ter essas informações... no rodapé no centro". */}
+          <p className="flex flex-wrap items-center justify-center gap-1 text-center">
             {t("developedBy")}
             <Heart size={12} className="fill-brand-red text-brand-red" aria-hidden />
             {t("by")}{" "}
@@ -147,6 +150,7 @@ export function Footer() {
               {siteConfig.developer.name}
             </a>
           </p>
+          <div aria-hidden className="hidden sm:block" />
         </div>
       </div>
     </footer>

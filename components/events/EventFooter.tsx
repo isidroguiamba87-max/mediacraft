@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LinkedinIcon, InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
+import { Heart } from "lucide-react";
 import { Link } from "@/config/i18n";
 import { siteConfig } from "@/config/site.config";
 
@@ -12,6 +12,7 @@ import { siteConfig } from "@/config/site.config";
  * bottom once a visitor scrolls past the event's own content. */
 export function EventFooter() {
   const tNav = useTranslations("nav");
+  const tFooter = useTranslations("footer");
   const year = new Date().getFullYear();
 
   return (
@@ -36,35 +37,19 @@ export function EventFooter() {
           </a>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2.5">
+        <p className="flex shrink-0 items-center gap-1">
+          {tFooter("developedBy")}
+          <Heart size={10} className="fill-brand-red text-brand-red" aria-hidden />
+          {tFooter("by")}{" "}
           <a
-            href={siteConfig.contact.social.linkedin}
+            href={siteConfig.developer.url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="text-white/60 hover:text-white"
+            className="font-medium hover:text-white"
           >
-            <LinkedinIcon size={14} />
+            {siteConfig.developer.name}
           </a>
-          <a
-            href={siteConfig.contact.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className="text-white/60 hover:text-white"
-          >
-            <InstagramIcon size={14} />
-          </a>
-          <a
-            href={siteConfig.contact.social.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook"
-            className="text-white/60 hover:text-white"
-          >
-            <FacebookIcon size={14} />
-          </a>
-        </div>
+        </p>
       </div>
     </footer>
   );
