@@ -13,6 +13,14 @@ import { SandHeadline } from "./SandHeadline";
 
 const WORD_MS = 5200;
 const INTRO_VIDEO_SRC = "/video/hero-intro.mp4";
+// Shot specifically for a tall/portrait screen (confirmed: vertical
+// framing, not just the desktop clip letterboxed) — picked over the
+// desktop source below `sm`'s breakpoint (640px) via the <source media>
+// query, same cutoff the object-fit split a few lines down already used.
+// The browser itself decides which one to fetch, so a visitor never
+// downloads both.
+const INTRO_VIDEO_SRC_MOBILE = "/video/hero-intro-mobile.mp4";
+const MOBILE_BREAKPOINT_QUERY = "(max-width: 639px)";
 // How long before the video's own end the crossfade into the normal hero
 // starts (2026-10-26: "quando começa a desaparecer logo aparece o
 // primeiro título... de forma suave" — the handoff needs to be under way
@@ -212,16 +220,10 @@ export function ShowcaseHero() {
 
       {!reduceMotion && (
         // Solid navy backdrop behind the video, not just the video itself
-        // (2026-10-26: "a ideia do vídeo para modo mobile não está boa" —
-        // `object-cover` on this 16:9 video inside a tall portrait
-        // viewport was cropping the logo off the sides). `object-contain`
-        // on mobile shows the whole thing instead, letterboxed — and
-        // since the video's own footage is itself a navy gradient, this
-        // backdrop makes those letterbox bars invisible rather than
-        // showing whatever's behind the video (the dimmed hero content).
-        // Desktop/tablet keep `object-cover` — confirmed live that one
-        // already reads well there, portrait cropping isn't an issue at
-        // those aspect ratios.
+        // — the mobile source below is its own vertical clip so
+        // `object-cover` fills the screen cleanly either way, but this
+        // still covers the brief gap before the chosen <source> has
+        // enough data to paint a frame.
         <div
           aria-hidden
           className={cn(
@@ -231,7 +233,6 @@ export function ShowcaseHero() {
         >
           <video
             ref={videoRef}
-            src={INTRO_VIDEO_SRC}
             muted
             playsInline
             onTimeUpdate={(e) => {
@@ -241,8 +242,14 @@ export function ShowcaseHero() {
               }
             }}
             onEnded={() => setVideoPhase("done")}
-            className="h-full w-full object-contain sm:object-cover"
-          />
+            className="h-full w-full object-cover"
+          >
+            {/* The browser picks the first matching <source> at load
+             * time and only fetches that one — a visitor never
+             * downloads both clips. */}
+            <source src={INTRO_VIDEO_SRC_MOBILE} media={MOBILE_BREAKPOINT_QUERY} />
+            <source src={INTRO_VIDEO_SRC} />
+          </video>
         </div>
       )}
     </section>
