@@ -73,7 +73,13 @@ function FlagshipCard({
   const range = scheduleDateRange(event.scheduleDates);
 
   return (
-    <div className="relative overflow-hidden rounded-brand bg-brand-navy px-6 py-8 text-white sm:px-8 sm:py-9">
+    // The whole card is one link (mobile's compact rectangle needs that),
+    // so the sm+ layout's CTA below is a plain styled span, not a nested
+    // <Link> — a real <a> can't contain another one.
+    <Link
+      href={`/eventos/${event.id}`}
+      className="relative block overflow-hidden rounded-brand bg-brand-navy text-white"
+    >
       {event.coverUrl && (
         // eslint-disable-next-line @next/next/no-img-element -- remote Pulse media, host not finalized yet
         <img src={event.coverUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
@@ -87,22 +93,23 @@ function FlagshipCard({
         }}
       />
       <MouseGlow />
-      <div className="relative">
-        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold tracking-[0.14em] uppercase">
-          {isLiveToday ? (
-            <span className="inline-flex items-center gap-2 rounded-full bg-brand-red px-3 py-1">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
-              </span>
-              {t("live")}
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
-              {t("soon")}
-            </span>
-          )}
-          <span className="text-white/60">
+
+      {/* Mobile: a compact rectangle — status + title only, no date/
+       * location/button text (2026-11-02: "isso aqui esta muito grande
+       * para mobile... apenas mostra o nome do evento, mostre ao vivo"). */}
+      <div className="relative flex items-center gap-3 px-4 py-3.5 sm:hidden">
+        <div className="min-w-0 flex-1">
+          <StatusBadge isLiveToday={isLiveToday} label={isLiveToday ? t("live") : t("soon")} />
+          <p className="mt-1.5 truncate font-display text-sm font-medium">{event.title}</p>
+        </div>
+        <ArrowRight size={18} className="shrink-0 text-white/70" />
+      </div>
+
+      {/* sm+: the full panel — photo, dates, location, CTA. */}
+      <div className="relative hidden px-6 py-8 sm:block sm:px-8 sm:py-9">
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusBadge isLiveToday={isLiveToday} label={isLiveToday ? t("live") : t("soon")} />
+          <span className="text-xs font-semibold tracking-[0.14em] text-white/60 uppercase">
             {isLiveToday ? t("today") : t("daysUntil", { count: daysToStart })}
           </span>
         </div>
@@ -129,11 +136,27 @@ function FlagshipCard({
           )}
         </div>
 
-        <Link href={`/eventos/${event.id}`} className={buttonVariants("primary", "md", "mt-6")}>
+        <span className={buttonVariants("primary", "md", "mt-6")}>
           {t("cta")}
           <ArrowRight size={18} />
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
+  );
+}
+
+function StatusBadge({ isLiveToday, label }: { isLiveToday: boolean; label: string }) {
+  return isLiveToday ? (
+    <span className="inline-flex items-center gap-2 rounded-full bg-brand-red px-3 py-1 text-xs font-semibold tracking-[0.14em] uppercase">
+      <span className="relative flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+      </span>
+      {label}
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-[0.14em] uppercase">
+      {label}
+    </span>
   );
 }

@@ -44,31 +44,31 @@ export function EventCard({ event }: { event: PulseEvent }) {
         />
 
         {event.isSoldOut ? (
-          <span className="relative z-10 m-4 inline-flex w-fit items-center rounded-full bg-brand-red px-3 py-1 font-mono text-[10px] font-semibold tracking-[0.14em] text-white uppercase shadow-sm">
+          <span className="relative z-10 m-2.5 inline-flex w-fit items-center rounded-full bg-brand-red px-2 py-0.5 font-mono text-[9px] font-semibold tracking-[0.1em] text-white uppercase shadow-sm sm:m-4 sm:px-3 sm:py-1 sm:text-[10px] sm:tracking-[0.14em]">
             {t("soldOut")}
           </span>
         ) : (
           event.isFree && (
-            <span className="relative z-10 m-4 inline-flex w-fit items-center rounded-full bg-white/95 px-3 py-1 font-mono text-[10px] font-semibold tracking-[0.14em] text-brand-navy uppercase shadow-sm">
+            <span className="relative z-10 m-2.5 inline-flex w-fit items-center rounded-full bg-white/95 px-2 py-0.5 font-mono text-[9px] font-semibold tracking-[0.1em] text-brand-navy uppercase shadow-sm sm:m-4 sm:px-3 sm:py-1 sm:text-[10px] sm:tracking-[0.14em]">
               {t("free")}
             </span>
           )
         )}
 
-        <div className="relative z-10 mt-auto p-5">
-          <h3 className="font-display text-lg leading-snug font-bold text-white">
+        <div className="relative z-10 mt-auto p-3 sm:p-5">
+          <h3 className="font-display text-sm leading-snug font-bold text-white sm:text-lg">
             {event.title}
           </h3>
-          <div className="mt-3 flex flex-col gap-1.5 font-mono text-[11px] tracking-wide text-white/80">
+          <div className="mt-2 flex flex-col gap-1 font-mono text-[9px] tracking-wide text-white/80 sm:mt-3 sm:gap-1.5 sm:text-[11px]">
             {date && (
-              <span className="flex items-center gap-2">
-                <CalendarDays size={13} className="shrink-0 text-brand-red" />
+              <span className="flex items-center gap-1.5 sm:gap-2">
+                <CalendarDays size={12} className="shrink-0 text-brand-red sm:size-[13px]" />
                 {formatCompactDate(date, locale)}
               </span>
             )}
             {event.location?.name && (
-              <span className="flex items-center gap-2">
-                <MapPin size={13} className="shrink-0 text-brand-red" />
+              <span className="flex items-center gap-1.5 sm:gap-2">
+                <MapPin size={12} className="shrink-0 text-brand-red sm:size-[13px]" />
                 {formatEventLocation(event.location)}
               </span>
             )}

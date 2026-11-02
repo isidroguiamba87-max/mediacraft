@@ -9,11 +9,11 @@ export function CTA() {
 
   return (
     <section className="mx-auto max-w-container px-6 pb-20 lg:px-10">
-      <div className="relative overflow-hidden rounded-brand bg-brand-navy px-8 py-16 text-center text-white sm:px-16">
+      <div className="relative overflow-hidden rounded-brand bg-brand-navy px-6 py-10 text-center text-white sm:px-16 sm:py-16">
         <MouseGlow />
-        <div className="relative flex flex-col items-center gap-6">
-          <h2 className="font-display text-3xl sm:text-4xl">{t("title")}</h2>
-          <p className="max-w-xl text-white/70">{t("subtitle")}</p>
+        <div className="relative flex flex-col items-center gap-4 sm:gap-6">
+          <h2 className="font-display text-2xl sm:text-4xl">{t("title")}</h2>
+          <p className="max-w-xl text-sm text-white/70 sm:text-base">{t("subtitle")}</p>
           <Link href="/contacto" className={buttonVariants("primary", "lg")}>
             {t("button")}
             <ArrowRight size={18} />

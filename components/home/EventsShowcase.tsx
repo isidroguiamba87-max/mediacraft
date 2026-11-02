@@ -30,9 +30,9 @@ export async function EventsShowcase() {
             simply isn't there when nothing's live. It reappears on its own
             the moment a real upcoming event exists in Pulse. */}
         {featured.length > 0 && (
-          <div className="mt-12 flex flex-wrap gap-6">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:flex sm:flex-wrap sm:gap-6">
             {featured.map((event) => (
-              <div key={event.id} className="w-full max-w-72 sm:w-72">
+              <div key={event.id} className="sm:w-72">
                 <EventCard event={event} />
               </div>
             ))}
