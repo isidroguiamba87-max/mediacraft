@@ -36,6 +36,16 @@
 -- is already a technically-valid token, so anything calling the Supabase
 -- API directly (bypassing the UI) would otherwise skip the second factor
 -- entirely. This is the official pattern from Supabase's own MFA docs.
+--
+-- 2026-11-03: needs `security definer` — confirmed live, every admin
+-- action started throwing `StorageApiError: permission denied for table
+-- mfa_factors`. `auth.mfa_factors` isn't readable by the `authenticated`
+-- role RLS policies normally run as; `security definer` runs this
+-- function as its owner instead (which does have access), same as
+-- Supabase's own docs example. `search_path` is pinned explicitly, which
+-- `security definer` functions always should be (an unset search_path is
+-- hijackable by whatever schema a caller can create objects in).
+--
 -- Run this in the Supabase SQL Editor against the live project — it is
 -- NOT applied automatically by this file being in the repo.
 -- ============================================================================
@@ -43,6 +53,8 @@ create or replace function is_admin()
 returns boolean
 language sql
 stable
+security definer
+set search_path = public, auth
 as $$
   select
     auth.uid() is not null
@@ -52,6 +64,8 @@ as $$
       where auth.mfa_factors.user_id = auth.uid() and status = 'verified'
     );
 $$;
+
+grant execute on function is_admin() to authenticated, anon;
 
 -- ============================================================================
 -- news / news_media
