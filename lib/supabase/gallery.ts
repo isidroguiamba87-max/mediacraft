@@ -1,5 +1,6 @@
 import { createClient } from "./server";
 import { sanitizeFileName } from "@/lib/utils";
+import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
 
 export type GalleryMediaType = "image" | "video";
 
@@ -67,8 +68,11 @@ export interface GalleryImageInput {
  * file for a multi-file upload, so one bad file never blocks the rest. */
 export async function addGalleryImage(input: GalleryImageInput): Promise<AdminGalleryItem> {
   const supabase = await createClient();
-  const path = `gallery/${crypto.randomUUID()}-${sanitizeFileName(input.file.name)}`;
-  const { error: uploadError } = await supabase.storage.from("media").upload(path, input.file);
+  const processed = await processImageUpload(input.file);
+  const path = `gallery/${crypto.randomUUID()}.${processed.extension}`;
+  const { error: uploadError } = await supabase.storage
+    .from("media")
+    .upload(path, processed.buffer, { contentType: processed.contentType });
   if (uploadError) throw uploadError;
   const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
 
@@ -102,6 +106,7 @@ export async function addGalleryVideo(input: GalleryVideoInput): Promise<AdminGa
   let storageUrl: string | null = null;
 
   if (input.file && input.file.size > 0) {
+    assertValidVideoUpload(input.file);
     const path = `gallery/${crypto.randomUUID()}-${sanitizeFileName(input.file.name)}`;
     const { error: uploadError } = await supabase.storage.from("media").upload(path, input.file);
     if (uploadError) throw uploadError;

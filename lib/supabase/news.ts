@@ -1,5 +1,6 @@
 import { createClient } from "./server";
 import { sanitizeFileName } from "@/lib/utils";
+import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
 
 export type NewsStatus = "draft" | "scheduled" | "published";
 
@@ -134,8 +135,11 @@ export async function deleteNews(id: string): Promise<void> {
  * bucket SQL from the Supabase setup) and returns its public URL. */
 export async function uploadNewsCover(file: File): Promise<string> {
   const supabase = await createClient();
-  const path = `news/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-  const { error } = await supabase.storage.from("media").upload(path, file);
+  const processed = await processImageUpload(file);
+  const path = `news/${crypto.randomUUID()}.${processed.extension}`;
+  const { error } = await supabase.storage
+    .from("media")
+    .upload(path, processed.buffer, { contentType: processed.contentType });
   if (error) throw error;
   const { data } = supabase.storage.from("media").getPublicUrl(path);
   return data.publicUrl;
@@ -199,8 +203,11 @@ export async function listNewsMedia(newsId: string): Promise<AdminNewsMediaItem[
  * (same pattern as addGalleryImage). */
 export async function addNewsImage(newsId: string, caption: string, file: File): Promise<AdminNewsMediaItem> {
   const supabase = await createClient();
-  const path = `news/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-  const { error: uploadError } = await supabase.storage.from("media").upload(path, file);
+  const processed = await processImageUpload(file);
+  const path = `news/${crypto.randomUUID()}.${processed.extension}`;
+  const { error: uploadError } = await supabase.storage
+    .from("media")
+    .upload(path, processed.buffer, { contentType: processed.contentType });
   if (uploadError) throw uploadError;
   const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
 
@@ -229,6 +236,7 @@ export async function addNewsVideo(
   let storageUrl: string | null = null;
 
   if (file && file.size > 0) {
+    assertValidVideoUpload(file);
     const path = `news/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
     const { error: uploadError } = await supabase.storage.from("media").upload(path, file);
     if (uploadError) throw uploadError;

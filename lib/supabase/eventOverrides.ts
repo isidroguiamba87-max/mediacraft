@@ -1,5 +1,5 @@
 import { createClient } from "./server";
-import { sanitizeFileName } from "@/lib/utils";
+import { processImageUpload } from "./mediaUpload";
 
 export interface AdminEventOverride {
   eventId: string;
@@ -108,8 +108,11 @@ export async function setQaEnabled(eventId: string, enabled: boolean): Promise<v
 
 export async function uploadEventCover(file: File): Promise<string> {
   const supabase = await createClient();
-  const path = `events/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-  const { error } = await supabase.storage.from("media").upload(path, file);
+  const processed = await processImageUpload(file);
+  const path = `events/${crypto.randomUUID()}.${processed.extension}`;
+  const { error } = await supabase.storage
+    .from("media")
+    .upload(path, processed.buffer, { contentType: processed.contentType });
   if (error) throw error;
   const { data } = supabase.storage.from("media").getPublicUrl(path);
   return data.publicUrl;
