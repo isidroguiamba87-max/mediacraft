@@ -27,12 +27,6 @@ export const team: TeamMember[] = [
     email: "mikail.dasilva@mediacraft.co.mz",
   },
   {
-    id: "desiane-katar",
-    name: "Desiane Katar",
-    photo: "/images/team/desiane-katar.jpg",
-    email: "desiane.katar@mediacraft.co.mz",
-  },
-  {
     id: "leticia-de-sousa",
     name: "Letícia de Sousa",
     photo: "/images/team/leticia-de-sousa.jpg",
@@ -50,12 +44,6 @@ export const team: TeamMember[] = [
     name: "Joaquina Novela",
     photo: "/images/team/joaquina-novela.jpg",
     linkedin: "https://www.linkedin.com/company/mediacraftmz",
-  },
-  {
-    id: "ludmila-mero",
-    name: "Ludmila Mero",
-    photo: "/images/team/ludmila-mero.jpg",
-    email: "ludmila.mero@mediacraft.co.mz",
   },
   {
     id: "eugenia-sive",

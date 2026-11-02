@@ -19,7 +19,7 @@ export function Footer() {
   return (
     <footer className="bg-brand-navy text-white">
       <div className="mx-auto max-w-container px-6 py-14 lg:px-10">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-x-10 gap-y-10 sm:gap-x-6 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-1">
             <Image
               src="/logo/logo.png"
