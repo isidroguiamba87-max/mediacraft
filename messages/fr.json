@@ -434,6 +434,13 @@
     "subtitle": "La page que vous recherchez n'existe pas ou a été déplacée.",
     "backHome": "Retour à l'accueil"
   },
+  "errorBoundary": {
+    "title": "Une erreur est survenue",
+    "subtitle": "Une erreur inattendue s'est produite. Nous avons été notifiés — réessayez dans un instant.",
+    "retry": "Réessayer",
+    "backHome": "Retour à l'accueil",
+    "errorId": "Référence de l'erreur"
+  },
   "common": {
     "langSwitcher": "Langue"
   },

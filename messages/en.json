@@ -434,6 +434,13 @@
     "subtitle": "The page you're looking for doesn't exist or has moved.",
     "backHome": "Back to home"
   },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "subtitle": "An unexpected error occurred. We've been notified — please try again shortly.",
+    "retry": "Try again",
+    "backHome": "Back to home",
+    "errorId": "Error reference"
+  },
   "common": {
     "langSwitcher": "Language"
   },

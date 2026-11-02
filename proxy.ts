@@ -1,15 +1,84 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./config/i18n";
 import { isSupabaseConfigured } from "./lib/supabase/config";
+import { pulseConfig } from "./config/site.config";
 
 const intlProxy = createIntlMiddleware(routing);
+
+function originOf(url: string | undefined): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
+}
+
+// Derived from the same env vars the app itself reads, so the CSP tracks
+// whichever Supabase project / Pulse API is actually wired up (staging
+// today, production later) without needing a separate hardcoded value.
+const supabaseOrigin = originOf(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const pulseOrigin = originOf(pulseConfig.apiUrl);
+
+/**
+ * `script-src`/`style-src` nonce — see https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy.
+ * Next needs the nonce on the *request* (it reads it back out via
+ * `headers()` while rendering, to stamp its own injected <script> tags) —
+ * so it's set on a cloned request passed into every branch below, not just
+ * on the outgoing response.
+ *
+ * `style-src` stays on 'unsafe-inline' rather than the nonce: a lot of
+ * this codebase sets React `style={{...}}` (MouseGlow, FlagshipEvent,
+ * per-event accent colors), and the `style=""` HTML attribute can't be
+ * nonce'd the way a `<style>` block or `<script>` tag can — there's no
+ * practical way to lock that down further without rewriting every one of
+ * those call sites to CSS custom properties.
+ *
+ * Currently shipped as `Content-Security-Policy-Report-Only` — browsers
+ * log violations to the console without blocking anything. Flip the
+ * response header name to `Content-Security-Policy` once a pass through
+ * the real site (home, eventos, event detail incl. the YouTube "Ao Vivo"
+ * embed, novidades, /admin login + dashboard) shows no unexpected
+ * [Report Only] console entries. See docs/CHECKLIST-SEGURANCA.md.
+ */
+function buildCsp(nonce: string): string {
+  const connectSrc = [
+    "'self'",
+    supabaseOrigin,
+    supabaseOrigin?.replace(/^https:/, "wss:"),
+    pulseOrigin,
+  ].filter(Boolean);
+
+  const directives = [
+    `default-src 'self'`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    `style-src 'self' 'unsafe-inline'`,
+    `img-src 'self' data: blob: https://*.supabase.co https://minio.devpulsemz.cloud https://img.youtube.com https://images.unsplash.com`,
+    `font-src 'self' data:`,
+    `connect-src ${connectSrc.join(" ")}`,
+    `frame-src https://www.youtube.com`,
+    `object-src 'none'`,
+    `base-uri 'self'`,
+    `form-action 'self'`,
+    `frame-ancestors 'none'`,
+    `upgrade-insecure-requests`,
+  ];
+  return directives.join("; ");
+}
+
+function withNonce(request: NextRequest, nonce: string): NextRequest {
+  const headers = new Headers(request.headers);
+  headers.set("x-nonce", nonce);
+  return new NextRequest(request, { headers });
+}
 
 /**
  * Single proxy for the whole app (Next.js 16 renamed middleware.ts to
  * proxy.ts — only one is allowed, so this is where next-intl's
- * locale-routing and the Supabase session refresh both have to live).
+ * locale-routing, the Supabase session refresh and the security headers
+ * all have to live).
  *
  * /admin/** is NOT part of the [locale] segment (see app/admin/layout.tsx)
  * and is Portuguese-only by design — it must never be handed to
@@ -26,13 +95,31 @@ const intlProxy = createIntlMiddleware(routing);
  * intl rewrite entirely.
  */
 export default async function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const nonceRequest = withNonce(request, nonce);
+
+  let response: NextResponse;
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    return refreshSupabaseSession(request);
+    response = await refreshSupabaseSession(nonceRequest);
+  } else if (request.nextUrl.pathname.startsWith("/responder")) {
+    response = NextResponse.next({ request: nonceRequest });
+  } else {
+    response = intlProxy(nonceRequest);
   }
-  if (request.nextUrl.pathname.startsWith("/responder")) {
-    return NextResponse.next({ request });
-  }
-  return intlProxy(request);
+
+  response.headers.set("Content-Security-Policy-Report-Only", buildCsp(nonce));
+  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+  );
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "same-origin");
+
+  return response;
 }
 
 async function refreshSupabaseSession(request: NextRequest) {

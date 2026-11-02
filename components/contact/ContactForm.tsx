@@ -33,6 +33,17 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      {/* Honeypot — invisible to real visitors (off-screen, not display:none
+          or aria-hidden, which some bots skip on purpose), caught
+          server-side in app/api/contact/route.ts. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden"
+        aria-hidden="true"
+      />
       <div className="grid gap-4 sm:grid-cols-2">
         <input name="name" required placeholder={t("name")} className={fieldClass} />
         <input

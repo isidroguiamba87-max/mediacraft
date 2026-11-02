@@ -434,6 +434,13 @@
     "subtitle": "A página que procura não existe ou foi movida.",
     "backHome": "Voltar ao início"
   },
+  "errorBoundary": {
+    "title": "Algo correu mal",
+    "subtitle": "Ocorreu um erro inesperado. Já fomos notificados — tenta novamente em instantes.",
+    "retry": "Tentar novamente",
+    "backHome": "Voltar ao início",
+    "errorId": "Referência do erro"
+  },
   "common": {
     "langSwitcher": "Idioma"
   },
