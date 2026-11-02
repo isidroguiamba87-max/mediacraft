@@ -1,0 +1,37 @@
+/**
+ * Design tokens — the ONE place to change the visual identity of the site.
+ * Every color, radius and shadow used across the app reads from these
+ * CSS custom properties. Update values here (and font stacks in
+ * tailwind.config.ts) and the whole site updates with it.
+ *
+ * These are MediaCraft Mozambique's official brand colors — do not swap
+ * them without sign-off from the brand owner.
+ */
+
+:root {
+  /* Brand palette */
+  --brand-red: #bf262e; /* primary accent */
+  --brand-red-deep: #9e1f26;
+  --brand-navy: #001b32; /* base / dark surfaces */
+  --brand-navy-2: #0f3350;
+
+  /* Neutrals */
+  --ink: #12263e; /* body text */
+  --slate: #66707e; /* secondary text */
+  --paper: #ffffff; /* light surface */
+  --paper-2: #f4f6f8; /* light surface, alt */
+  --line: rgba(0, 27, 50, 0.13); /* hairlines / borders */
+  --success: #18a566; /* live/confirmed/answered states (Pulse console) */
+  --alert: #c8802b; /* pending/warning states (Pulse console) */
+
+  /* Shape & elevation */
+  --radius: 16px;
+  --shadow: 0 12px 34px rgba(0, 27, 50, 0.14);
+
+  /* Typography — drop the real font files into public/fonts and declare
+     @font-face in app/globals.css when they arrive. Until then these
+     fall back gracefully to system stacks. */
+  --font-display: "Noe Display", Georgia, "Times New Roman", serif;
+  --font-body: "Avenir", "Avenir Next", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+}

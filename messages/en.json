@@ -1,0 +1,691 @@
+{
+  "meta": {
+    "home": {
+      "title": "MediaCraft Mozambique — Strategic Communication & Events",
+      "description": "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and corporate events."
+    },
+    "events": {
+      "title": "Events — MediaCraft",
+      "description": "Discover the corporate events organized by MediaCraft: conferences, forums and gatherings connecting brands, media and the public."
+    },
+    "novidades": {
+      "title": "News — MediaCraft",
+      "description": "The latest news and updates from MediaCraft Mozambique."
+    },
+    "about": {
+      "title": "About Us — MediaCraft",
+      "description": "Mission, vision, values and the team behind MediaCraft Mozambique."
+    },
+    "contact": {
+      "title": "Contact — MediaCraft",
+      "description": "Get in touch with the MediaCraft team. Office in Maputo, Mozambique."
+    },
+    "keywords": "Strategic communication, MediaCraft, corporate events, reputation management, public relations, Mozambique"
+  },
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "news": "News",
+    "about": "About Us",
+    "contact": "Contact",
+    "cta": "Talk to us",
+    "pulse": "Sign in (Pulse)"
+  },
+  "showcase": {
+    "metaTitle": "Visual demo — MediaCraft",
+    "pillars": [
+      "Communication",
+      "Reputation",
+      "Events",
+      "Content"
+    ],
+    "trust": "+70 partners · +500 attendees · +15 countries",
+    "numbersEyebrow": "MediaCraft in numbers",
+    "numbersTitle": "Impact you can measure in results.",
+    "flagship": {
+      "live": "Live",
+      "today": "Happening now",
+      "soon": "Coming soon",
+      "daysUntil": "In {count, plural, one {# day} other {# days}}",
+      "label": "Upcoming event",
+      "cta": "Enter the event"
+    },
+    "orbitHint": "Tap a title to open that area and see what we do on each front.",
+    "orbitClose": "Close",
+    "orbitScrollHint": "Scroll through each area — or tap a title",
+    "orbitScrollCue": "Keep scrolling",
+    "orbitAuto": "Auto-rotating · tap to jump"
+  },
+  "hero": {
+    "eyebrow": "Communication · Reputation · Events · Content",
+    "title": "Strategic communication, corporate events and content that transforms.",
+    "subtitle": "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and corporate events. We help brands, institutions and organizations navigate challenges, drive growth and strengthen strategic connections.",
+    "primaryCta": "View featured event",
+    "secondaryCta": "Explore events",
+    "cardTitle": "+15 years",
+    "cardSubtitle": "building trust between brands and audiences",
+    "titleParts": [
+      {
+        "t": "Strategic communication",
+        "hl": true
+      },
+      {
+        "t": ", ",
+        "hl": false
+      },
+      {
+        "t": "corporate events",
+        "hl": true
+      },
+      {
+        "t": " and ",
+        "hl": false
+      },
+      {
+        "t": "content that transforms",
+        "hl": true
+      },
+      {
+        "t": ".",
+        "hl": false
+      }
+    ]
+  },
+  "stats": {
+    "title": "Our reach",
+    "items": {
+      "partners": {
+        "value": "+70",
+        "label": "Corporate partners"
+      },
+      "countries": {
+        "value": "+15",
+        "label": "Countries with presence"
+      },
+      "channels": {
+        "value": "+100",
+        "label": "Media & coverage channels"
+      },
+      "participants": {
+        "value": "+500",
+        "label": "Attendees reached"
+      }
+    }
+  },
+  "services": {
+    "eyebrow": "What we do",
+    "title": "Strategy, delivery, impact.",
+    "items": {
+      "communication": {
+        "title": "Strategic & Institutional Communication",
+        "description": "Institutional positioning, corporate and public-sector communication, brand and reputation management, stakeholder relations and strategic narrative building."
+      },
+      "programs": {
+        "title": "Projects & Programs Implementation",
+        "description": "Design, coordination and delivery of institutional, development and multisectoral programs, from planning to execution."
+      },
+      "content": {
+        "title": "Content, Media & Production",
+        "description": "Editorial design, television formats, audiovisual production, strategic content and executive production."
+      },
+      "events": {
+        "title": "Conferences, Events & Dialogue Platforms",
+        "description": "Design and delivery of executive conferences, business forums, institutional events, exhibitions and high-level dialogue and relationship platforms."
+      },
+      "campaigns": {
+        "title": "Campaigns & Public Engagement",
+        "description": "Public information campaigns, community involvement, mobilization and territorial activation initiatives at national and local level."
+      }
+    },
+    "next": "Next"
+  },
+  "eventsShowcase": {
+    "eyebrow": "Agenda",
+    "title": "Upcoming events",
+    "viewAll": "See all →",
+    "empty": "New events will be announced soon."
+  },
+  "partners": {
+    "eyebrow": "Trusted by",
+    "title": "Partners & Clients",
+    "viewAll": "View all",
+    "modalTitle": "All partners"
+  },
+  "cta": {
+    "title": "Have an event to make happen?",
+    "subtitle": "From first idea to final report — we build the complete experience, on stage and on screen.",
+    "button": "Talk to us"
+  },
+  "about": {
+    "eyebrow": "About us",
+    "title": "Reputation isn't improvised — it's cultivated.",
+    "intro": "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and themed corporate events. With a global vision and local roots, we help brands, institutions, individuals and organizations navigate complex challenges, drive growth and strengthen strategic connections.",
+    "quote": "Communicating means building bridges, inspiring people and transforming realities.",
+    "signatureRole": "Founders of MediaCraft Mozambique",
+    "mission": {
+      "title": "Mission",
+      "text": "We support brands, institutions and organizations in building effective communication strategies, authentic narratives and innovative solutions that drive their positioning and growth. Through strategic consulting, reputation management and transformative experiences, we strengthen identities, expand influence and promote sustainable development, generating economic, social and cultural value."
+    },
+    "vision": {
+      "title": "Vision",
+      "text": "To be an undisputed reference in strategic communication, impactful content and memorable events in Mozambique and across Africa — creating powerful narratives, strengthening reputations and driving strategic connections that generate lasting value."
+    },
+    "values": {
+      "title": "Our values",
+      "items": {
+        "boldness": {
+          "title": "Boldness",
+          "description": "We innovate and challenge convention to create disruptive solutions."
+        },
+        "inclusion": {
+          "title": "Inclusion",
+          "description": "We foster diversity of ideas and perspectives, ensuring comprehensive strategic approaches."
+        },
+        "curiosity": {
+          "title": "Curiosity",
+          "description": "We invest in continuous learning, anticipating trends and creating pioneering solutions."
+        },
+        "empathy": {
+          "title": "Empathy",
+          "description": "We understand the needs of clients and stakeholders to create value and lasting relationships."
+        }
+      }
+    },
+    "history": {
+      "eyebrow": "Our story",
+      "title": "From two voices to a national narrative.",
+      "titleParts": [
+        { "t": "From two voices to a ", "hl": false },
+        { "t": "national narrative.", "hl": true }
+      ],
+      "paragraphs": [
+        "It all began with two women, Linda from Niassa and Vanessa from Zambézia, united by a shared passion: communication. Coming from different backgrounds, they followed different paths, facing the challenges and demands of the corporate world and shaping themselves through experience that only practice allows — until the day they understood that their country's story needed to be told by voices that belonged to it.",
+        "That realisation led them to leave the security of traditional jobs behind to build something bigger than themselves. That is how Criattus Mozambique was born, and later, driven by the same values and an even broader vision of the transformative power of communication, they brought MediaCraft Mozambique to life.",
+        "But they did not just found companies. They built bridges between past and future, between tradition and innovation, between who we are and who we can become. They saw communication as an act of identity and resistance, and reputation-building as a way of giving back to society — with values, purpose and legacy.",
+        "In a landscape where, for so long, narratives were imported and disconnected from local reality, Linda and Vanessa chose to put down roots. They brought an unshakeable commitment to diversity to the centre of Mozambican communication, creating spaces where different voices, ideas and perspectives meet and grow stronger — inspiring creativity, innovation and real impact.",
+        "At MediaCraft Mozambique, communication goes beyond service: it is a mission. It is a way of honouring stories, amplifying voices that deserve to be heard, turning dialogue into movements and events into meaningful milestones. Because communicating is not just informing — it is building memory, affirming identity and opening paths to a future where the African narrative, told by those who live it, occupies the place it has always belonged.",
+        "Linda and Vanessa took the first step. Today, MediaCraft Mozambique continues to amplify that voice through strategic communication, public relations, reputation management, branding, corporate event curation and creative content production — turning ideas into authentic narratives that connect brands, companies and institutions with their audiences. We build strategies that consolidate presence, stories that inspire and experiences that leave a mark."
+      ],
+      "readMore": "Read more",
+      "readLess": "Read less"
+    }
+  },
+  "team": {
+    "eyebrow": "People",
+    "title": "Our team",
+    "subtitle": "Move through the team — each portrait opens that person's story beside it.",
+    "members": {
+      "linda-fernando": {
+        "role": "Co-Founder & Director — Operations and Business Development",
+        "bio": "Linda Fernando is a communication and business development professional and executive producer, with experience working alongside governments, companies and institutions across Africa.\n\nHer work spans strategic communication, institutional relations, business development and high-level dialogue platforms, with a particular focus on positioning organisations and initiatives, developing partnerships and bringing decision-makers together around business, investment and public-interest agendas.\n\nHer background in entrepreneurship, media, communication, production and tourism allows her to combine business vision, contextual awareness, relationship-building and execution to identify opportunities, structure proposals, develop partnerships and turn ideas into concrete projects.\n\nShe was recognised among the MIPAD Global Top 100 Most Influential People of African Descent — Travel & Tourism Edition, Class of 2026, and is an alumna of the Academy for International Business Officials (AIBO) and the African Women Entrepreneurship Cooperative (AWEC)."
+      },
+      "vanessa-cadir": {
+        "role": "Co-Founder & Director — Communication and Events",
+        "bio": "Vanessa Cadir is a communication, marketing and corporate events executive, with experience in communication strategy, client management, events, strategic partnerships and organisational development.\n\nHer work centres on communication, client strategy, partnership development and event management, ensuring the structuring and delivery of projects that require coordination between clients, partners, teams and different stakeholders.\n\nWith experience across communication, marketing, entrepreneurship, business development and events, Vanessa combines commercial vision, relationship management and organisational and delivery skills in leading mandates, developing partnerships and coordinating projects."
+      },
+      "mikail-da-silva": {
+        "role": "Financial Manager"
+      },
+      "desiane-katar": {
+        "role": "Administrative Secretary"
+      },
+      "leticia-de-sousa": {
+        "role": "Administrative Coordinator"
+      },
+      "arlina-cunje": {
+        "role": "Information and Content Manager"
+      },
+      "joaquina-novela": {
+        "role": "Marketing Assistant"
+      },
+      "ludmila-mero": {
+        "role": "Project Coordinator"
+      },
+      "eugenia-sive": {
+        "role": "Project Manager"
+      },
+      "benicio-moises": {
+        "role": "Graphic Designer"
+      },
+      "rolando-neves": {
+        "role": "Graphic Designer"
+      },
+      "francisco-maculuve": {
+        "role": "Graphic Designer"
+      },
+      "clesio-singano": {
+        "role": "Programme Coordinator"
+      }
+    },
+    "deckHint": "Drag · Scroll · Arrows",
+    "bioClose": "Close",
+    "readMore": "Read bio"
+  },
+  "events": {
+    "title": "All events",
+    "subtitle": "Filter by period. Each event opens its own universe — with all published content available.",
+    "filters": {
+      "period": "Period",
+      "periodAll": "Any date",
+      "periodUpcoming": "Upcoming",
+      "periodPast": "Past"
+    },
+    "empty": "No events found for the selected filters.",
+    "card": {
+      "viewDetails": "View details"
+    },
+    "free": "Free",
+    "soldOut": "Sold out",
+    "offline": "Couldn't reach the events platform (Pulse) — showing demo content instead.",
+    "shelfNearest": "Coming up next"
+  },
+  "eventTabs": {
+    "details": "Details",
+    "detailsEmpty": "There's no description for this event yet.",
+    "news": "Updates",
+    "live": "Live",
+    "program": "Program",
+    "speakers": "Speakers",
+    "gallery": "Gallery",
+    "partners": "Partners",
+    "organizer": "Organizer",
+    "qa": "Q&A",
+    "tickets": "Tickets",
+    "ageLimit": "{count}+ years",
+    "wheelchairAccess": "Wheelchair accessible",
+    "partnersEmpty": "No partners announced for this event yet.",
+    "partnersSectionEmpty": "No partners in this section yet.",
+    "organizerEmpty": "Organizer information not available.",
+    "organizerLabel": "Organized by",
+    "newsEmpty": "No updates for this event yet.",
+    "newsFeatured": "Featured",
+    "liveOffline": "The live stream hasn't started yet.",
+    "liveOnAir": "On air now",
+    "liveScheduledFor": "Stream scheduled for {date}",
+    "liveScheduledSoon": "Stream scheduled soon",
+    "liveWatchLink": "Open stream",
+    "liveExternalOnly": "This stream can only be watched via the link above.",
+    "programEmpty": "The programme will be published soon.",
+    "speakersEmpty": "Speakers will be announced soon.",
+    "speakersOthers": "Other speakers",
+    "libraryEmpty": "No materials available yet.",
+    "libraryDownload": "Download",
+    "libraryCodeTitle": "Have a ticket code?",
+    "libraryCodeHint": "Some materials are exclusive to registered participants.",
+    "libraryCodePlaceholder": "Ticket code",
+    "libraryCodeChecking": "Checking…",
+    "libraryCodeUnlock": "Unlock",
+    "libraryCodeNoMaterials": "We couldn't find any exclusive materials for that code.",
+    "libraryLocked": "These materials are exclusive to registered participants. Enter your ticket code above to unlock them.",
+    "galleryEmpty": "Content will be published after the event.",
+    "galleryPhotos": "Photos",
+    "galleryVideos": "Videos",
+    "galleryDocuments": "Documents",
+    "qaTitle": "Ask the panel",
+    "qaNamePlaceholder": "Your name",
+    "qaPlaceholder": "Type your question…",
+    "qaSubmit": "Submit question",
+    "qaEmpty": "Be the first to ask.",
+    "qaSending": "Sending…",
+    "qaSent": "Question sent! It'll appear here once the organizers review it.",
+    "qaPanelLabel": "Panel / session (optional)",
+    "qaPanelPlaceholder": "No specific panel",
+    "qaSpeakerLabel": "Speaker (optional)",
+    "qaSpeakerPlaceholder": "No specific speaker",
+    "qaAnswerLabel": "Answer",
+    "programDay": "Day {n}",
+    "programToday": "Today",
+    "programSessions": "{count, plural, one {# session} other {# sessions}}",
+    "heroFree": "Join"
+  },
+  "panel": {
+    "back": "Back to panels",
+    "about": "About this panel",
+    "speakers": "Speakers",
+    "room": "Room",
+    "details": "Details",
+    "schedule": "Schedule",
+    "section": "Track"
+  },
+  "speakersDirectory": {
+    "searchPlaceholder": "Search for a speaker by name…",
+    "allSessions": "All sessions",
+    "noResults": "No speakers found.",
+    "empty": "No speakers confirmed for this event yet."
+  },
+  "speakerProfile": {
+    "back": "Back to speakers",
+    "sessions": "Appears in"
+  },
+  "tickets": {
+    "title": "Tickets",
+    "empty": "Ticket sales aren't open yet.",
+    "reserve": "Reserve",
+    "reserving": "Reserving…",
+    "reserveError": "Couldn't complete the reservation. Please try again.",
+    "soldOut": "Sold out",
+    "free": "Free",
+    "area": {
+      "NORMAL": "Normal",
+      "VIP": "VIP"
+    },
+    "dates": "Dates you're attending",
+    "contactTitle": "Your details",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phoneNumber": "Phone number",
+    "continueToPayment": "Continue to payment",
+    "continueToForm": "Continue",
+    "formTitle": "A few more details",
+    "formFileUnsupported": "This field asks for a file — it can't be attached here; the organizer will follow up if needed.",
+    "paymentTitle": "Payment",
+    "paymentTotal": "Total due: {total}",
+    "paymentExpired": "Your reservation has expired.",
+    "startOver": "Start over",
+    "paymentPhonePlaceholder": "M-Pesa/e-Mola number",
+    "paymentPhoneInvalid": "Invalid number for the chosen method.",
+    "payNow": "Pay now",
+    "paying": "Processing payment…",
+    "payError": "Couldn't complete the payment. Please try again.",
+    "confirmedTitle": "Reservation confirmed",
+    "confirmedBody": "Your reservation has been registered successfully.",
+    "confirmedBodyCount": "{count, plural, one {# ticket confirmed. You'll get the PDF by email.} other {# tickets confirmed. You'll get the PDFs by email.}}",
+    "qrAlt": "Ticket {count} QR code",
+    "qrLabel": "Ticket {count}",
+    "qrHint": "Save a screenshot or show this QR code at the door."
+  },
+  "contact": {
+    "eyebrow": "Get in touch",
+    "title": "Let's build the next event.",
+    "subtitle": "Have an event to organize or want to know more about MediaCraft? Get in touch.",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "success": "Message sent successfully. We'll be in touch soon.",
+      "error": "Couldn't send the message. Please try again."
+    },
+    "info": {
+      "title": "Contact information",
+      "email": "Email",
+      "address": "Address",
+      "social": "Social media"
+    }
+  },
+  "footer": {
+    "tagline": "Strategic communication and corporate events. Content that turns presence into influence.",
+    "nav": "Navigation",
+    "platform": "Platform",
+    "microsite": "Event micro-site",
+    "pulse": "Pulse",
+    "company": "Company",
+    "contact": "Contact",
+    "follow": "Follow us",
+    "rights": "All rights reserved.",
+    "developedBy": "Developed by"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "The page you're looking for doesn't exist or has moved.",
+    "backHome": "Back to home"
+  },
+  "common": {
+    "langSwitcher": "Language"
+  },
+  "rating": {
+    "title": "Rate this event",
+    "subtitle": "Your feedback helps us improve future events.",
+    "stars": "stars",
+    "commentPlaceholder": "Anything else you'd like to add? (optional)",
+    "submit": "Send rating",
+    "sending": "Sending…",
+    "thanksTitle": "Thank you!",
+    "thanksBody": "Your rating has been recorded.",
+    "error": "Couldn't send it. Please try again.",
+    "close": "Close",
+    "respond": "Answer the questionnaire",
+    "closeAndEnter": "Close and enter the site"
+  },
+  "panelRating": {
+    "cta": "Rate this panel",
+    "title": "Rate this panel",
+    "rated": "Panel rated"
+  },
+  "pulse": {
+    "demoBar": "DEMO · Simulation of the Pulse console for the MediaCraft institutional website",
+    "login": {
+      "title": "Sign in to Pulse",
+      "subtitle": "Authentication via a Pulse account (Participant).",
+      "idLabel": "Email or phone",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "guest": "Continue as guest",
+      "note": "Demo — real sign-in uses the Pulse Participant flow (JWT)."
+    },
+    "exit": "Exit",
+    "viewAs": "View as",
+    "roles": {
+      "admin": "Organiser",
+      "panelist": "Speaker",
+      "participant": "Participant",
+      "checkin": "Check-in"
+    },
+    "nav": {
+      "dashboard": "Overview",
+      "events": "Events",
+      "create": "Create event",
+      "publications": "Publications",
+      "communications": "Communications",
+      "qa": "Questions",
+      "live": "Live & media",
+      "report": "Reports"
+    },
+    "source": {
+      "intro": "Data source:",
+      "pulse": "Pulse · real data",
+      "bff": "Website · interim"
+    },
+    "dashboard": {
+      "title": "Overview",
+      "subtitle": "Diplomacy, Tourism & Investment Forum 2026 · live",
+      "kpiRegistered": "Total registered",
+      "kpiCheckins": "Check-ins today",
+      "kpiQuestions": "Panel questions",
+      "kpiRevenue": "Ticket revenue",
+      "today": "today",
+      "attendance": "attendance",
+      "pending": "pending",
+      "tickets": "tickets",
+      "chartTitle": "Registrations per week",
+      "chartSubtitle": "Last 7 weeks",
+      "activityTitle": "Real-time activity",
+      "activitySubtitle": "Everything talks to Pulse",
+      "sessionsTitle": "Today's sessions",
+      "sessionsSubtitle": "Real-time status · auto-updates",
+      "thSession": "Session",
+      "thRoom": "Room",
+      "thStatus": "Status",
+      "thCheckin": "Check-in",
+      "onAir": "on air",
+      "done": "Done",
+      "alertsTitle": "Question reminders",
+      "alertsSubtitle": "Alert whenever a new question comes in",
+      "attendanceByDayTitle": "Attendance by day",
+      "attendanceByDaySubtitle": "Registered vs. present",
+      "present": "present",
+      "expected": "expected",
+      "createCta": "Create event"
+    },
+    "events": {
+      "subtitle": "All events, by category and visibility",
+      "thEvent": "Event",
+      "thDate": "Date",
+      "thCategory": "Category",
+      "thVisibility": "Visibility",
+      "thRegistrations": "Registered",
+      "public": "Public",
+      "private": "Private"
+    },
+    "create": {
+      "title": "Create event",
+      "subtitle": "One form, a complete event universe",
+      "basicTitle": "Basic info",
+      "basicSubtitle": "The event essentials",
+      "nameLabel": "Event name",
+      "categoryLabel": "Category",
+      "visibilityLabel": "Visibility",
+      "daysLabel": "No. of days",
+      "venueLabel": "Venue",
+      "streamLabel": "Zoom / streaming link",
+      "programTitle": "Programme",
+      "programSubtitle": "Upload a file or write it by hand",
+      "uploadHint": "Drag the programme here",
+      "or": "or",
+      "writeManually": "Write programme manually",
+      "modulesLabel": "Modules active in this event",
+      "submit": "Create event"
+    },
+    "publications": {
+      "title": "Publications",
+      "subtitle": "Publish content for each event phase — visible to participants",
+      "phaseBefore": "Before",
+      "phaseDuring": "Now",
+      "phaseAfter": "After",
+      "note": "The phases (Before / Now / After) are for you, the organiser. Participants only see the published content, unified, with no phase tabs.",
+      "newTitle": "New publication",
+      "newSubtitle": "News, photo, video or campaign",
+      "typeLabel": "Type",
+      "titleLabel": "Title",
+      "mediaHint": "Drag image or video",
+      "publishCta": "Publish to event",
+      "listTitle": "Already published",
+      "listSubtitle": "Appears in the micro-site Updates"
+    },
+    "communications": {
+      "title": "Communications",
+      "subtitle": "Letters, invitations and email sends",
+      "composeTitle": "New communication",
+      "composeSubtitle": "Personalise with name, role and organisation",
+      "templateLabel": "Template",
+      "toLabel": "Recipients",
+      "toAll": "All registered",
+      "toDelegates": "Delegates",
+      "toCorporate": "Corporate",
+      "subjectLabel": "Subject",
+      "messageLabel": "Message",
+      "variablesLabel": "Available variables",
+      "sendCta": "Send by email",
+      "historyTitle": "Recent sends",
+      "historySubtitle": "Campaign status",
+      "thType": "Type",
+      "thRecipients": "Recipients",
+      "thStatus": "Status",
+      "sent": "Sent",
+      "scheduled": "Scheduled"
+    },
+    "qa": {
+      "title": "Questions — organiser view",
+      "subtitle": "Metrics per panel, without reading private chats",
+      "privacyNote": "As organiser you see how many questions there were and how many were answered — never the content of private chats between participant and speaker.",
+      "thPanel": "Panel",
+      "thPanelist": "Speaker",
+      "thQuestions": "Questions",
+      "thAnswered": "Answered",
+      "thStatus": "Status",
+      "active": "Active"
+    },
+    "live": {
+      "title": "Live & media",
+      "subtitle": "Publish on the day — reflects on the site instantly",
+      "mediaTitle": "Live photos & video",
+      "mediaSubtitle": "Upload during the event; they appear in the gallery instantly",
+      "dropHint": "Drag photos or videos",
+      "dropSubtitle": "The media team publishes directly",
+      "linkTitle": "Live link",
+      "linkSubtitle": "Paste the link; change it whenever you need",
+      "updateCta": "Update live link",
+      "reflectNote": "What you update here reflects instantly on the micro-site."
+    },
+    "report": {
+      "title": "Final report",
+      "subtitle": "Diplomacy Forum 2026 · after the event",
+      "exportCta": "Export CSV",
+      "attendeesLabel": "Unique attendees",
+      "attendanceRateLabel": "Attendance rate",
+      "questionsLabel": "Questions exchanged",
+      "ratingLabel": "Average rating",
+      "attendanceTitle": "Attendance by day",
+      "attendanceSubtitle": "Measured by QR check-in",
+      "note": "Measures real attendance via QR, library downloads and session ratings — without exposing private chats."
+    },
+    "panelist": {
+      "subtitle": "Speaker · Economic Diplomacy in Africa",
+      "kSessions": "My sessions",
+      "kQuestions": "Questions received",
+      "kRating": "Average rating",
+      "kAttendees": "Present in session",
+      "topRated": "among the top rated",
+      "conversationsTitle": "Conversations",
+      "conversationsSubtitle": "Your chats with participants · most recent on top",
+      "questionsTitle": "Questions for me",
+      "questionsSubtitle": "Directed to you by participants",
+      "reply": "Reply",
+      "materialsTitle": "Additional material",
+      "materialsSubtitle": "Attach what you didn't hand to the organisers",
+      "uploadCta": "Attach document or slides",
+      "ratingTitle": "My feedback",
+      "clarity": "Clarity",
+      "relevance": "Relevance",
+      "pending": "Pending"
+    },
+    "participant": {
+      "title": "My events",
+      "subtitle": "Participant",
+      "downloadCta": "Download events list",
+      "ticketTitle": "My ticket",
+      "ticketCaption": "Ticket #MC-2026-0847 · valid for 2 days",
+      "downloadQr": "Download ticket QR",
+      "upcomingTitle": "Upcoming events",
+      "upcomingSubtitle": "Register for the next ones",
+      "panelistsTitle": "Speakers — chat & rate",
+      "panelistsSubtitle": "After QR check-in, chat with each speaker and rate the session",
+      "register": "Register",
+      "talk": "Chat"
+    },
+    "checkin": {
+      "title": "QR check-in",
+      "subtitle": "Point the camera at the participant's QR",
+      "scanning": "Reading QR Code…",
+      "download": "Download this QR",
+      "confirmed": "Check-in confirmed",
+      "corporate": "Corporate",
+      "statsTitle": "Today's attendance",
+      "statsSubtitle": "Day 1 · updates on each scan",
+      "total": "Total present",
+      "lastHour": "Last hour",
+      "corporates": "Corporate",
+      "noShow": "Registered absent"
+    },
+    "chat": {
+      "placeholder": "Type your message…",
+      "note": "Private chat. The organiser can't see the content.",
+      "end": "End",
+      "ended": "Conversation ended. No one can send more messages.",
+      "talk": "Chat"
+    }
+  },
+  "novidades": {
+    "title": "News",
+    "subtitle": "The latest news and updates from MediaCraft.",
+    "empty": "No news published yet.",
+    "backToList": "News",
+    "viewEvent": "View event",
+    "gallery": "Gallery",
+    "share": "Share"
+  }
+}

@@ -1,0 +1,691 @@
+{
+  "meta": {
+    "home": {
+      "title": "MediaCraft Moçambique — Comunicação Estratégica & Eventos",
+      "description": "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e eventos corporativos."
+    },
+    "events": {
+      "title": "Eventos — MediaCraft",
+      "description": "Conheça os eventos corporativos organizados pela MediaCraft: conferências, fóruns e encontros que ligam marcas, media e público."
+    },
+    "novidades": {
+      "title": "Novidades — MediaCraft",
+      "description": "Últimas notícias e atualizações da MediaCraft Moçambique."
+    },
+    "about": {
+      "title": "Sobre Nós — MediaCraft",
+      "description": "Missão, visão, valores e a equipa por trás da MediaCraft Moçambique."
+    },
+    "contact": {
+      "title": "Contacto — MediaCraft",
+      "description": "Fale com a equipa da MediaCraft. Escritório em Maputo, Moçambique."
+    },
+    "keywords": "Comunicação estratégica, MediaCraft, eventos corporativos, gestão de reputação, relações públicas, Moçambique"
+  },
+  "nav": {
+    "home": "Início",
+    "events": "Eventos",
+    "news": "Novidades",
+    "about": "Sobre Nós",
+    "contact": "Contacto",
+    "cta": "Fale connosco",
+    "pulse": "Entrar (Pulse)"
+  },
+  "showcase": {
+    "metaTitle": "Demonstração visual — MediaCraft",
+    "pillars": [
+      "Comunicação",
+      "Reputação",
+      "Eventos",
+      "Conteúdos"
+    ],
+    "trust": "+70 parceiros · +500 participantes · +15 países",
+    "numbersEyebrow": "MediaCraft em números",
+    "numbersTitle": "Impacto que se mede em resultados.",
+    "flagship": {
+      "live": "Ao vivo",
+      "today": "A decorrer agora",
+      "soon": "Em breve",
+      "daysUntil": "Dentro de {count, plural, one {# dia} other {# dias}}",
+      "label": "Próximo evento",
+      "cta": "Entrar no evento"
+    },
+    "orbitHint": "Toca num título para abrir essa área e ver o que fazemos em cada frente.",
+    "orbitClose": "Fechar",
+    "orbitScrollHint": "Rola para percorrer cada área — ou toca num título",
+    "orbitScrollCue": "Continua a rolar",
+    "orbitAuto": "Roda sozinho · toca para saltar"
+  },
+  "hero": {
+    "eyebrow": "Comunicação · Reputação · Eventos · Conteúdos",
+    "title": "Comunicação estratégica, eventos corporativos e conteúdos que transformam.",
+    "subtitle": "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e eventos corporativos. Ajudamos marcas, instituições e organizações a navegar desafios, impulsionar o crescimento e fortalecer conexões estratégicas.",
+    "primaryCta": "Ver evento em destaque",
+    "secondaryCta": "Explorar eventos",
+    "cardTitle": "+15 anos",
+    "cardSubtitle": "a construir confiança entre marcas e público",
+    "titleParts": [
+      {
+        "t": "Comunicação estratégica",
+        "hl": true
+      },
+      {
+        "t": ", ",
+        "hl": false
+      },
+      {
+        "t": "eventos corporativos",
+        "hl": true
+      },
+      {
+        "t": " e ",
+        "hl": false
+      },
+      {
+        "t": "conteúdos que transformam",
+        "hl": true
+      },
+      {
+        "t": ".",
+        "hl": false
+      }
+    ]
+  },
+  "stats": {
+    "title": "O nosso alcance",
+    "items": {
+      "partners": {
+        "value": "+70",
+        "label": "Parceiros corporativos"
+      },
+      "countries": {
+        "value": "+15",
+        "label": "Países com presença"
+      },
+      "channels": {
+        "value": "+100",
+        "label": "Canais de média & cobertura"
+      },
+      "participants": {
+        "value": "+500",
+        "label": "Participantes alcançados"
+      }
+    }
+  },
+  "services": {
+    "eyebrow": "O que fazemos",
+    "title": "Estratégia, execução e impacto.",
+    "items": {
+      "communication": {
+        "title": "Comunicação Estratégica & Institucional",
+        "description": "Posicionamento institucional, comunicação corporativa e do sector público, gestão de marca e reputação, relacionamento com stakeholders e construção de narrativas estratégicas."
+      },
+      "programs": {
+        "title": "Implementação de Projectos & Programas",
+        "description": "Concepção, coordenação e execução de programas institucionais, de desenvolvimento e multissetoriais, do planeamento à entrega."
+      },
+      "content": {
+        "title": "Conteúdo, Media & Produção",
+        "description": "Concepção editorial, formatos televisivos, produção audiovisual, conteúdos estratégicos e produção executiva."
+      },
+      "events": {
+        "title": "Conferências, Eventos & Plataformas de Diálogo",
+        "description": "Concepção e realização de conferências executivas, fóruns empresariais, eventos institucionais, exposições e plataformas de diálogo e relacionamento de alto nível."
+      },
+      "campaigns": {
+        "title": "Campanhas & Engajamento Público",
+        "description": "Campanhas de informação pública, envolvimento comunitário, mobilização e acções de activação territorial a nível nacional e local."
+      }
+    },
+    "next": "Seguinte"
+  },
+  "eventsShowcase": {
+    "eyebrow": "Agenda",
+    "title": "Próximos eventos",
+    "viewAll": "Ver todos →",
+    "empty": "Novos eventos serão anunciados em breve."
+  },
+  "partners": {
+    "eyebrow": "Confiam em nós",
+    "title": "Parceiros & Clientes",
+    "viewAll": "Ver todos",
+    "modalTitle": "Todos os parceiros"
+  },
+  "cta": {
+    "title": "Tens um evento para acontecer?",
+    "subtitle": "Da primeira ideia ao relatório final — construímos a experiência completa, no palco e no ecrã.",
+    "button": "Fale connosco"
+  },
+  "about": {
+    "eyebrow": "Sobre nós",
+    "title": "Reputação não se improvisa — cultiva-se.",
+    "intro": "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e organização de eventos corporativos temáticos. Com visão global e raízes locais, ajudamos marcas, instituições, individualidades e organizações a navegar desafios complexos, impulsionar o crescimento e fortalecer conexões estratégicas.",
+    "quote": "Comunicar é construir pontes, inspirar pessoas e transformar realidades.",
+    "signatureRole": "Fundadoras da MediaCraft Moçambique",
+    "mission": {
+      "title": "Missão",
+      "text": "Apoiamos marcas, instituições e organizações na construção de estratégias de comunicação eficazes, narrativas autênticas e soluções inovadoras que impulsionam o seu posicionamento e crescimento. Através da consultoria estratégica, gestão de reputação e criação de experiências transformadoras, fortalecemos identidades, ampliamos influências e promovemos um desenvolvimento sustentável, gerando valor económico, social e cultural."
+    },
+    "vision": {
+      "title": "Visão",
+      "text": "Ser referência incontornável em comunicação estratégica, desenvolvimento de conteúdos impactantes e organização de eventos memoráveis em Moçambique e no continente africano — criando narrativas poderosas, fortalecendo reputações e impulsionando conexões estratégicas que geram valor sustentável."
+    },
+    "values": {
+      "title": "Os nossos valores",
+      "items": {
+        "boldness": {
+          "title": "Ousadia",
+          "description": "Inovamos e desafiamos o convencional para gerar soluções disruptivas."
+        },
+        "inclusion": {
+          "title": "Inclusão",
+          "description": "Promovemos diversidade de ideias e perspectivas, garantindo abordagens estratégicas abrangentes."
+        },
+        "curiosity": {
+          "title": "Curiosidade",
+          "description": "Investimos no conhecimento contínuo, antecipando tendências e criando soluções pioneiras."
+        },
+        "empathy": {
+          "title": "Empatia",
+          "description": "Compreendemos as necessidades dos clientes e stakeholders para criar valor e relações duradouras."
+        }
+      }
+    },
+    "history": {
+      "eyebrow": "A nossa história",
+      "title": "De duas vozes a uma narrativa nacional.",
+      "titleParts": [
+        { "t": "De duas vozes a uma ", "hl": false },
+        { "t": "narrativa nacional.", "hl": true }
+      ],
+      "paragraphs": [
+        "Tudo começou com duas mulheres, Linda do Niassa, e Vanessa da Zambézia, unidas por uma paixão em comum: a comunicação. Vindas de origens distintas, percorreram caminhos diferentes, enfrentaram os desafios e as exigências do mundo corporativo, moldando-se nas experiências que só a prática permite, até que um dia compreenderam que a narrativa do seu país precisava ser contada por vozes que lhe pertencem.",
+        "Foi essa consciência que levou a deixar para trás a segurança dos empregos tradicionais para construir algo maior do que elas próprias. Assim nasceu a Criattus Mozambique e, mais tarde, impulsionadas pelos mesmos valores e por uma visão ainda mais abrangente do poder transformador da comunicação, deram vida à MediaCraft Moçambique.",
+        "Mas não fundaram apenas empresas. Criaram pontes entre o passado e o futuro, entre a tradição e a inovação, entre o que somos e o que podemos ser. Viram na comunicação um acto de identidade e resistência, e na construção de reputações, uma forma de retribuir à sociedade: com valores, propósito e legado.",
+        "Num cenário onde, por tanto tempo, as narrativas foram importadas e desconectadas da realidade local, Linda e Vanessa escolheram enraizar. Trouxeram para o centro da comunicação moçambicana um compromisso inabalável com a diversidade, criando espaços onde diferentes vozes, ideias e perspectivas se encontram e se fortalecem para inspirar criatividade, inovação e impacto real.",
+        "Na MediaCraft Moçambique, a comunicação vai além do serviço: é uma missão. É uma forma de honrar histórias, de amplificar vozes que merecem ser ouvidas, de transformar diálogos em movimentos e eventos em marcos com significado. Porque comunicar não é apenas informar, é construir memória, afirmar identidade e abrir caminhos para um futuro onde a narrativa africana, contada por quem a vive, ocupa o lugar que sempre lhe pertenceu.",
+        "Linda e Vanessa deram o primeiro passo. Hoje, a MediaCraft Moçambique continua a amplificar essa voz, através da comunicação estratégica, relações públicas, gestão reputacional, branding, curadoria de eventos corporativos e produção de conteúdos criativos, que transformam ideias em narrativas autênticas para conectar marcas, empresas e instituições às suas audiências. Construímos estratégias que consolidam presenças, histórias que inspiram e experiências que deixam marca."
+      ],
+      "readMore": "Ver mais",
+      "readLess": "Ver menos"
+    }
+  },
+  "team": {
+    "eyebrow": "Pessoas",
+    "title": "A nossa equipa",
+    "subtitle": "Percorre a equipa — a cada retrato, o historial da pessoa abre-se ao lado.",
+    "members": {
+      "linda-fernando": {
+        "role": "Co-Fundadora & Administradora — Operações e Desenvolvimento de Negócios",
+        "bio": "Linda Fernando é profissional de comunicação e desenvolvimento de negócios e produtora executiva, com experiência junto de Governos, empresas e instituições em África.\n\nO seu trabalho cruza comunicação estratégica, relacionamento institucional, desenvolvimento de negócios e plataformas de diálogo de alto nível, com particular enfoque no posicionamento de organizações e iniciativas, desenvolvimento de parcerias e aproximação entre decisores em torno de agendas de negócio, investimento e interesse público.\n\nO seu percurso nas áreas do empreendedorismo, media, comunicação, produção e turismo permite-lhe combinar visão de negócio, capacidade de leitura do contexto, construção de relações e execução para identificar oportunidades, estruturar propostas, desenvolver parcerias e transformar ideias em projectos concretos.\n\nFoi reconhecida entre os MIPAD Global Top 100 Most Influential People of African Descent — Travel & Tourism Edition, Class of 2026, e é alumna da Academy for International Business Officials (AIBO) e da African Women Entrepreneurship Cooperative (AWEC)."
+      },
+      "vanessa-cadir": {
+        "role": "Co-Fundadora & Administradora — Comunicação e Gestão de Eventos",
+        "bio": "Vanessa Cadir é executiva de comunicação, marketing e gestão de eventos corporativos, com experiência em estratégia de comunicação, gestão de clientes, eventos, parcerias estratégicas e desenvolvimento organizacional.\n\nO seu trabalho centra-se na comunicação, estratégia de cliente, desenvolvimento de parcerias e gestão de eventos, assegurando a estruturação e implementação de projectos que exigem coordenação entre clientes, parceiros, equipas e diferentes stakeholders.\n\nCom experiência nas áreas de comunicação, marketing, empreendedorismo, desenvolvimento de negócios e eventos, Vanessa alia visão comercial, gestão de relações e capacidade de organização e execução na condução de mandatos, desenvolvimento de parcerias e coordenação de projectos."
+      },
+      "mikail-da-silva": {
+        "role": "Gestor Financeiro"
+      },
+      "desiane-katar": {
+        "role": "Secretária Administrativa"
+      },
+      "leticia-de-sousa": {
+        "role": "Coordenadora Administrativa"
+      },
+      "arlina-cunje": {
+        "role": "Gestora de Informação e Conteúdos"
+      },
+      "joaquina-novela": {
+        "role": "Assistente de Marketing"
+      },
+      "ludmila-mero": {
+        "role": "Coordenadora de Projectos"
+      },
+      "eugenia-sive": {
+        "role": "Gestora de Projectos"
+      },
+      "benicio-moises": {
+        "role": "Designer Gráfico"
+      },
+      "rolando-neves": {
+        "role": "Designer Gráfico"
+      },
+      "francisco-maculuve": {
+        "role": "Designer Gráfico"
+      },
+      "clesio-singano": {
+        "role": "Coordenador de Programas"
+      }
+    },
+    "deckHint": "Arrastar · Scroll · Setas",
+    "bioClose": "Fechar",
+    "readMore": "Ler apresentação"
+  },
+  "events": {
+    "title": "Todos os eventos",
+    "subtitle": "Filtra por período. Cada evento abre o seu próprio universo — com tudo publicado disponível.",
+    "filters": {
+      "period": "Período",
+      "periodAll": "Qualquer data",
+      "periodUpcoming": "Próximos",
+      "periodPast": "Já realizados"
+    },
+    "empty": "Nenhum evento encontrado para os filtros seleccionados.",
+    "card": {
+      "viewDetails": "Ver detalhes"
+    },
+    "free": "Gratuito",
+    "soldOut": "Esgotado",
+    "offline": "Não foi possível ligar à plataforma de eventos (Pulse) — a mostrar conteúdo de demonstração.",
+    "shelfNearest": "Mais próximos"
+  },
+  "eventTabs": {
+    "details": "Detalhes",
+    "detailsEmpty": "Ainda não há uma descrição para este evento.",
+    "news": "Novidades",
+    "live": "Ao Vivo",
+    "program": "Programa",
+    "speakers": "Oradores",
+    "gallery": "Galeria",
+    "partners": "Parceiros",
+    "organizer": "Organizador",
+    "qa": "Perguntas",
+    "tickets": "Bilhetes",
+    "ageLimit": "+{count} anos",
+    "wheelchairAccess": "Acesso para cadeira de rodas",
+    "partnersEmpty": "Ainda não há parceiros anunciados para este evento.",
+    "partnersSectionEmpty": "Ainda não há parceiros nesta secção.",
+    "organizerEmpty": "Informação do organizador não disponível.",
+    "organizerLabel": "Organizado por",
+    "newsEmpty": "Ainda não há novidades para este evento.",
+    "newsFeatured": "Destaque",
+    "liveOffline": "A transmissão em directo ainda não começou.",
+    "liveOnAir": "No ar agora",
+    "liveScheduledFor": "Transmissão agendada para {date}",
+    "liveScheduledSoon": "Transmissão agendada em breve",
+    "liveWatchLink": "Abrir transmissão",
+    "liveExternalOnly": "Esta transmissão só pode ser vista no link acima.",
+    "programEmpty": "O programa será publicado em breve.",
+    "speakersEmpty": "Os painelistas serão anunciados em breve.",
+    "speakersOthers": "Outros painelistas",
+    "libraryEmpty": "Ainda não há materiais disponíveis.",
+    "libraryDownload": "Descarregar",
+    "libraryCodeTitle": "Tens um código de bilhete?",
+    "libraryCodeHint": "Alguns materiais são exclusivos para participantes inscritos.",
+    "libraryCodePlaceholder": "Código do bilhete",
+    "libraryCodeChecking": "A verificar…",
+    "libraryCodeUnlock": "Desbloquear",
+    "libraryCodeNoMaterials": "Não encontrámos materiais exclusivos para este código.",
+    "libraryLocked": "Estes materiais são exclusivos para participantes inscritos. Insere o código do teu bilhete acima para os desbloquear.",
+    "galleryEmpty": "O conteúdo será publicado após o evento.",
+    "galleryPhotos": "Fotos",
+    "galleryVideos": "Vídeos",
+    "galleryDocuments": "Documentos",
+    "qaTitle": "Perguntas ao painel",
+    "qaNamePlaceholder": "O seu nome",
+    "qaPlaceholder": "Escreva a sua pergunta…",
+    "qaSubmit": "Enviar pergunta",
+    "qaEmpty": "Seja o primeiro a perguntar.",
+    "qaSending": "A enviar…",
+    "qaSent": "Pergunta enviada! Vai aparecer aqui assim que for revista pela organização.",
+    "qaPanelLabel": "Painel / sessão (opcional)",
+    "qaPanelPlaceholder": "Nenhum painel específico",
+    "qaSpeakerLabel": "Painelista (opcional)",
+    "qaSpeakerPlaceholder": "Nenhum painelista específico",
+    "qaAnswerLabel": "Resposta",
+    "programDay": "Dia {n}",
+    "programToday": "Hoje",
+    "programSessions": "{count, plural, one {# sessão} other {# sessões}}",
+    "heroFree": "Entrar"
+  },
+  "panel": {
+    "back": "Voltar aos painéis",
+    "about": "Sobre este painel",
+    "speakers": "Painelistas",
+    "room": "Sala",
+    "details": "Detalhes",
+    "schedule": "Horário",
+    "section": "Secção"
+  },
+  "speakersDirectory": {
+    "searchPlaceholder": "Procurar orador pelo nome…",
+    "allSessions": "Todas as sessões",
+    "noResults": "Nenhum orador encontrado.",
+    "empty": "Ainda não há oradores confirmados para este evento."
+  },
+  "speakerProfile": {
+    "back": "Voltar aos oradores",
+    "sessions": "Participa em"
+  },
+  "tickets": {
+    "title": "Bilhetes",
+    "empty": "A venda de bilhetes ainda não está disponível.",
+    "reserve": "Reservar",
+    "reserving": "A reservar…",
+    "reserveError": "Não foi possível concluir a reserva. Tente novamente.",
+    "soldOut": "Esgotado",
+    "free": "Gratuito",
+    "area": {
+      "NORMAL": "Normal",
+      "VIP": "VIP"
+    },
+    "dates": "Datas a participar",
+    "contactTitle": "Os teus dados",
+    "firstName": "Nome",
+    "lastName": "Apelido",
+    "email": "Email",
+    "phoneNumber": "Telefone",
+    "continueToPayment": "Continuar para pagamento",
+    "continueToForm": "Continuar",
+    "formTitle": "Mais alguns dados",
+    "formFileUnsupported": "Este campo pede um ficheiro — não é possível anexá-lo aqui, o organizador entrará em contacto se for necessário.",
+    "paymentTitle": "Pagamento",
+    "paymentTotal": "Total a pagar: {total}",
+    "paymentExpired": "A tua reserva expirou.",
+    "startOver": "Recomeçar",
+    "paymentPhonePlaceholder": "Número para M-Pesa/e-Mola",
+    "paymentPhoneInvalid": "Número inválido para o método escolhido.",
+    "payNow": "Pagar agora",
+    "paying": "A processar pagamento…",
+    "payError": "Não foi possível concluir o pagamento. Tente novamente.",
+    "confirmedTitle": "Reserva confirmada",
+    "confirmedBody": "A tua reserva foi registada com sucesso.",
+    "confirmedBodyCount": "{count, plural, one {# bilhete confirmado. Vai receber o PDF por email.} other {# bilhetes confirmados. Vai receber os PDFs por email.}}",
+    "qrAlt": "Código QR do bilhete {count}",
+    "qrLabel": "Bilhete {count}",
+    "qrHint": "Guarda uma captura de ecrã ou mostra este código QR à entrada."
+  },
+  "contact": {
+    "eyebrow": "Fala connosco",
+    "title": "Vamos construir o próximo evento.",
+    "subtitle": "Tens um evento para organizar ou queres saber mais sobre a MediaCraft? Fala connosco.",
+    "form": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone (opcional)",
+      "subject": "Assunto",
+      "message": "Mensagem",
+      "submit": "Enviar mensagem",
+      "sending": "A enviar…",
+      "success": "Mensagem enviada com sucesso. Entraremos em contacto em breve.",
+      "error": "Não foi possível enviar a mensagem. Tente novamente."
+    },
+    "info": {
+      "title": "Informações de contacto",
+      "email": "E-mail",
+      "address": "Endereço",
+      "social": "Redes sociais"
+    }
+  },
+  "footer": {
+    "tagline": "Comunicação estratégica e eventos corporativos. Conteúdos que transformam presença em influência.",
+    "nav": "Navegação",
+    "platform": "Plataforma",
+    "microsite": "Micro-site de evento",
+    "pulse": "Pulse",
+    "company": "Empresa",
+    "contact": "Contacto",
+    "follow": "Siga-nos",
+    "rights": "Todos os direitos reservados.",
+    "developedBy": "Desenvolvido por"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "subtitle": "A página que procura não existe ou foi movida.",
+    "backHome": "Voltar ao início"
+  },
+  "common": {
+    "langSwitcher": "Idioma"
+  },
+  "rating": {
+    "title": "Avalia este evento",
+    "subtitle": "A tua opinião ajuda-nos a melhorar os próximos eventos.",
+    "stars": "estrelas",
+    "commentPlaceholder": "Queres dizer mais alguma coisa? (opcional)",
+    "submit": "Enviar avaliação",
+    "sending": "A enviar…",
+    "thanksTitle": "Obrigado!",
+    "thanksBody": "A tua avaliação foi registada.",
+    "error": "Não foi possível enviar. Tenta novamente.",
+    "close": "Fechar",
+    "respond": "Responder ao questionário",
+    "closeAndEnter": "Fechar e entrar no site"
+  },
+  "panelRating": {
+    "cta": "Avaliar este painel",
+    "title": "Avalia este painel",
+    "rated": "Painel avaliado"
+  },
+  "pulse": {
+    "demoBar": "DEMO · Simulação da consola Pulse para o website institucional MediaCraft",
+    "login": {
+      "title": "Entrar no Pulse",
+      "subtitle": "Autenticação via conta Pulse (Participante).",
+      "idLabel": "Email ou telefone",
+      "passwordLabel": "Palavra-passe",
+      "submit": "Entrar",
+      "guest": "Continuar como convidado",
+      "note": "Demonstração — o login real usa o fluxo de Participante do Pulse (JWT)."
+    },
+    "exit": "Sair",
+    "viewAs": "Ver como",
+    "roles": {
+      "admin": "Organizador",
+      "panelist": "Painelista",
+      "participant": "Participante",
+      "checkin": "Credenciação"
+    },
+    "nav": {
+      "dashboard": "Painel geral",
+      "events": "Eventos",
+      "create": "Criar evento",
+      "publications": "Publicações",
+      "communications": "Comunicações",
+      "qa": "Perguntas",
+      "live": "Direto & média",
+      "report": "Relatórios"
+    },
+    "source": {
+      "intro": "Origem dos dados:",
+      "pulse": "Pulse · dados reais",
+      "bff": "Website · interino"
+    },
+    "dashboard": {
+      "title": "Painel geral",
+      "subtitle": "Fórum de Diplomacia, Turismo & Investimento 2026 · a decorrer",
+      "kpiRegistered": "Inscritos totais",
+      "kpiCheckins": "Check-ins hoje",
+      "kpiQuestions": "Perguntas ao painel",
+      "kpiRevenue": "Receita de bilhetes",
+      "today": "hoje",
+      "attendance": "presença",
+      "pending": "pendentes",
+      "tickets": "bilhetes",
+      "chartTitle": "Inscrições por semana",
+      "chartSubtitle": "Últimas 7 semanas",
+      "activityTitle": "Atividade em tempo real",
+      "activitySubtitle": "Tudo comunica com o Pulse",
+      "sessionsTitle": "Sessões de hoje",
+      "sessionsSubtitle": "Estado em tempo real · atualiza automaticamente",
+      "thSession": "Sessão",
+      "thRoom": "Sala",
+      "thStatus": "Estado",
+      "thCheckin": "Check-in",
+      "onAir": "no ar",
+      "done": "Concluída",
+      "alertsTitle": "Lembretes de perguntas",
+      "alertsSubtitle": "Aviso sempre que entra uma pergunta nova",
+      "attendanceByDayTitle": "Presença por dia",
+      "attendanceByDaySubtitle": "Inscritos vs. presentes",
+      "present": "presentes",
+      "expected": "esperados",
+      "createCta": "Criar evento"
+    },
+    "events": {
+      "subtitle": "Todos os eventos, por categoria e visibilidade",
+      "thEvent": "Evento",
+      "thDate": "Data",
+      "thCategory": "Categoria",
+      "thVisibility": "Visibilidade",
+      "thRegistrations": "Inscritos",
+      "public": "Público",
+      "private": "Privado"
+    },
+    "create": {
+      "title": "Criar evento",
+      "subtitle": "Um formulário, um universo completo de evento",
+      "basicTitle": "Informação base",
+      "basicSubtitle": "O essencial do evento",
+      "nameLabel": "Nome do evento",
+      "categoryLabel": "Categoria",
+      "visibilityLabel": "Visibilidade",
+      "daysLabel": "Nº de dias",
+      "venueLabel": "Local",
+      "streamLabel": "Link Zoom / streaming",
+      "programTitle": "Programa",
+      "programSubtitle": "Carrega um ficheiro ou escreve à mão",
+      "uploadHint": "Arrasta o programa para aqui",
+      "or": "ou",
+      "writeManually": "Escrever programa manualmente",
+      "modulesLabel": "Módulos ativos neste evento",
+      "submit": "Criar evento"
+    },
+    "publications": {
+      "title": "Publicações",
+      "subtitle": "Publica conteúdo para cada fase do evento — visível para os participantes",
+      "phaseBefore": "Antes",
+      "phaseDuring": "Agora",
+      "phaseAfter": "Depois",
+      "note": "As fases (Antes / Agora / Depois) são para ti, organizador. O participante vê apenas o conteúdo publicado, unificado, sem separadores de fase.",
+      "newTitle": "Nova publicação",
+      "newSubtitle": "Notícia, foto, vídeo ou campanha",
+      "typeLabel": "Tipo",
+      "titleLabel": "Título",
+      "mediaHint": "Arrasta imagem ou vídeo",
+      "publishCta": "Publicar no evento",
+      "listTitle": "Já publicado",
+      "listSubtitle": "Aparece nas Novidades do micro-site"
+    },
+    "communications": {
+      "title": "Comunicações",
+      "subtitle": "Cartas, convites e envios por email",
+      "composeTitle": "Nova comunicação",
+      "composeSubtitle": "Personaliza com nome, cargo e organização",
+      "templateLabel": "Modelo",
+      "toLabel": "Destinatários",
+      "toAll": "Todos os inscritos",
+      "toDelegates": "Delegados",
+      "toCorporate": "Corporativos",
+      "subjectLabel": "Assunto",
+      "messageLabel": "Mensagem",
+      "variablesLabel": "Variáveis disponíveis",
+      "sendCta": "Enviar por email",
+      "historyTitle": "Envios recentes",
+      "historySubtitle": "Estado das campanhas",
+      "thType": "Tipo",
+      "thRecipients": "Destinatários",
+      "thStatus": "Estado",
+      "sent": "Enviado",
+      "scheduled": "Agendado"
+    },
+    "qa": {
+      "title": "Perguntas — visão da organização",
+      "subtitle": "Métricas por painel, sem ler as conversas privadas",
+      "privacyNote": "Como organizador vês quantas perguntas houve e quantas foram respondidas — nunca o conteúdo das conversas privadas entre participante e painelista.",
+      "thPanel": "Painel",
+      "thPanelist": "Painelista",
+      "thQuestions": "Perguntas",
+      "thAnswered": "Respondidas",
+      "thStatus": "Estado",
+      "active": "Ativo"
+    },
+    "live": {
+      "title": "Direto & média",
+      "subtitle": "Publica no próprio dia — reflecte no site na hora",
+      "mediaTitle": "Fotos & vídeo ao vivo",
+      "mediaSubtitle": "Sobe imagens durante o evento; aparecem na galeria imediatamente",
+      "dropHint": "Arrasta fotos ou vídeos",
+      "dropSubtitle": "A equipa de imagem publica direto",
+      "linkTitle": "Link ao vivo",
+      "linkSubtitle": "Cola o link; muda quando precisares",
+      "updateCta": "Atualizar link ao vivo",
+      "reflectNote": "O que atualizas aqui reflecte-se instantaneamente no micro-site."
+    },
+    "report": {
+      "title": "Relatório final",
+      "subtitle": "Fórum de Diplomacia 2026 · depois do evento",
+      "exportCta": "Exportar CSV",
+      "attendeesLabel": "Participantes únicos",
+      "attendanceRateLabel": "Taxa de presença",
+      "questionsLabel": "Perguntas trocadas",
+      "ratingLabel": "Avaliação média",
+      "attendanceTitle": "Presença por dia",
+      "attendanceSubtitle": "Apurado por check-in de QR",
+      "note": "Apura presenças reais via QR, downloads da biblioteca e avaliação das sessões — sem expor conversas privadas."
+    },
+    "panelist": {
+      "subtitle": "Painelista · Diplomacia Económica em África",
+      "kSessions": "As minhas sessões",
+      "kQuestions": "Perguntas recebidas",
+      "kRating": "Avaliação média",
+      "kAttendees": "Presentes na sessão",
+      "topRated": "entre as mais avaliadas",
+      "conversationsTitle": "Conversas",
+      "conversationsSubtitle": "As tuas conversas com participantes · a mais recente no topo",
+      "questionsTitle": "Perguntas para mim",
+      "questionsSubtitle": "Dirigidas a ti pelos participantes",
+      "reply": "Responder",
+      "materialsTitle": "Material adicional",
+      "materialsSubtitle": "Anexa o que não entregaste à organização",
+      "uploadCta": "Anexar documento ou slides",
+      "ratingTitle": "O meu feedback",
+      "clarity": "Clareza",
+      "relevance": "Relevância",
+      "pending": "Pendente"
+    },
+    "participant": {
+      "title": "Os meus eventos",
+      "subtitle": "Participante",
+      "downloadCta": "Descarregar lista de eventos",
+      "ticketTitle": "O meu bilhete",
+      "ticketCaption": "Bilhete #MC-2026-0847 · válido para 2 dias",
+      "downloadQr": "Descarregar QR do bilhete",
+      "upcomingTitle": "Eventos que se aproximam",
+      "upcomingSubtitle": "Inscreve-te nos próximos",
+      "panelistsTitle": "Painelistas — conversar & classificar",
+      "panelistsSubtitle": "Após o check-in por QR, fala com cada painelista e avalia a sessão",
+      "register": "Inscrever",
+      "talk": "Conversar"
+    },
+    "checkin": {
+      "title": "Credenciação por QR",
+      "subtitle": "Aponta a câmara ao QR do participante",
+      "scanning": "A ler QR Code…",
+      "download": "Descarregar este QR",
+      "confirmed": "Check-in confirmado",
+      "corporate": "Corporativo",
+      "statsTitle": "Presenças de hoje",
+      "statsSubtitle": "Dia 1 · atualiza a cada leitura",
+      "total": "Total presente",
+      "lastHour": "Última hora",
+      "corporates": "Corporativos",
+      "noShow": "Inscritos ausentes"
+    },
+    "chat": {
+      "placeholder": "Escreve a tua mensagem…",
+      "note": "Conversa privada. A organização não vê o conteúdo.",
+      "end": "Encerrar",
+      "ended": "Conversa encerrada. Ninguém pode enviar mais mensagens.",
+      "talk": "Conversar"
+    }
+  },
+  "novidades": {
+    "title": "Novidades",
+    "subtitle": "As últimas notícias e atualizações da MediaCraft.",
+    "empty": "Ainda não há novidades publicadas.",
+    "backToList": "Novidades",
+    "viewEvent": "Ver evento",
+    "gallery": "Galeria",
+    "share": "Partilhar"
+  }
+}

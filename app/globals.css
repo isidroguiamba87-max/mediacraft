@@ -1,0 +1,459 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+@import "../styles/tokens.css";
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--brand-red);
+  color: var(--paper);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* Partner logo marquee (components/ui/Marquee.tsx) */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  /* Was 32s — with ~22 logos that worked out to each one blurring past in
+   * ~2-3s on a phone-width viewport. Slower reads as a calm drift instead. */
+  animation: marquee 70s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Showcase (app/[locale]/showcase) — slow ambient spotlight drift */
+@keyframes spotlight-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.08);
+  }
+}
+
+.spotlight-drift {
+  animation: spotlight-drift 18s ease-in-out infinite;
+}
+
+/* Showcase — gentle idle bob for the pillar figure / artwork */
+@keyframes pillar-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.pillar-float {
+  animation: pillar-float 6s ease-in-out infinite;
+}
+
+/* Showcase — subtle premium film grain overlay */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Showcase — CSS entrance reveals (hydration-safe, honour reduced motion) */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-mask {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.reveal-up {
+  animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal-mask {
+  display: inline-block;
+  animation: reveal-mask 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Showcase — Services orbit: ring / spoke / node swing */
+.orbit-anim {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Showcase — Services orbit: a wheel of areas turning behind the MediaCraft
+   mark, auto-advancing on a timer (no scroll-driving). Below `lg` the wheel
+   never reads well no matter how it's cropped, so it's back to `lg`-only;
+   under that (and under reduced-motion, at any width) it's the plain
+   stacked list instead — logo, then each theme's title/info followed by
+   its photo. */
+.orbit-section {
+  position: relative;
+}
+.orbit-hub {
+  display: none;
+  --wheel-cx: clamp(190px, 23vw, 360px);
+  --wheel-cy: 54%;
+  --wheel-r: clamp(148px, 18vw, 196px);
+}
+.orbit-list {
+  display: block;
+}
+@media (min-width: 1024px) {
+  .orbit-section {
+    min-height: 92vh;
+  }
+  .orbit-hub {
+    display: block;
+  }
+  .orbit-list {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-section {
+    min-height: 0;
+  }
+  .orbit-hub {
+    display: none;
+  }
+  .orbit-list {
+    display: block;
+  }
+}
+
+.orbit-wheel {
+  --rot: 0deg;
+}
+.orbit-node {
+  position: absolute;
+  left: var(--wheel-cx);
+  top: var(--wheel-cy, 50%);
+  transform: translate(-50%, -50%)
+    rotate(calc(var(--phi) + var(--rot)))
+    translateX(var(--wheel-r))
+    rotate(calc(-1 * (var(--phi) + var(--rot))));
+  transition: transform 0.9s cubic-bezier(0.5, 0, 0.15, 1);
+  will-change: transform;
+}
+.orbit-node-inner {
+  transform: translate(-50%, -50%) scale(0.88);
+  opacity: 0.5;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s ease,
+    border-color 0.5s ease,
+    box-shadow 0.5s ease;
+}
+.orbit-node.is-active .orbit-node-inner {
+  transform: translate(-50%, -50%) scale(1.08);
+  opacity: 1;
+  border-color: var(--brand-red);
+  box-shadow: 0 14px 34px rgba(191, 38, 46, 0.3);
+}
+.orbit-spoke {
+  position: absolute;
+  left: var(--wheel-cx);
+  top: var(--wheel-cy, 50%);
+  height: 1px;
+  width: var(--wheel-r);
+  background: rgba(0, 27, 50, 0.14);
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--phi) + var(--rot)));
+  transition:
+    transform 0.9s cubic-bezier(0.5, 0, 0.15, 1),
+    background-color 0.5s ease,
+    height 0.5s ease;
+}
+.orbit-spoke.is-active {
+  height: 2px;
+  background: var(--brand-red);
+}
+
+/* centre mark: hidden → revealed (`.is-armed`) → ignited (`.is-lit`) */
+.orbit-logo {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+  transition:
+    opacity 0.7s ease,
+    transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.orbit-logo.is-armed {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Showcase — the ScrollThread current terminates at the orbit's centre mark
+   and lights it up (`.is-lit` toggled from components/showcase/ScrollThread.tsx) */
+@keyframes thread-star-ping {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes thread-star-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.thread-star {
+  transition:
+    box-shadow 0.6s ease,
+    border-color 0.6s ease;
+}
+
+.thread-star-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 2px solid var(--brand-red);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.thread-star-core,
+.thread-star-spark {
+  transition:
+    box-shadow 0.5s ease,
+    transform 0.5s ease;
+}
+
+.thread-star.is-lit {
+  border-color: rgba(191, 38, 46, 0.6);
+  box-shadow:
+    0 0 0 4px rgba(191, 38, 46, 0.14),
+    0 0 44px 8px rgba(191, 38, 46, 0.4),
+    0 18px 44px rgba(0, 27, 50, 0.14);
+}
+
+.thread-star.is-lit .thread-star-ring {
+  animation: thread-star-ping 1.8s ease-out infinite;
+}
+
+.thread-star.is-lit .thread-star-spark {
+  box-shadow: 0 0 22px 4px rgba(191, 38, 46, 0.75);
+  animation: thread-star-breathe 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-anim,
+  .orbit-node,
+  .orbit-spoke,
+  .orbit-logo {
+    transition: none;
+  }
+
+  .spotlight-drift {
+    animation: none;
+  }
+
+  .reveal-up,
+  .reveal-mask,
+  .pillar-float {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1;
+  }
+
+  .thread-star.is-lit .thread-star-ring {
+    animation: none;
+  }
+
+  .thread-star.is-lit .thread-star-spark {
+    animation: none;
+  }
+}
+
+/* Events — every event card/spine renders as a book: a spine on the left, a
+   sliver of page-edges on the right, and hovering tilts the cover open on
+   that spine (used by EventCard and the compact EventBook shelf item). */
+.book-wrap {
+  position: relative;
+  perspective: 1400px;
+}
+.book-cover {
+  position: relative;
+  transform-origin: 0% 50%;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease;
+}
+.book-wrap:hover .book-cover,
+.book-wrap:focus-within .book-cover {
+  transform: rotateY(-9deg) translateX(2px);
+}
+.book-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9px;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.32),
+    rgba(255, 255, 255, 0.12) 45%,
+    transparent
+  );
+}
+.book-pages {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -4px;
+  width: 7px;
+  border-radius: 0 4px 4px 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    #efe8d8 0px,
+    #efe8d8 2px,
+    #d9d0ba 2px,
+    #d9d0ba 3px
+  );
+  box-shadow: 1px 0 2px rgba(0, 27, 50, 0.14);
+  transition:
+    right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.45s ease;
+}
+.book-wrap:hover .book-pages,
+.book-wrap:focus-within .book-pages {
+  right: -8px;
+  width: 10px;
+}
+.book-shadow {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -8px;
+  height: 10px;
+  background: radial-gradient(
+    closest-side,
+    rgba(0, 27, 50, 0.32),
+    transparent 72%
+  );
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+}
+.book-wrap:hover .book-shadow,
+.book-wrap:focus-within .book-shadow {
+  transform: scaleX(1.1);
+  opacity: 0.85;
+}
+/* a turned-up page corner, bottom-right */
+.book-fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 26px;
+  height: 26px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(135deg, transparent 46%, rgba(255, 255, 255, 0.9) 47%);
+  opacity: 0.5;
+  pointer-events: none;
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+.book-wrap:hover .book-fold,
+.book-wrap:focus-within .book-fold {
+  width: 34px;
+  height: 34px;
+  opacity: 0.9;
+}
+
+/* the shelf ledge under each row of the bookshelf (/eventos) */
+.shelf-plank {
+  height: 10px;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 27, 50, 0.06),
+    rgba(0, 27, 50, 0.18)
+  );
+  box-shadow: 0 16px 22px -6px rgba(0, 27, 50, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-cover,
+  .book-pages,
+  .book-shadow,
+  .book-fold {
+    transition: none;
+  }
+}
+
+/* About — team spotlight deck (TeamDeck). Light gray ground, matching
+ * --paper-2 used elsewhere on the site (2026-10-26: swapped from the
+ * original warm beige for consistency — "peço para mudar essa imagem de
+ * fundo" / "cor lisa... paper-2"). */
+.team-deck {
+  background: var(--paper-2);
+}
