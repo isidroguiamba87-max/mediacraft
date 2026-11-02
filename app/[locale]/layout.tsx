@@ -61,8 +61,15 @@ export default async function LocaleLayout({
           <PulseLauncher>
             <Header />
             <main className="flex-1">{children}</main>
-            <MobileBottomNav />
             <ConditionalFooter />
+            {/* After the footer, not before: MobileBottomNav's own spacer
+             * div reserves room for its fixed bar right where it sits in
+             * the flow — before the footer, that space landed between
+             * </main> and the footer instead of after it, so the footer's
+             * last line rendered straight under the fixed bar and got
+             * clipped (2026-11-03). The bar itself is `fixed`, so its own
+             * on-screen position doesn't depend on this DOM order. */}
+            <MobileBottomNav />
           </PulseLauncher>
         </NextIntlClientProvider>
       </body>
