@@ -27,6 +27,16 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     redirect("/admin/login");
   }
 
+  // Account has a verified TOTP factor but this session only cleared the
+  // password step — send it to the second-factor challenge instead of
+  // granting access. (Accounts with no factor enrolled never hit this:
+  // Supabase only ever asks for aal2 once one exists — see
+  // app/admin/seguranca.)
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal && aal.nextLevel === "aal2" && aal.currentLevel !== aal.nextLevel) {
+    redirect("/admin/mfa");
+  }
+
   return (
     <div className="flex min-h-full">
       <AdminSidebar />

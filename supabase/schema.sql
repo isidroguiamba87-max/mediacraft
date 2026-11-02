@@ -26,13 +26,31 @@
 -- Supabase Auth dashboard. The simplest definition consistent with that is
 -- "any authenticated user is an admin". Tighten this (e.g. check email
 -- domain against @mediacraft.co.mz) if the real project enforced more.
+--
+-- 2026-11-02: also requires aal2 (the second factor) for any account that
+-- has a *verified* TOTP factor enrolled (see app/admin/seguranca) — an
+-- account with no factor enrolled is unaffected, so this is safe to run
+-- even for existing admins who haven't opted in yet. Without this, the
+-- app-level redirect to /admin/mfa (see (protected)/layout.tsx) is only a
+-- UI gate: the aal1 session Supabase issues right after the password step
+-- is already a technically-valid token, so anything calling the Supabase
+-- API directly (bypassing the UI) would otherwise skip the second factor
+-- entirely. This is the official pattern from Supabase's own MFA docs.
+-- Run this in the Supabase SQL Editor against the live project — it is
+-- NOT applied automatically by this file being in the repo.
 -- ============================================================================
 create or replace function is_admin()
 returns boolean
 language sql
 stable
 as $$
-  select auth.uid() is not null;
+  select
+    auth.uid() is not null
+    and array[(select auth.jwt() ->> 'aal')] <@ (
+      select case when count(id) > 0 then array['aal2'] else array['aal1', 'aal2'] end
+      from auth.mfa_factors
+      where auth.mfa_factors.user_id = auth.uid() and status = 'verified'
+    );
 $$;
 
 -- ============================================================================

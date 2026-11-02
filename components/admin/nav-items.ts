@@ -7,6 +7,7 @@ import {
   MessageCircleQuestion,
   Database,
   Palette,
+  ShieldCheck,
 } from "lucide-react";
 
 /** Shared between AdminSidebar (desktop) and the mobile nav in AdminHeader
@@ -27,4 +28,5 @@ export const ADMIN_NAV_ITEMS = [
   { href: "/admin/networking", label: "Networking", icon: Handshake },
   { href: "/admin/eventos", label: "Visual do Evento", icon: Palette },
   { href: "/admin/pulse", label: "Dados do Pulse", icon: Database },
+  { href: "/admin/seguranca", label: "Segurança", icon: ShieldCheck },
 ] as const;
