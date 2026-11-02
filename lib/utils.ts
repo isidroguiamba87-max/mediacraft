@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 /** Merge class names, resolving conflicting Tailwind utilities sanely. */
 export function cn(...inputs: ClassValue[]) {
@@ -35,7 +35,7 @@ export function stripHtml(html: string, maxLength = 160) {
   // Insert a space at block boundaries first, or adjacent blocks run
   // together with no separator (e.g. "...2026Feira Internacional...").
   const spaced = html.replace(/<\/(p|div|h[1-6]|li|br)>/gi, " ");
-  const text = DOMPurify.sanitize(spaced, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] })
+  const text = sanitizeHtml(spaced, { allowedTags: [], allowedAttributes: {} })
     .replace(/\s+/g, " ")
     .trim();
   return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;

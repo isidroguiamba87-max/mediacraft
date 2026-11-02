@@ -1,5 +1,13 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import { cn } from "@/lib/utils";
+
+const ALLOWED_TAGS = [
+  "h1", "h2", "h3", "h4", "h5", "h6",
+  "p", "div", "span", "br",
+  "ul", "ol", "li",
+  "a", "strong", "b", "em", "i", "u",
+  "img",
+];
 
 /**
  * Organizer-authored rich text (confirmed live 2026-09-16 against the
@@ -13,7 +21,10 @@ import { cn } from "@/lib/utils";
  * `Partnership.caption` — anywhere Pulse hands us organizer free text.
  */
 export function SafeHtml({ html, className }: { html: string; className?: string }) {
-  const clean = DOMPurify.sanitize(html);
+  const clean = sanitizeHtml(html, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"] },
+  });
   return (
     <div
       className={cn(
