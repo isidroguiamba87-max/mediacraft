@@ -14,6 +14,8 @@ import { NewsCoverImage } from "@/components/news/NewsCoverImage";
 import type { PulseEventDetail } from "@/lib/pulse/types";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 interface NewsDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -39,8 +41,9 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const item = await getPublishedNewsById(id);
   if (!item) notFound();
 
-  const [t, currentLocale, media, linkedEvent] = await Promise.all([
+  const [t, tNav, currentLocale, media, linkedEvent] = await Promise.all([
     getTranslations("novidades"),
+    getTranslations("nav"),
     getLocale(),
     getNewsMedia(item.id),
     item.eventId ? getEvent(item.eventId).then((r) => r.event) : Promise.resolve(null),
@@ -50,6 +53,12 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 lg:px-10">
+      <JsonLd
+        data={breadcrumbSchema(locale as Locale, [
+          { name: tNav("news"), path: "/novidades" },
+          { name: item.title, path: `/novidades/${id}` },
+        ])}
+      />
       <Link href="/novidades" className="inline-flex items-center gap-2 text-sm text-slate hover:text-ink">
         <ArrowLeft size={15} />
         {t("backToList")}

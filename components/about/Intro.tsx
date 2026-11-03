@@ -26,7 +26,7 @@ export function Intro() {
       <span aria-hidden className="absolute inset-0 bg-brand-navy/70" />
 
       <div className="relative mx-auto max-w-3xl">
-        <h2 className="font-display text-3xl leading-tight text-white sm:text-4xl">{t("title")}</h2>
+        <h1 className="font-display text-3xl leading-tight text-white sm:text-4xl">{t("title")}</h1>
         <p className="mx-auto mt-8 max-w-3xl text-base text-white/85 sm:text-lg">{t("intro")}</p>
       </div>
     </section>

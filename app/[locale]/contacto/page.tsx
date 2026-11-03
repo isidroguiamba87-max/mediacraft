@@ -4,6 +4,8 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export async function generateMetadata({
   params,
@@ -27,10 +29,11 @@ export default async function ContactPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("contact");
+  const [t, tNav] = await Promise.all([getTranslations("contact"), getTranslations("nav")]);
 
   return (
     <div className="mx-auto max-w-container px-6 py-16 lg:px-10">
+      <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("contact"), path: "/contacto" }])} />
       <div className="max-w-2xl">
         <p className="mb-3 text-xs font-semibold tracking-[0.14em] text-brand-red uppercase">
           {t("eyebrow")}

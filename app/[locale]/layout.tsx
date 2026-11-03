@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/config/i18n";
 import { siteConfig } from "@/config/site.config";
 import { defaultRobots } from "@/lib/seo";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/layout/Header";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
@@ -60,6 +62,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className="h-full">
       <body className="flex min-h-full flex-col">
+        <JsonLd data={organizationSchema()} />
+        <JsonLd data={websiteSchema(locale as Locale)} />
         <NextIntlClientProvider messages={messages}>
           <PulseLauncher>
             <Header />

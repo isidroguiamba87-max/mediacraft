@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getEvent } from "@/lib/pulse/endpoints";
 import { getActiveRatingForm, getEventOverride } from "@/lib/bff";
 import { buildSpeakerDirectory } from "@/lib/pulse/panels";
 import { stripHtml, darkenHex, isEventFree } from "@/lib/utils";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema, eventSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { EventShell, type EventSectionDef } from "@/components/events/EventShell";
 import { EVENT_TAB_DISPLAY_ORDER, EVENT_TAB_KEYS, type EventTabKey } from "@/lib/events/tabs";
 import { RatingPopup } from "@/components/events/RatingPopup";
@@ -45,9 +47,10 @@ export default async function EventPage({ params, searchParams }: EventPageProps
   const { event } = await getEvent(eventId);
   if (!event) notFound();
 
-  const [ratingForm, override] = await Promise.all([
+  const [ratingForm, override, tNav] = await Promise.all([
     getActiveRatingForm(event.id),
     getEventOverride(event.id),
+    getTranslations({ locale, namespace: "nav" }),
   ]);
 
   // Sections that only make sense with real data behind them stay hidden
@@ -123,6 +126,13 @@ export default async function EventPage({ params, searchParams }: EventPageProps
 
   return (
     <div style={accentStyle}>
+      <JsonLd
+        data={breadcrumbSchema(locale as Locale, [
+          { name: tNav("events"), path: "/eventos" },
+          { name: event.title, path: `/eventos/${eventId}` },
+        ])}
+      />
+      <JsonLd data={eventSchema(event, eventId, locale as Locale, stripHtml(event.details, 500))} />
       {ratingForm && <RatingPopup eventId={event.id} form={ratingForm} coverUrl={displayEvent.coverUrl} />}
       <EventShell event={displayEvent} sections={sections} initialKey={initialKey} />
     </div>

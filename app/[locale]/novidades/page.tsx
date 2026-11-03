@@ -5,6 +5,8 @@ import { getPublicEvents } from "@/lib/pulse/endpoints";
 import { NewsCard } from "@/components/news/NewsCard";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export async function generateMetadata({
   params,
@@ -29,12 +31,13 @@ export default async function NewsListPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("novidades");
+  const [t, tNav] = await Promise.all([getTranslations("novidades"), getTranslations("nav")]);
   const [news, { events }] = await Promise.all([getPublishedNews(), getPublicEvents({ status: "all" })]);
   const eventTitle = new Map(events.map((e) => [e.id, e.title]));
 
   return (
     <div className="mx-auto max-w-container px-6 py-16 lg:px-10">
+      <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("news"), path: "/novidades" }])} />
       <div className="max-w-2xl">
         <h1 className="font-display text-4xl text-brand-navy">{t("title")}</h1>
         <p className="mt-4 text-base text-slate">{t("subtitle")}</p>

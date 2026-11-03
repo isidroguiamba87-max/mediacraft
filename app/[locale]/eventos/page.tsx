@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPublicEvents } from "@/lib/pulse/endpoints";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { EventBook } from "@/components/events/EventBook";
 import { EventFilters } from "@/components/events/EventFilters";
 import { earliestScheduleDate } from "@/lib/utils";
@@ -65,13 +67,14 @@ export default async function EventsPage({ params, searchParams }: EventsPagePro
   const { period } = await searchParams;
   setRequestLocale(locale);
 
-  const t = await getTranslations("events");
+  const [t, tNav] = await Promise.all([getTranslations("events"), getTranslations("nav")]);
   const { events, usedFallback } = await getPublicEvents({
     status: period === "upcoming" || period === "past" ? period : undefined,
   });
 
   return (
     <div className="mx-auto max-w-container px-6 py-16 lg:px-10">
+      <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("events"), path: "/eventos" }])} />
       <div className="max-w-2xl">
         <h1 className="font-display text-4xl text-brand-navy">{t("title")}</h1>
         <p className="mt-4 text-base text-slate">{t("subtitle")}</p>
