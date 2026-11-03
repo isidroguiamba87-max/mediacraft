@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import withBundleAnalyzerInit from "@next/bundle-analyzer";
 
 const withNextIntl = createNextIntlPlugin("./config/request.ts");
+// Opt-in only (`ANALYZE=true npm run build`) — writes .next/analyze/*.html
+// instead of changing anything about a normal build.
+const withBundleAnalyzer = withBundleAnalyzerInit({ enabled: process.env.ANALYZE === "true" });
 
 const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
@@ -40,4 +44,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

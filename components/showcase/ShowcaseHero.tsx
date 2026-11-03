@@ -235,6 +235,7 @@ export function ShowcaseHero() {
             ref={videoRef}
             muted
             playsInline
+            preload="auto"
             onTimeUpdate={(e) => {
               const v = e.currentTarget;
               if (videoPhase === "playing" && v.duration && v.currentTime >= v.duration - INTRO_FADE_SECONDS) {
