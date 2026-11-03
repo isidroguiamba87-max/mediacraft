@@ -4,6 +4,8 @@ import { Intro } from "@/components/about/Intro";
 import { MissionVision } from "@/components/about/MissionVision";
 import { History } from "@/components/about/History";
 import { Team } from "@/components/about/Team";
+import type { Locale } from "@/config/i18n";
+import { buildMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -12,7 +14,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.about" });
-  return { title: t("title"), description: t("description") };
+  return buildMetadata({
+    locale: locale as Locale,
+    path: "/sobre",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function AboutPage({

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/config/i18n";
 import { siteConfig } from "@/config/site.config";
+import { defaultRobots } from "@/lib/seo";
 import { Header } from "@/components/layout/Header";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
@@ -13,6 +14,10 @@ import "../globals.css";
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+export const viewport: Viewport = {
+  themeColor: "#001B32",
+};
 
 export async function generateMetadata({
   params,
@@ -26,14 +31,12 @@ export async function generateMetadata({
     metadataBase: new URL(siteConfig.url),
     title: { default: siteConfig.name, template: `%s · ${siteConfig.name}` },
     keywords: t("keywords"),
-    alternates: {
-      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])),
-    },
-    openGraph: {
-      siteName: siteConfig.name,
-      locale,
-      type: "website",
-    },
+    // Deliberately no `alternates`/`openGraph` here — every page under this
+    // layout sets its own via lib/seo.ts's buildMetadata, with its real
+    // path, not just the locale root. A value set here would apply to
+    // every page that doesn't override it, which used to be the bug:
+    // every page advertised the homepage as its hreflang alternate.
+    robots: defaultRobots(),
   };
 }
 

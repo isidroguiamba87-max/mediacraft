@@ -1,0 +1,35 @@
+# MediaCraft Mozambique
+
+> A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e organização de eventos corporativos temáticos, com visão global e raízes locais.
+
+Site institucional, trilingue (Português — idioma por omissão, Inglês, Francês). Todas as páginas existem nas três línguas sob os prefixos `/pt`, `/en` e `/fr`.
+
+## Serviços
+
+- Comunicação Estratégica & Institucional — posicionamento institucional, comunicação corporativa e do sector público, gestão de marca e reputação, relacionamento com stakeholders.
+- Implementação de Projectos & Programas — concepção, coordenação e execução de programas institucionais, de desenvolvimento e multissetoriais.
+- Conteúdo, Media & Produção — concepção editorial, formatos televisivos, produção audiovisual, conteúdos estratégicos.
+- Conferências, Eventos & Plataformas de Diálogo — conferências executivas, fóruns empresariais, eventos institucionais, exposições.
+- Campanhas & Engajamento Público — campanhas de informação pública, envolvimento comunitário, mobilização e activação territorial.
+
+## Páginas principais
+
+- [Início](https://mediacraft.co.mz/pt): apresentação da empresa, serviços, números e eventos em destaque.
+- [Eventos](https://mediacraft.co.mz/pt/eventos): conferências, fóruns e eventos corporativos organizados ou geridos pela MediaCraft, com bilhética e programa.
+- [Novidades](https://mediacraft.co.mz/pt/novidades): notícias e actualizações da empresa.
+- [Sobre nós](https://mediacraft.co.mz/pt/sobre): missão, visão, valores, história e equipa.
+- [Contacto](https://mediacraft.co.mz/pt/contacto): formulário de contacto e dados da empresa.
+
+## Contacto
+
+- E-mail: info@mediacraft.co.mz
+- Morada: Av. da Marginal, Maputo, Moçambique
+- LinkedIn: https://www.linkedin.com/company/mediacraftmz
+- Instagram: https://www.instagram.com/mediacraftmz
+- Facebook: https://www.facebook.com/MediaCraftMz
+
+## Política de uso do conteúdo
+
+O conteúdo deste site pode ser citado e resumido com atribuição ("MediaCraft Mozambique", com link para mediacraft.co.mz). Não é autorizada a reprodução integral de artigos ou o uso do conteúdo para treinar modelos sem autorização prévia — contacte info@mediacraft.co.mz.
+
+Para o conteúdo institucional completo em texto corrido, ver [llms-full.txt](https://mediacraft.co.mz/llms-full.txt).

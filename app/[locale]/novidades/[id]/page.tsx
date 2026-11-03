@@ -12,19 +12,24 @@ import { SafeHtml } from "@/components/ui/SafeHtml";
 import { GalleryGrid } from "@/components/events/tabs/GalleryGrid";
 import { NewsCoverImage } from "@/components/news/NewsCoverImage";
 import type { PulseEventDetail } from "@/lib/pulse/types";
+import type { Locale } from "@/config/i18n";
+import { buildMetadata } from "@/lib/seo";
 
 interface NewsDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
 }
 
 export async function generateMetadata({ params }: NewsDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const item = await getPublishedNewsById(id);
-  if (!item) return {};
-  return {
+  if (!item) return buildMetadata({ locale: locale as Locale, path: `/novidades/${id}` });
+  return buildMetadata({
+    locale: locale as Locale,
+    path: `/novidades/${id}`,
     title: item.title,
     description: item.summary ?? (item.body ? stripHtml(item.body) : undefined),
-  };
+    image: item.coverUrl ?? undefined,
+  });
 }
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {

@@ -5,6 +5,8 @@ import { getEvent } from "@/lib/pulse/endpoints";
 import { getActiveRatingForm, getEventOverride } from "@/lib/bff";
 import { buildSpeakerDirectory } from "@/lib/pulse/panels";
 import { stripHtml, darkenHex, isEventFree } from "@/lib/utils";
+import type { Locale } from "@/config/i18n";
+import { buildMetadata } from "@/lib/seo";
 import { EventShell, type EventSectionDef } from "@/components/events/EventShell";
 import { EVENT_TAB_DISPLAY_ORDER, EVENT_TAB_KEYS, type EventTabKey } from "@/lib/events/tabs";
 import { RatingPopup } from "@/components/events/RatingPopup";
@@ -24,12 +26,15 @@ interface EventPageProps {
 }
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
-  const { eventId } = await params;
+  const { locale, eventId } = await params;
   const { event } = await getEvent(eventId);
-  return {
+  return buildMetadata({
+    locale: locale as Locale,
+    path: `/eventos/${eventId}`,
     title: event?.title,
     description: event?.details ? stripHtml(event.details) : undefined,
-  };
+    image: event?.coverUrl ?? undefined,
+  });
 }
 
 export default async function EventPage({ params, searchParams }: EventPageProps) {

@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { Link } from "@/config/i18n";
 import { buttonVariants } from "@/components/ui/Button";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 // Rendered for notFound() calls inside a locale (e.g. an unknown eventId).
 // Has access to the [locale] layout's messages, unlike the root

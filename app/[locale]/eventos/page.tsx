@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPublicEvents } from "@/lib/pulse/endpoints";
+import type { Locale } from "@/config/i18n";
+import { buildMetadata } from "@/lib/seo";
 import { EventBook } from "@/components/events/EventBook";
 import { EventFilters } from "@/components/events/EventFilters";
 import { earliestScheduleDate } from "@/lib/utils";
@@ -45,7 +47,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.events" });
-  return { title: t("title"), description: t("description") };
+  return buildMetadata({
+    locale: locale as Locale,
+    path: "/eventos",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 interface EventsPageProps {

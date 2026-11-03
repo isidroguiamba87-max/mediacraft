@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPublishedNews } from "@/lib/bff";
 import { getPublicEvents } from "@/lib/pulse/endpoints";
 import { NewsCard } from "@/components/news/NewsCard";
+import type { Locale } from "@/config/i18n";
+import { buildMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -11,7 +13,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.novidades" });
-  return { title: t("title"), description: t("description") };
+  return buildMetadata({
+    locale: locale as Locale,
+    path: "/novidades",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function NewsListPage({

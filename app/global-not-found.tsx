@@ -14,6 +14,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Página não encontrada · MediaCraft",
   description: "A página que procura não existe ou foi movida.",
+  robots: { index: false, follow: false },
 };
 
 export default function GlobalNotFound() {
