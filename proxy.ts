@@ -68,9 +68,19 @@ function buildCsp(nonce: string): string {
   return directives.join("; ");
 }
 
-function withNonce(request: NextRequest, nonce: string): NextRequest {
+const CSP_HEADER_NAME = "Content-Security-Policy-Report-Only";
+
+function withNonce(request: NextRequest, nonce: string, csp: string): NextRequest {
   const headers = new Headers(request.headers);
   headers.set("x-nonce", nonce);
+  // Next only auto-stamps its own <script> tags with the nonce when it can
+  // read a `nonce-<value>` CSP directive back out of the *request* headers
+  // during rendering — the x-nonce header alone isn't enough (confirmed
+  // live 2026-11-03: every inline script Next itself injects on
+  // /admin/login was missing the nonce until this was added). Setting it
+  // under the same Report-Only name used on the response, since that's
+  // the one Next is actually looking for right now.
+  headers.set(CSP_HEADER_NAME, csp);
   return new NextRequest(request, { headers });
 }
 
@@ -96,7 +106,8 @@ function withNonce(request: NextRequest, nonce: string): NextRequest {
  */
 export default async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const nonceRequest = withNonce(request, nonce);
+  const csp = buildCsp(nonce);
+  const nonceRequest = withNonce(request, nonce, csp);
 
   let response: NextResponse;
   if (request.nextUrl.pathname.startsWith("/admin")) {
@@ -107,7 +118,7 @@ export default async function proxy(request: NextRequest) {
     response = intlProxy(nonceRequest);
   }
 
-  response.headers.set("Content-Security-Policy-Report-Only", buildCsp(nonce));
+  response.headers.set(CSP_HEADER_NAME, csp);
   response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
