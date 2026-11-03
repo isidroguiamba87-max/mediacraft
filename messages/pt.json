@@ -20,6 +20,14 @@
       "title": "Contacto — MediaCraft",
       "description": "Fale com a equipa da MediaCraft. Escritório em Maputo, Moçambique."
     },
+    "privacyPolicy": {
+      "title": "Política de Privacidade — MediaCraft",
+      "description": "Como a MediaCraft Moçambique recolhe, usa e protege os teus dados pessoais."
+    },
+    "termsOfUse": {
+      "title": "Termos de Uso — MediaCraft",
+      "description": "Condições de utilização do website e dos serviços da MediaCraft Moçambique."
+    },
     "keywords": "Comunicação estratégica, MediaCraft, eventos corporativos, gestão de reputação, relações públicas, Moçambique"
   },
   "nav": {
@@ -422,7 +430,9 @@
     "follow": "Siga-nos",
     "rights": "Todos os direitos reservados.",
     "developedBy": "Desenvolvido com",
-    "by": "pela"
+    "by": "pela",
+    "privacyPolicy": "Política de Privacidade",
+    "termsOfUse": "Termos de Uso"
   },
   "notFound": {
     "title": "Página não encontrada",
@@ -689,5 +699,93 @@
     "viewEvent": "Ver evento",
     "gallery": "Galeria",
     "share": "Partilhar"
+  },
+  "cookieConsent": {
+    "message": "Usamos apenas cookies técnicos, essenciais ao funcionamento do site. Não usamos cookies de publicidade nem de rastreio sem o teu consentimento.",
+    "accept": "Aceitar",
+    "decline": "Apenas essenciais",
+    "learnMore": "Política de Privacidade"
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidade",
+    "updated": "Última actualização: novembro de 2026",
+    "intro": "Esta política explica que dados pessoais a MediaCraft Moçambique recolhe através do website mediacraft.co.mz, para que servem e como os protegemos.",
+    "sections": [
+      {
+        "title": "Quem somos",
+        "body": "Esta política aplica-se ao website mediacraft.co.mz, operado pela MediaCraft Mozambique, Av. da Marginal, Maputo, Moçambique. Para qualquer questão sobre os teus dados, contacta-nos em info@mediacraft.co.mz."
+      },
+      {
+        "title": "Que dados recolhemos",
+        "body": "Quando usas o formulário de contacto, recolhemos o teu nome, email, telefone (opcional) e a mensagem que escreves. Quando reservas um bilhete para um evento, os dados do formulário de inscrição (nome, email, telefone, género e data de nascimento, consoante o que o evento pedir) são enviados directamente à Pulse, a plataforma que gere os nossos eventos e bilhética — ver a secção seguinte. Se acederes ao nosso painel de administração como membro da equipa, a tua sessão fica associada ao teu email de administrador."
+      },
+      {
+        "title": "Com quem partilhamos dados",
+        "body": "A Pulse processa os dados de inscrição e bilhética dos eventos em nome da MediaCraft; consulta a política de privacidade da Pulse para saberes como ela trata esses dados. Os dados e conteúdos do site, incluindo o painel de administração, são alojados pela Supabase; o website em si corre na infraestrutura da Vercel. Nenhuma destas empresas usa os teus dados para fins próprios de publicidade. Nunca vendemos nem alugamos os teus dados a terceiros."
+      },
+      {
+        "title": "Cookies",
+        "body": "O site usa apenas cookies técnicos, necessários para funcionar — por exemplo, para manteres sessão iniciada no painel de administração (se fores membro da equipa) e para guardar a tua preferência de idioma. Não usamos cookies de publicidade nem de rastreio entre sites. Se no futuro adicionarmos ferramentas de analítica, só serão activadas depois do teu consentimento explícito."
+      },
+      {
+        "title": "Quanto tempo guardamos os dados",
+        "body": "As mensagens do formulário de contacto são guardadas apenas o tempo necessário para te respondermos. Os dados de bilhética ficam guardados segundo a política de retenção da Pulse. Os registos de acções no painel de administração (quem fez o quê e quando) são guardados para efeitos de segurança e auditoria."
+      },
+      {
+        "title": "Os teus direitos",
+        "body": "Nos termos da Lei de Protecção de Dados Pessoais de Moçambique e, sempre que aplicável, do Regulamento Geral de Protecção de Dados (RGPD), tens o direito de aceder, corrigir, eliminar ou pedir a portabilidade dos teus dados, bem como de te opores ao seu tratamento. Para exerceres qualquer um destes direitos, escreve-nos para info@mediacraft.co.mz."
+      },
+      {
+        "title": "Segurança",
+        "body": "Protegemos os dados com ligação encriptada (HTTPS) em todo o site, autenticação reforçada (verificação em duas etapas) para a equipa que acede ao painel de administração, e controlo de acesso que garante que cada conta só vê o que precisa de ver."
+      },
+      {
+        "title": "Alterações a esta política",
+        "body": "Podemos actualizar esta política sempre que necessário. A data da última actualização está sempre indicada no topo desta página."
+      }
+    ]
+  },
+  "termsOfUse": {
+    "title": "Termos de Uso",
+    "updated": "Última actualização: novembro de 2026",
+    "intro": "Estes Termos de Uso regem a utilização do website mediacraft.co.mz. Ao usares o site, aceitas estes termos.",
+    "sections": [
+      {
+        "title": "Aceitação dos termos",
+        "body": "Ao usares o website mediacraft.co.mz estás a aceitar estes Termos de Uso. Se não concordares, por favor não uses o site."
+      },
+      {
+        "title": "Quem somos",
+        "body": "O website é operado pela MediaCraft Mozambique, com sede em Maputo, Moçambique. Podes contactar-nos em info@mediacraft.co.mz."
+      },
+      {
+        "title": "Uso permitido",
+        "body": "Podes navegar no site, consultar informação sobre os nossos eventos e serviços, e usar o formulário de contacto. Não é permitido usar o site para fins ilegais, tentar aceder a áreas restritas sem autorização, ou interferir com o seu funcionamento normal."
+      },
+      {
+        "title": "Conteúdo e propriedade intelectual",
+        "body": "Os textos, imagens, vídeos e marca MediaCraft presentes neste site são propriedade da MediaCraft Mozambique ou usados com autorização, e não podem ser copiados ou reutilizados sem o nosso consentimento prévio."
+      },
+      {
+        "title": "Eventos e bilhética",
+        "body": "A inscrição e compra de bilhetes para eventos é processada pela Pulse, uma plataforma de gestão de eventos independente. Ao reservares um bilhete, estás também a aceitar os termos da Pulse para esse processo. A MediaCraft não se responsabiliza por falhas técnicas da plataforma Pulse."
+      },
+      {
+        "title": "Conta de administrador",
+        "body": "O painel de administração é de uso exclusivo da equipa da MediaCraft, protegido por autenticação e verificação em duas etapas. É proibido tentar aceder-lhe sem autorização."
+      },
+      {
+        "title": "Limitação de responsabilidade",
+        "body": "Fazemos os possíveis para manter o site correcto e disponível, mas não garantimos que esteja sempre livre de erros ou interrupções. A MediaCraft não se responsabiliza por danos resultantes do uso do site, dentro dos limites permitidos por lei."
+      },
+      {
+        "title": "Alterações a estes termos",
+        "body": "Podemos actualizar estes Termos de Uso sempre que necessário. A data da última actualização está sempre indicada no topo desta página."
+      },
+      {
+        "title": "Lei aplicável",
+        "body": "Estes Termos de Uso regem-se pela lei moçambicana."
+      }
+    ]
   }
 }

@@ -20,6 +20,14 @@
       "title": "Contact — MediaCraft",
       "description": "Get in touch with the MediaCraft team. Office in Maputo, Mozambique."
     },
+    "privacyPolicy": {
+      "title": "Privacy Policy — MediaCraft",
+      "description": "How MediaCraft Mozambique collects, uses and protects your personal data."
+    },
+    "termsOfUse": {
+      "title": "Terms of Use — MediaCraft",
+      "description": "Terms and conditions for using the MediaCraft Mozambique website and services."
+    },
     "keywords": "Strategic communication, MediaCraft, corporate events, reputation management, public relations, Mozambique"
   },
   "nav": {
@@ -422,7 +430,9 @@
     "follow": "Follow us",
     "rights": "All rights reserved.",
     "developedBy": "Developed with",
-    "by": "by"
+    "by": "by",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use"
   },
   "notFound": {
     "title": "Page not found",
@@ -689,5 +699,93 @@
     "viewEvent": "View event",
     "gallery": "Gallery",
     "share": "Share"
+  },
+  "cookieConsent": {
+    "message": "We only use technical cookies, essential for the site to work. We don't use advertising or tracking cookies without your consent.",
+    "accept": "Accept",
+    "decline": "Essential only",
+    "learnMore": "Privacy Policy"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: November 2026",
+    "intro": "This policy explains what personal data MediaCraft Mozambique collects through the mediacraft.co.mz website, what it's used for, and how we protect it.",
+    "sections": [
+      {
+        "title": "Who we are",
+        "body": "This policy applies to the mediacraft.co.mz website, operated by MediaCraft Mozambique, Av. da Marginal, Maputo, Mozambique. For any question about your data, contact us at info@mediacraft.co.mz."
+      },
+      {
+        "title": "What data we collect",
+        "body": "When you use the contact form, we collect your name, email, phone (optional) and the message you write. When you reserve a ticket for an event, the registration form data (name, email, phone, gender and date of birth, depending on what the event asks for) is sent directly to Pulse, the platform that manages our events and ticketing — see the next section. If you access our admin panel as a staff member, your session is tied to your admin email."
+      },
+      {
+        "title": "Who we share data with",
+        "body": "Pulse processes event registration and ticketing data on behalf of MediaCraft; see Pulse's own privacy policy for how it handles that data. The site's data and content, including the admin panel, are hosted by Supabase; the website itself runs on Vercel's infrastructure. None of these companies uses your data for their own advertising purposes. We never sell or rent your data to third parties."
+      },
+      {
+        "title": "Cookies",
+        "body": "The site only uses technical cookies that are necessary for it to work — for example, to keep you signed in to the admin panel (if you're a staff member) and to remember your language preference. We don't use advertising or cross-site tracking cookies. If we ever add analytics tools, they'll only be enabled after your explicit consent."
+      },
+      {
+        "title": "How long we keep data",
+        "body": "Contact form messages are kept only for as long as needed to reply to you. Ticketing data is kept according to Pulse's own retention policy. Admin panel action logs (who did what, and when) are kept for security and audit purposes."
+      },
+      {
+        "title": "Your rights",
+        "body": "Under Mozambique's Personal Data Protection Law and, where applicable, the General Data Protection Regulation (GDPR), you have the right to access, correct, delete or request portability of your data, and to object to its processing. To exercise any of these rights, write to us at info@mediacraft.co.mz."
+      },
+      {
+        "title": "Security",
+        "body": "We protect data with encrypted connections (HTTPS) across the whole site, strong authentication (two-factor verification) for staff accessing the admin panel, and access controls that make sure each account only sees what it needs to."
+      },
+      {
+        "title": "Changes to this policy",
+        "body": "We may update this policy whenever necessary. The date of the last update is always shown at the top of this page."
+      }
+    ]
+  },
+  "termsOfUse": {
+    "title": "Terms of Use",
+    "updated": "Last updated: November 2026",
+    "intro": "These Terms of Use govern your use of the mediacraft.co.mz website. By using the site, you agree to these terms.",
+    "sections": [
+      {
+        "title": "Acceptance of these terms",
+        "body": "By using the mediacraft.co.mz website, you're accepting these Terms of Use. If you don't agree, please don't use the site."
+      },
+      {
+        "title": "Who we are",
+        "body": "The website is operated by MediaCraft Mozambique, based in Maputo, Mozambique. You can contact us at info@mediacraft.co.mz."
+      },
+      {
+        "title": "Permitted use",
+        "body": "You may browse the site, view information about our events and services, and use the contact form. You may not use the site for unlawful purposes, attempt to access restricted areas without authorization, or interfere with its normal operation."
+      },
+      {
+        "title": "Content and intellectual property",
+        "body": "The text, images, videos and MediaCraft brand on this site are the property of MediaCraft Mozambique or used with permission, and may not be copied or reused without our prior consent."
+      },
+      {
+        "title": "Events and ticketing",
+        "body": "Event registration and ticket purchases are processed by Pulse, an independent event management platform. By reserving a ticket, you're also accepting Pulse's own terms for that process. MediaCraft is not responsible for technical failures of the Pulse platform."
+      },
+      {
+        "title": "Administrator account",
+        "body": "The admin panel is for the exclusive use of MediaCraft staff, protected by authentication and two-factor verification. Attempting to access it without authorization is prohibited."
+      },
+      {
+        "title": "Limitation of liability",
+        "body": "We do our best to keep the site accurate and available, but we don't guarantee it will always be free of errors or interruptions. MediaCraft isn't liable for damages resulting from use of the site, to the extent permitted by law."
+      },
+      {
+        "title": "Changes to these terms",
+        "body": "We may update these Terms of Use whenever necessary. The date of the last update is always shown at the top of this page."
+      },
+      {
+        "title": "Governing law",
+        "body": "These Terms of Use are governed by Mozambican law."
+      }
+    ]
   }
 }

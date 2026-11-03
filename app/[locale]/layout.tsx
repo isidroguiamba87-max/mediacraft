@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/layout/Header";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { CookieConsent } from "@/components/layout/CookieConsent";
 import { PulseLauncher } from "@/components/pulse/PulseLauncher";
 import "../globals.css";
 
@@ -77,6 +78,7 @@ export default async function LocaleLayout({
              * clipped (2026-11-03). The bar itself is `fixed`, so its own
              * on-screen position doesn't depend on this DOM order. */}
             <MobileBottomNav />
+            <CookieConsent />
           </PulseLauncher>
         </NextIntlClientProvider>
       </body>

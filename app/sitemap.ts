@@ -16,6 +16,8 @@ const staticPaths: StaticPath[] = [
   { path: "/novidades", changeFrequency: "daily", priority: 0.8 },
   { path: "/sobre", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contacto", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/politica-privacidade", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/termos-de-uso", changeFrequency: "yearly", priority: 0.2 },
 ];
 
 function entry(path: string, lastModified: Date, changeFrequency: StaticPath["changeFrequency"], priority: number): MetadataRoute.Sitemap[number] {

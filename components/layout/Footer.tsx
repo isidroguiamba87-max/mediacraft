@@ -152,6 +152,15 @@ export function Footer() {
           </p>
           <div aria-hidden className="hidden sm:block" />
         </div>
+
+        <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-xs text-white/50 sm:justify-start">
+          <Link href="/politica-privacidade" className="hover:text-white/80">
+            {t("privacyPolicy")}
+          </Link>
+          <Link href="/termos-de-uso" className="hover:text-white/80">
+            {t("termsOfUse")}
+          </Link>
+        </div>
       </div>
     </footer>
   );

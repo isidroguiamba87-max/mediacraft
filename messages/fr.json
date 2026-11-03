@@ -20,6 +20,14 @@
       "title": "Contact — MediaCraft",
       "description": "Contactez l'équipe MediaCraft. Bureau à Maputo, Mozambique."
     },
+    "privacyPolicy": {
+      "title": "Politique de Confidentialité — MediaCraft",
+      "description": "Comment MediaCraft Mozambique recueille, utilise et protège tes données personnelles."
+    },
+    "termsOfUse": {
+      "title": "Conditions d'Utilisation — MediaCraft",
+      "description": "Conditions d'utilisation du site et des services de MediaCraft Mozambique."
+    },
     "keywords": "Communication stratégique, MediaCraft, événements corporatifs, gestion de la réputation, relations publiques, Mozambique"
   },
   "nav": {
@@ -422,7 +430,9 @@
     "follow": "Suivez-nous",
     "rights": "Tous droits réservés.",
     "developedBy": "Développé avec",
-    "by": "par"
+    "by": "par",
+    "privacyPolicy": "Politique de Confidentialité",
+    "termsOfUse": "Conditions d'Utilisation"
   },
   "notFound": {
     "title": "Page non trouvée",
@@ -688,5 +698,93 @@
     "viewEvent": "Voir l'événement",
     "gallery": "Galerie",
     "share": "Partager"
+  },
+  "cookieConsent": {
+    "message": "Nous utilisons uniquement des cookies techniques, essentiels au fonctionnement du site. Nous n'utilisons pas de cookies publicitaires ni de suivi sans ton consentement.",
+    "accept": "Accepter",
+    "decline": "Essentiels uniquement",
+    "learnMore": "Politique de Confidentialité"
+  },
+  "privacyPolicy": {
+    "title": "Politique de Confidentialité",
+    "updated": "Dernière mise à jour : novembre 2026",
+    "intro": "Cette politique explique quelles données personnelles MediaCraft Mozambique recueille via le site mediacraft.co.mz, à quoi elles servent et comment nous les protégeons.",
+    "sections": [
+      {
+        "title": "Qui sommes-nous",
+        "body": "Cette politique s'applique au site mediacraft.co.mz, exploité par MediaCraft Mozambique, Av. da Marginal, Maputo, Mozambique. Pour toute question sur tes données, contacte-nous à info@mediacraft.co.mz."
+      },
+      {
+        "title": "Quelles données nous recueillons",
+        "body": "Lorsque tu utilises le formulaire de contact, nous recueillons ton nom, ton email, ton téléphone (facultatif) et le message que tu écris. Lorsque tu réserves un billet pour un événement, les données du formulaire d'inscription (nom, email, téléphone, genre et date de naissance, selon ce que l'événement demande) sont envoyées directement à Pulse, la plateforme qui gère nos événements et la billetterie — voir la section suivante. Si tu accèdes à notre panneau d'administration en tant que membre de l'équipe, ta session est associée à ton email d'administrateur."
+      },
+      {
+        "title": "Avec qui nous partageons les données",
+        "body": "Pulse traite les données d'inscription et de billetterie des événements pour le compte de MediaCraft ; consulte la politique de confidentialité de Pulse pour savoir comment elle traite ces données. Les données et contenus du site, y compris le panneau d'administration, sont hébergés par Supabase ; le site lui-même fonctionne sur l'infrastructure de Vercel. Aucune de ces entreprises n'utilise tes données à des fins publicitaires propres. Nous ne vendons ni ne louons jamais tes données à des tiers."
+      },
+      {
+        "title": "Cookies",
+        "body": "Le site n'utilise que des cookies techniques, nécessaires à son fonctionnement — par exemple pour maintenir ta session ouverte dans le panneau d'administration (si tu es membre de l'équipe) et pour mémoriser ta préférence de langue. Nous n'utilisons pas de cookies publicitaires ni de suivi entre sites. Si nous ajoutons un jour des outils d'analyse, ils ne seront activés qu'après ton consentement explicite."
+      },
+      {
+        "title": "Durée de conservation des données",
+        "body": "Les messages du formulaire de contact sont conservés uniquement le temps nécessaire pour te répondre. Les données de billetterie sont conservées selon la politique de rétention de Pulse. Les journaux d'actions du panneau d'administration (qui a fait quoi, et quand) sont conservés à des fins de sécurité et d'audit."
+      },
+      {
+        "title": "Tes droits",
+        "body": "En vertu de la loi mozambicaine de protection des données personnelles et, le cas échéant, du Règlement Général sur la Protection des Données (RGPD), tu as le droit d'accéder à tes données, de les corriger, de les supprimer ou d'en demander la portabilité, ainsi que de t'opposer à leur traitement. Pour exercer l'un de ces droits, écris-nous à info@mediacraft.co.mz."
+      },
+      {
+        "title": "Sécurité",
+        "body": "Nous protégeons les données avec une connexion chiffrée (HTTPS) sur l'ensemble du site, une authentification renforcée (vérification en deux étapes) pour l'équipe accédant au panneau d'administration, et un contrôle d'accès qui garantit que chaque compte ne voit que ce dont il a besoin."
+      },
+      {
+        "title": "Modifications de cette politique",
+        "body": "Nous pouvons mettre à jour cette politique chaque fois que nécessaire. La date de la dernière mise à jour est toujours indiquée en haut de cette page."
+      }
+    ]
+  },
+  "termsOfUse": {
+    "title": "Conditions d'Utilisation",
+    "updated": "Dernière mise à jour : novembre 2026",
+    "intro": "Ces Conditions d'Utilisation régissent ton utilisation du site mediacraft.co.mz. En utilisant le site, tu acceptes ces conditions.",
+    "sections": [
+      {
+        "title": "Acceptation des conditions",
+        "body": "En utilisant le site mediacraft.co.mz, tu acceptes ces Conditions d'Utilisation. Si tu n'es pas d'accord, merci de ne pas utiliser le site."
+      },
+      {
+        "title": "Qui sommes-nous",
+        "body": "Le site est exploité par MediaCraft Mozambique, basée à Maputo, Mozambique. Tu peux nous contacter à info@mediacraft.co.mz."
+      },
+      {
+        "title": "Utilisation autorisée",
+        "body": "Tu peux naviguer sur le site, consulter les informations sur nos événements et services, et utiliser le formulaire de contact. Il est interdit d'utiliser le site à des fins illégales, de tenter d'accéder à des zones restreintes sans autorisation, ou de perturber son fonctionnement normal."
+      },
+      {
+        "title": "Contenu et propriété intellectuelle",
+        "body": "Les textes, images, vidéos et la marque MediaCraft présents sur ce site sont la propriété de MediaCraft Mozambique ou utilisés avec autorisation, et ne peuvent être copiés ni réutilisés sans notre consentement préalable."
+      },
+      {
+        "title": "Événements et billetterie",
+        "body": "L'inscription et l'achat de billets pour les événements sont traités par Pulse, une plateforme de gestion d'événements indépendante. En réservant un billet, tu acceptes également les conditions de Pulse pour ce processus. MediaCraft n'est pas responsable des défaillances techniques de la plateforme Pulse."
+      },
+      {
+        "title": "Compte administrateur",
+        "body": "Le panneau d'administration est réservé à l'usage exclusif de l'équipe MediaCraft, protégé par authentification et vérification en deux étapes. Toute tentative d'y accéder sans autorisation est interdite."
+      },
+      {
+        "title": "Limitation de responsabilité",
+        "body": "Nous faisons de notre mieux pour que le site reste exact et disponible, mais nous ne garantissons pas qu'il soit toujours exempt d'erreurs ou d'interruptions. MediaCraft n'est pas responsable des dommages résultant de l'utilisation du site, dans les limites permises par la loi."
+      },
+      {
+        "title": "Modifications de ces conditions",
+        "body": "Nous pouvons mettre à jour ces Conditions d'Utilisation chaque fois que nécessaire. La date de la dernière mise à jour est toujours indiquée en haut de cette page."
+      },
+      {
+        "title": "Loi applicable",
+        "body": "Ces Conditions d'Utilisation sont régies par le droit mozambicain."
+      }
+    ]
   }
 }
