@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { CalendarDays, MapPin, Ticket, Users, Clock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { getEventPreviewAction, type EventPreview } from "@/app/admin/(protected)/novidades/actions";
+import { replaceFileField } from "@/lib/supabase/clientUpload";
 import type { AdminNewsItem, NewsStatus } from "@/lib/supabase/news";
 
 const inputClass =
@@ -61,7 +62,13 @@ export function NewsForm({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-      <form action={action} className="flex flex-col gap-5">
+      <form
+        action={async (formData) => {
+          await replaceFileField(formData, "cover");
+          action(formData);
+        }}
+        className="flex flex-col gap-5"
+      >
         <div>
           <label className={labelClass} htmlFor="eventId">
             Evento associado (opcional)

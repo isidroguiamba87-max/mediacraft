@@ -1,6 +1,5 @@
 import { createClient } from "./server";
-import { sanitizeFileName } from "@/lib/utils";
-import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
+import { finalizeImageUpload, finalizeVideoUpload } from "./mediaUpload";
 import { logAdminAction } from "./auditLog";
 
 export type GalleryMediaType = "image" | "video";
@@ -62,27 +61,25 @@ export interface GalleryImageInput {
   eventId: string;
   caption: string;
   dayOrSession: string;
-  file: File;
+  /** Temp Storage path from lib/supabase/clientUpload.ts's
+   * uploadToTempStorage — not the raw file (see finalizeImageUpload for
+   * why: a Vercel Function's request body is capped well below what a
+   * real photo needs). */
+  tempPath: string;
 }
 
 /** Uploads one image to Storage and creates its row — called once per
  * file for a multi-file upload, so one bad file never blocks the rest. */
 export async function addGalleryImage(input: GalleryImageInput): Promise<AdminGalleryItem> {
   const supabase = await createClient();
-  const processed = await processImageUpload(input.file);
-  const path = `gallery/${crypto.randomUUID()}.${processed.extension}`;
-  const { error: uploadError } = await supabase.storage
-    .from("media")
-    .upload(path, processed.buffer, { contentType: processed.contentType });
-  if (uploadError) throw uploadError;
-  const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
+  const publicUrl = await finalizeImageUpload(supabase, input.tempPath, "gallery");
 
   const { data, error } = await supabase
     .from("gallery_media")
     .insert({
       event_id: input.eventId,
       type: "image",
-      storage_url: urlData.publicUrl,
+      storage_url: publicUrl,
       caption: input.caption || null,
       day_or_session: input.dayOrSession || null,
       published: true,
@@ -99,21 +96,14 @@ export interface GalleryVideoInput {
   caption: string;
   dayOrSession: string;
   externalVideoUrl: string | null;
-  file: File | null;
+  /** Temp Storage path, or null when only `externalVideoUrl` was given
+   * — see GalleryImageInput.tempPath. */
+  tempPath: string | null;
 }
 
 export async function addGalleryVideo(input: GalleryVideoInput): Promise<AdminGalleryItem> {
   const supabase = await createClient();
-  let storageUrl: string | null = null;
-
-  if (input.file && input.file.size > 0) {
-    assertValidVideoUpload(input.file);
-    const path = `gallery/${crypto.randomUUID()}-${sanitizeFileName(input.file.name)}`;
-    const { error: uploadError } = await supabase.storage.from("media").upload(path, input.file);
-    if (uploadError) throw uploadError;
-    const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
-    storageUrl = urlData.publicUrl;
-  }
+  const storageUrl = input.tempPath ? await finalizeVideoUpload(supabase, input.tempPath, "gallery") : null;
 
   const { data, error } = await supabase
     .from("gallery_media")

@@ -9,6 +9,7 @@ import {
   saveEventOverrideAction,
   clearEventOverrideAction,
 } from "@/app/admin/(protected)/eventos/actions";
+import { replaceFileField } from "@/lib/supabase/clientUpload";
 import type { AdminEventOverride } from "@/lib/supabase/eventOverrides";
 
 const inputClass =
@@ -62,6 +63,7 @@ export function EventVisualForm({
     <form
       action={async (formData) => {
         try {
+          await replaceFileField(formData, "cover");
           await boundAction(formData);
           toast.success("Alterações guardadas com sucesso!");
         } catch {

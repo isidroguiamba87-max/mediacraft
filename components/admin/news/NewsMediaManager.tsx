@@ -11,6 +11,8 @@ import {
   addNewsVideoAction,
   deleteNewsMediaAction,
 } from "@/app/admin/(protected)/novidades/actions";
+import { replaceFileField, replaceFileFields } from "@/lib/supabase/clientUpload";
+import { assertValidVideoUpload } from "@/lib/uploadValidation";
 import type { AdminNewsMediaItem } from "@/lib/supabase/news";
 
 const inputClass =
@@ -116,6 +118,7 @@ export function NewsMediaManager({ newsId, media }: { newsId: string; media: Adm
             ref={imageFormRef}
             action={async (formData) => {
               try {
+                await replaceFileFields(formData, "files");
                 await addNewsImagesAction(newsId, formData);
                 imageFormRef.current?.reset();
                 setImagePickerKey((k) => k + 1);
@@ -145,6 +148,9 @@ export function NewsMediaManager({ newsId, media }: { newsId: string; media: Adm
             ref={videoFormRef}
             action={async (formData) => {
               try {
+                const file = formData.get("file");
+                if (file instanceof File && file.size > 0) assertValidVideoUpload(file);
+                await replaceFileField(formData, "file");
                 await addNewsVideoAction(newsId, formData);
                 videoFormRef.current?.reset();
                 toast.success("Vídeo adicionado com sucesso!");

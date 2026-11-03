@@ -78,9 +78,13 @@ function readNewsInput(formData: FormData): Omit<NewsInput, "coverUrl"> {
 }
 
 async function resolveCoverUrl(formData: FormData, existingUrl: string | null) {
-  const file = formData.get("cover") as File | null;
-  if (file && file.size > 0) {
-    return uploadNewsCover(file);
+  // Already uploaded straight to Storage client-side — see
+  // lib/supabase/clientUpload.ts and uploadNewsCover for why (a Vercel
+  // Function's own request body is capped well below what a real photo
+  // needs).
+  const tempPath = formData.get("cover");
+  if (typeof tempPath === "string" && tempPath.length > 0) {
+    return uploadNewsCover(tempPath);
   }
   // Checkbox: "remove the current cover and don't upload a new one".
   if (formData.get("removeCover") === "on") {
@@ -133,9 +137,9 @@ export async function deleteNewsAction(id: string) {
 
 export async function addNewsImagesAction(newsId: string, formData: FormData) {
   const caption = String(formData.get("caption") ?? "").trim();
-  const files = formData.getAll("files").filter((f): f is File => f instanceof File && f.size > 0);
-  for (const file of files) {
-    await addNewsImage(newsId, caption, file);
+  const tempPaths = formData.getAll("files").filter((v): v is string => typeof v === "string" && v.length > 0);
+  for (const tempPath of tempPaths) {
+    await addNewsImage(newsId, caption, tempPath);
   }
   revalidatePath(`/admin/novidades/${newsId}`);
   revalidatePath(`/novidades/${newsId}`);
@@ -144,8 +148,9 @@ export async function addNewsImagesAction(newsId: string, formData: FormData) {
 export async function addNewsVideoAction(newsId: string, formData: FormData) {
   const caption = String(formData.get("caption") ?? "").trim();
   const externalVideoUrl = String(formData.get("externalVideoUrl") ?? "").trim() || null;
-  const file = formData.get("file") as File | null;
-  await addNewsVideo(newsId, caption, externalVideoUrl, file && file.size > 0 ? file : null);
+  const tempPathValue = formData.get("file");
+  const tempPath = typeof tempPathValue === "string" && tempPathValue.length > 0 ? tempPathValue : null;
+  await addNewsVideo(newsId, caption, externalVideoUrl, tempPath);
   revalidatePath(`/admin/novidades/${newsId}`);
   revalidatePath(`/novidades/${newsId}`);
 }

@@ -1,6 +1,5 @@
 import { createClient } from "./server";
-import { sanitizeFileName } from "@/lib/utils";
-import { assertValidVideoUpload, processImageUpload } from "./mediaUpload";
+import { finalizeImageUpload, finalizeVideoUpload } from "./mediaUpload";
 import { logAdminAction } from "./auditLog";
 
 export type NewsStatus = "draft" | "scheduled" | "published";
@@ -137,18 +136,13 @@ export async function deleteNews(id: string): Promise<void> {
   await logAdminAction("news.delete", `news:${id}`);
 }
 
-/** Uploads a cover image to the shared `media` Storage bucket (see the
- * bucket SQL from the Supabase setup) and returns its public URL. */
-export async function uploadNewsCover(file: File): Promise<string> {
+/** Finishes a cover image upload — `tempPath` already holds the raw file,
+ * uploaded directly from the browser (see lib/supabase/clientUpload.ts
+ * and finalizeImageUpload for why: a Server Action's own request body is
+ * capped well below what a real photo needs on Vercel). */
+export async function uploadNewsCover(tempPath: string): Promise<string> {
   const supabase = await createClient();
-  const processed = await processImageUpload(file);
-  const path = `news/${crypto.randomUUID()}.${processed.extension}`;
-  const { error } = await supabase.storage
-    .from("media")
-    .upload(path, processed.buffer, { contentType: processed.contentType });
-  if (error) throw error;
-  const { data } = supabase.storage.from("media").getPublicUrl(path);
-  return data.publicUrl;
+  return finalizeImageUpload(supabase, tempPath, "news");
 }
 
 /** Extra photos/video attached to a news item, beyond its single cover —
@@ -207,22 +201,16 @@ export async function listNewsMedia(newsId: string): Promise<AdminNewsMediaItem[
 /** Uploads one image to Storage and creates its row — called once per
  * file for a multi-file upload, so one bad file never blocks the rest
  * (same pattern as addGalleryImage). */
-export async function addNewsImage(newsId: string, caption: string, file: File): Promise<AdminNewsMediaItem> {
+export async function addNewsImage(newsId: string, caption: string, tempPath: string): Promise<AdminNewsMediaItem> {
   const supabase = await createClient();
-  const processed = await processImageUpload(file);
-  const path = `news/${crypto.randomUUID()}.${processed.extension}`;
-  const { error: uploadError } = await supabase.storage
-    .from("media")
-    .upload(path, processed.buffer, { contentType: processed.contentType });
-  if (uploadError) throw uploadError;
-  const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
+  const publicUrl = await finalizeImageUpload(supabase, tempPath, "news");
 
   const { data, error } = await supabase
     .from("news_media")
     .insert({
       news_id: newsId,
       type: "image",
-      storage_url: urlData.publicUrl,
+      storage_url: publicUrl,
       caption: caption || null,
     })
     .select("*")
@@ -236,19 +224,10 @@ export async function addNewsVideo(
   newsId: string,
   caption: string,
   externalVideoUrl: string | null,
-  file: File | null,
+  tempPath: string | null,
 ): Promise<AdminNewsMediaItem> {
   const supabase = await createClient();
-  let storageUrl: string | null = null;
-
-  if (file && file.size > 0) {
-    assertValidVideoUpload(file);
-    const path = `news/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-    const { error: uploadError } = await supabase.storage.from("media").upload(path, file);
-    if (uploadError) throw uploadError;
-    const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
-    storageUrl = urlData.publicUrl;
-  }
+  const storageUrl = tempPath ? await finalizeVideoUpload(supabase, tempPath, "news") : null;
 
   const { data, error } = await supabase
     .from("news_media")

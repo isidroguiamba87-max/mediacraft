@@ -17,10 +17,12 @@ export async function saveEventOverrideAction(
   existingCoverUrl: string | null,
   formData: FormData,
 ) {
-  const file = formData.get("cover") as File | null;
+  // Already uploaded straight to Storage client-side — see
+  // lib/supabase/clientUpload.ts and uploadEventCover.
+  const tempPath = formData.get("cover");
   const coverImageUrl =
-    file && file.size > 0
-      ? await uploadEventCover(file)
+    typeof tempPath === "string" && tempPath.length > 0
+      ? await uploadEventCover(tempPath)
       : formData.get("removeCover") === "on"
         ? null
         : existingCoverUrl;

@@ -7,6 +7,8 @@ import { ImagePlus, Video } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ImagePicker } from "@/components/admin/shared/ImagePicker";
 import { uploadImagesAction, addVideoAction } from "@/app/admin/(protected)/galeria/actions";
+import { replaceFileField, replaceFileFields } from "@/lib/supabase/clientUpload";
+import { assertValidVideoUpload } from "@/lib/uploadValidation";
 
 const inputClass =
   "h-11 w-full rounded-brand border border-line bg-paper px-4 text-sm text-ink outline-none transition-colors focus-visible:border-brand-red";
@@ -54,6 +56,7 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
           ref={imageFormRef}
           action={async (formData) => {
             try {
+              await replaceFileFields(formData, "files");
               await uploadImagesAction(formData);
               imageFormRef.current?.reset();
               setImagePickerKey((k) => k + 1);
@@ -106,6 +109,9 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
           ref={videoFormRef}
           action={async (formData) => {
             try {
+              const file = formData.get("file");
+              if (file instanceof File && file.size > 0) assertValidVideoUpload(file);
+              await replaceFileField(formData, "file");
               await addVideoAction(formData);
               videoFormRef.current?.reset();
               toast.success("Vídeo adicionado com sucesso!");

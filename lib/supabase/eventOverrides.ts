@@ -1,5 +1,5 @@
 import { createClient } from "./server";
-import { processImageUpload } from "./mediaUpload";
+import { finalizeImageUpload } from "./mediaUpload";
 import { logAdminAction } from "./auditLog";
 
 export interface AdminEventOverride {
@@ -114,14 +114,9 @@ export async function setQaEnabled(eventId: string, enabled: boolean): Promise<v
   await logAdminAction("event_override.set_qa_enabled", `event_overrides:${eventId}`, { enabled });
 }
 
-export async function uploadEventCover(file: File): Promise<string> {
+/** `tempPath` already holds the raw file, uploaded directly from the
+ * browser — see lib/supabase/clientUpload.ts and finalizeImageUpload. */
+export async function uploadEventCover(tempPath: string): Promise<string> {
   const supabase = await createClient();
-  const processed = await processImageUpload(file);
-  const path = `events/${crypto.randomUUID()}.${processed.extension}`;
-  const { error } = await supabase.storage
-    .from("media")
-    .upload(path, processed.buffer, { contentType: processed.contentType });
-  if (error) throw error;
-  const { data } = supabase.storage.from("media").getPublicUrl(path);
-  return data.publicUrl;
+  return finalizeImageUpload(supabase, tempPath, "events");
 }
