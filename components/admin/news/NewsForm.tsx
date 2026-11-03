@@ -8,6 +8,7 @@ import { CalendarDays, MapPin, Ticket, Users, Clock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { getEventPreviewAction, type EventPreview } from "@/app/admin/(protected)/novidades/actions";
 import { replaceFileField } from "@/lib/supabase/clientUpload";
+import { RichTextEditor } from "@/components/admin/shared/RichTextEditor";
 import type { AdminNewsItem, NewsStatus } from "@/lib/supabase/news";
 
 const inputClass =
@@ -107,17 +108,8 @@ export function NewsForm({
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="body">
-          Conteúdo
-        </label>
-        <textarea
-          id="body"
-          name="body"
-          rows={8}
-          defaultValue={initial?.body ?? ""}
-          placeholder="Podes usar HTML simples (<p>, <b>, <a>…) — aparece formatado no site."
-          className="w-full resize-y rounded-brand border border-line bg-paper px-4 py-3 text-sm text-ink outline-none focus-visible:border-brand-red"
-        />
+        <label className={labelClass}>Conteúdo</label>
+        <RichTextEditor name="body" defaultValue={initial?.body ?? ""} />
       </div>
 
       <div>
