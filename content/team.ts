@@ -32,6 +32,7 @@ export const team: TeamMember[] = [
     photo: "/images/team/leticia-de-sousa.jpg",
     email: "leticia.sousa@mediacraft.co.mz",
     linkedin: "https://www.linkedin.com/in/let%C3%ADcia-sousa-6269063a8/",
+    whatsapp: "https://wa.me/258842729633",
   },
   {
     id: "arlina-cunje",
