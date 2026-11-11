@@ -61,7 +61,12 @@ const PILLAR_PHOTOS: (string[] | undefined)[] = [
   // 2026-10-31: "podes fazer o uso da imagem de reputação que está aqui no
   // projeto" — fills what used to be the one blank pillar.
   ["/images/home-services/Reputation.png"],
-  ["/images/home-services/events-1.jpg", "/images/home-services/events-2.jpg"],
+  // 2026-11-11: swapped to the audience/stage photo specifically matched
+  // to the new dark-overlay hero design ("esse aqui deve ser o novo
+  // visual da tela de início") — events-1/2.jpg stay as they were,
+  // content/services.ts's own "Eventos" card further down the page
+  // keeps using those, unaffected by this hero-only change.
+  ["/images/services/events.jpg"],
   ["/images/home-services/content.jpg"],
 ];
 
@@ -69,6 +74,10 @@ export function ShowcaseHero() {
   const t = useTranslations("showcase");
   const tHero = useTranslations("hero");
   const pillars = useMemo(() => t.raw("pillars") as string[], [t]);
+  // One paragraph per pillar, same index as PILLAR_PHOTOS/pillars — swaps
+  // in alongside the photo and headline as the cycle advances, replacing
+  // the single fixed tagline the hero used to show regardless of theme.
+  const pillarDescriptions = useMemo(() => t.raw("pillarDescriptions") as string[], [t]);
   const [hovered, setHovered] = useState(false);
   const reduceMotion = useReducedMotion();
   const pageLoadSeed = usePageLoadSeed();
@@ -135,13 +144,12 @@ export function ShowcaseHero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-[calc(100vh-5rem)] flex-col items-center justify-start overflow-hidden bg-paper px-6 pt-10 pb-16 text-center sm:justify-center sm:py-24">
-      {/* The themed photo behind everything, dimmed a bit so the plain
-       * text below stays readable on its own (2026-10-23 correction:
-       * "isso aqui não era para fazer acender... podes diminuir a
-       * visibilidade das imagens, ofuscá-las um pouco" — the glow/stroke
-       * treatment is gone; this wash is what carries legibility now,
-       * same role the hero's original gradient always had). */}
+    <section className="relative flex min-h-[calc(100vh-5rem)] flex-col items-center justify-start overflow-hidden bg-brand-navy px-6 pt-10 pb-16 text-center sm:justify-center sm:py-24">
+      {/* The themed photo behind everything, with a flat dark wash over it
+       * so white text stays legible regardless of what's in the photo
+       * (2026-11-11: "esse aqui deve ser o novo visual da tela de início" —
+       * replaces the previous light wash + navy text treatment; same
+       * dark-overlay-over-photo pattern EventHero already uses). */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         {PILLAR_PHOTOS.map((images, i) =>
           images && images.length > 0 ? (
@@ -164,13 +172,7 @@ export function ShowcaseHero() {
             />
           ) : null,
         )}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(130% 90% at 50% -10%, rgba(255,255,255,0.72) 0%, rgba(246,247,249,0.56) 50%, rgba(241,243,245,0.4) 100%)",
-          }}
-        />
+        <div className="absolute inset-0 bg-brand-navy/70" />
       </div>
 
       <div className="relative flex w-full max-w-[1500px] flex-col items-center">
@@ -187,11 +189,17 @@ export function ShowcaseHero() {
           className="h-[16vh] max-h-[180px] min-h-[110px] w-full max-w-[1300px] sm:h-[22vh] sm:max-h-[240px] sm:min-h-[140px]"
         />
 
+        {/* One paragraph per pillar (pillarDescriptions[active]) — replaces
+         * the single fixed tagline that used to show here regardless of
+         * which theme was active. Still the page's one real <h1>, just
+         * longer copy now; same text content for every visitor and for
+         * search engines regardless of which pillar happened to be
+         * animating in when the page was crawled. */}
         <h1
-          className="reveal-up mt-6 max-w-3xl font-display text-2xl leading-tight text-brand-navy sm:text-3xl"
+          className="reveal-up mt-6 max-w-2xl font-body text-base leading-relaxed text-white/90 sm:text-lg"
           style={{ animationDelay: "0.1s" }}
         >
-          {tHero("title")}
+          {pillarDescriptions[active]}
         </h1>
 
         <div
@@ -199,17 +207,12 @@ export function ShowcaseHero() {
           style={{ animationDelay: "0.3s" }}
         >
           <motion.span whileTap={{ scale: 0.95 }} className="inline-flex">
-            {/* Ghost variant's own border (`border-line`, a near-white
-             * gray) disappears against both a photo AND this hero's plain
-             * fallback background — a navy-tinted border shows up as a
-             * visible pill outline either way, with a frosted fill for
-             * the photo case. */}
             <Link
               href="/eventos"
               className={buttonVariants(
                 "ghost",
                 "lg",
-                "border-brand-navy/30 bg-white/40 text-brand-navy backdrop-blur-md hover:bg-white/60",
+                "border-transparent bg-white text-brand-navy uppercase tracking-wide hover:bg-white/90",
               )}
             >
               {tHero("secondaryCta")}

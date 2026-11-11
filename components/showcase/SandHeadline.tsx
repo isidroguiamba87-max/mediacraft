@@ -85,7 +85,10 @@ export function SandHeadline({
     const cache = new Map<string, Array<{ x: number; y: number }>>();
     const mouse = { x: -9999, y: -9999, active: false };
 
-    const navy = "rgba(0,27,50,1)";
+    // White grains, not navy — the hero this lives in (ShowcaseHero) moved
+    // from a light wash to a dark photo overlay, so navy-on-navy would be
+    // unreadable. Red accent grains stay the same; they read fine either way.
+    const base = "rgba(255,255,255,0.92)";
     const red = "rgba(191,38,46,1)";
 
     function setHover(next: boolean) {
@@ -209,7 +212,7 @@ export function SandHeadline({
         p.x += p.vx;
         p.y += p.vy;
         if (!p.on) continue;
-        c2d.fillStyle = p.red ? red : navy;
+        c2d.fillStyle = p.red ? red : base;
         c2d.fillRect(p.x, p.y, DOT, DOT);
       }
       raf = requestAnimationFrame(frame);
@@ -266,7 +269,7 @@ export function SandHeadline({
           {words.map((w, i) => (
             <span
               key={w}
-              className="font-display text-5xl leading-none text-brand-navy sm:text-6xl lg:text-7xl"
+              className="font-display text-5xl leading-none text-white sm:text-6xl lg:text-7xl"
             >
               {w}
               {i < words.length - 1 && (
