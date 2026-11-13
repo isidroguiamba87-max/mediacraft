@@ -17,11 +17,17 @@ body {
   font-family: var(--font-body);
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-display);
+/* In the base layer so a font utility on a heading (e.g. `font-body` on
+   the uppercase sans titles: EVENTOS, GALERIA, Painéis) can override it —
+   unlayered, this beat every Tailwind utility. Headings without one stay
+   on the display serif exactly as before. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
 }
 
 ::selection {
@@ -147,16 +153,20 @@ h4 {
 }
 .orbit-hub {
   display: none;
-  --wheel-cx: clamp(190px, 23vw, 360px);
-  --wheel-cy: 54%;
-  --wheel-r: clamp(148px, 18vw, 196px);
+  --wheel-cx: clamp(280px, 26.5vw, 420px);
+  --wheel-cy: 56%;
+  --wheel-r: clamp(176px, 15.4vw, 214px);
+  --ring-r: clamp(72px, 6.3vw, 84px);
+  --node-half: 5.75rem;
 }
 .orbit-list {
   display: block;
 }
 @media (min-width: 1024px) {
   .orbit-section {
-    min-height: 92vh;
+    /* tall enough that the whole wheel (±~260px around its centre) sits
+       clear below the heading, whatever the viewport height */
+    min-height: max(100svh, 900px);
   }
   .orbit-hub {
     display: block;
@@ -192,37 +202,121 @@ h4 {
   will-change: transform;
 }
 .orbit-node-inner {
-  transform: translate(-50%, -50%) scale(0.88);
-  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(0.94);
+  border-color: rgba(191, 38, 46, 0.55);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
   transition:
     transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.5s ease,
+    background-color 0.5s ease,
     border-color 0.5s ease,
     box-shadow 0.5s ease;
 }
 .orbit-node.is-active .orbit-node-inner {
-  transform: translate(-50%, -50%) scale(1.08);
-  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
   border-color: var(--brand-red);
-  box-shadow: 0 14px 34px rgba(191, 38, 46, 0.3);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(191, 38, 46, 0.25);
 }
+/* the two areas furthest from focus sink back into the navy */
+.orbit-node.is-far .orbit-node-inner {
+  opacity: 0.32;
+  border-color: transparent;
+  box-shadow: none;
+}
+.orbit-node.is-far .orbit-node-inner:hover {
+  opacity: 0.6;
+}
+/* only the active area is joined to the ring — a short red spoke from the
+   ring's edge to the card's edge */
 .orbit-spoke {
   position: absolute;
   left: var(--wheel-cx);
   top: var(--wheel-cy, 50%);
-  height: 1px;
-  width: var(--wheel-r);
-  background: rgba(0, 27, 50, 0.14);
+  height: 1.5px;
+  margin-top: -0.75px;
+  width: calc(var(--wheel-r) - var(--ring-r) - var(--node-half));
+  background: var(--brand-red);
+  opacity: 0;
   transform-origin: 0 50%;
-  transform: rotate(calc(var(--phi) + var(--rot)));
+  transform: rotate(calc(var(--phi) + var(--rot))) translateX(var(--ring-r));
   transition:
     transform 0.9s cubic-bezier(0.5, 0, 0.15, 1),
-    background-color 0.5s ease,
-    height 0.5s ease;
+    opacity 0.4s ease;
 }
 .orbit-spoke.is-active {
-  height: 2px;
-  background: var(--brand-red);
+  opacity: 1;
+  transition-delay: 0s, 0.6s;
+}
+
+/* thin red ring around the white logo disc */
+.orbit-ring {
+  width: calc(var(--ring-r, 80px) * 2);
+  height: calc(var(--ring-r, 80px) * 2);
+  border: 1.5px solid var(--brand-red);
+  background: var(--brand-navy);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* "O que fazemos?" — navy wash over the stage photo: solid on the left,
+   clearing towards the right, darkened at the foot and slightly at the top */
+.what-wash {
+  /* Same gradient shape (heavy where the title/cards sit, fading out
+   * toward the photo), just lighter throughout (2026-11-11: "a sombra...
+   * muito carregada... que dê para ver a foto através da sombra") — every
+   * stop's alpha scaled down, none of the stop positions changed. */
+  background:
+    linear-gradient(0deg, rgba(0, 27, 50, 0.6) 0%, rgba(0, 27, 50, 0.2) 22%, rgba(0, 27, 50, 0) 40%),
+    linear-gradient(180deg, rgba(0, 27, 50, 0.35) 0%, rgba(0, 27, 50, 0) 22%),
+    linear-gradient(90deg, rgba(0, 27, 50, 0.8) 0%, rgba(0, 27, 50, 0.68) 18%, rgba(0, 27, 50, 0.38) 36%, rgba(0, 27, 50, 0.08) 56%, rgba(0, 27, 50, 0) 70%);
+}
+@media (max-width: 1023px) {
+  .what-wash {
+    background: linear-gradient(180deg, rgba(0, 27, 50, 0.92) 0%, rgba(0, 27, 50, 0.7) 45%, rgba(0, 27, 50, 0.92) 100%);
+  }
+}
+/* lighter wash for artwork backgrounds that already fade to navy on the left */
+.what-wash-soft {
+  background: linear-gradient(90deg, rgba(0, 27, 50, 0.6) 0%, rgba(0, 27, 50, 0.25) 26%, rgba(0, 27, 50, 0) 42%);
+}
+@media (max-width: 1023px) {
+  .what-wash-soft {
+    background: linear-gradient(180deg, rgba(0, 27, 50, 0.85) 0%, rgba(0, 27, 50, 0.6) 45%, rgba(0, 27, 50, 0.85) 100%);
+  }
+}
+/* the section's own navy (same as the design / footer) and the right-anchored
+   picture box (client, 2026-11-11): right edge → middle, max 1396px wide */
+.what-ground {
+  background: #17223a;
+}
+.what-stage-box {
+  position: absolute;
+  inset: 0;
+}
+.what-stage-edge {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .what-stage-box {
+    /* from the right edge to about the middle only — never the full width,
+       never wider than 1396px, so the picture is only ever scaled DOWN
+       (all stages are ≥1442px wide and ≥1045px tall), never stretched */
+    left: auto;
+    right: 0;
+    height: 100%;
+    width: min(58%, 1396px);
+  }
+  .what-stage-edge {
+    display: block;
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 38%;
+    background: linear-gradient(90deg, #17223a 0%, rgba(23, 34, 58, 0.75) 35%, rgba(23, 34, 58, 0) 100%);
+  }
+}
+.what-rule {
+  width: min(26rem, 78vw);
 }
 
 /* centre mark: hidden → revealed (`.is-armed`) → ignited (`.is-lit`) */
@@ -456,4 +550,19 @@ h4 {
  * fundo" / "cor lisa... paper-2"). */
 .team-deck {
   background: var(--paper-2);
+}
+
+/* Footer (client design 2026-11-11): its own deep navy (#17223a, sampled
+   from the design — a touch lighter than --brand-navy) and the dashed
+   rules between columns on lg */
+.footer-ground {
+  background: #17223a;
+}
+@media (min-width: 1024px) {
+  .footer-col {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 55%, transparent 55%);
+    background-size: 1.5px 22px;
+    background-repeat: repeat-y;
+    background-position: left top;
+  }
 }

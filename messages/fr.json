@@ -28,7 +28,11 @@
       "title": "Conditions d'Utilisation — MediaCraft",
       "description": "Conditions d'utilisation du site et des services de MediaCraft Mozambique."
     },
-    "keywords": "Communication stratégique, MediaCraft, événements corporatifs, gestion de la réputation, relations publiques, Mozambique"
+    "keywords": "Communication stratégique, MediaCraft, événements corporatifs, gestion de la réputation, relations publiques, Mozambique",
+    "galeria": {
+      "title": "Galerie — MediaCraft",
+      "description": "Photos et vidéos de tous les événements de MediaCraft Mozambique."
+    }
   },
   "nav": {
     "home": "Accueil",
@@ -37,25 +41,25 @@
     "about": "À propos",
     "contact": "Contact",
     "cta": "Contactez-nous",
-    "pulse": "Entrer (Pulse)"
+    "pulse": "Entrer (Pulse)",
+    "gallery": "Galerie"
   },
   "showcase": {
     "metaTitle": "Démo visuelle — MediaCraft",
     "pillars": [
       "Communication",
       "Réputation",
-      "Événements",
-      "Contenus"
+      "Événements"
     ],
     "pillarDescriptions": [
       "MediaCraft Mozambique est une entreprise mozambicaine de référence en communication stratégique, gestion de la réputation et événements corporatifs. Nous aidons les marques, institutions et organisations à relever les défis, stimuler la croissance et renforcer les connexions stratégiques.",
       "MediaCraft Mozambique est une entreprise mozambicaine de référence en communication stratégique, gestion de la réputation et événements corporatifs. Nous aidons les marques, institutions et organisations à relever les défis, stimuler la croissance et renforcer les connexions stratégiques.",
-      "Nous transformons des idées en expériences uniques, à travers la conception, la planification, l'organisation et la production d'événements corporatifs, institutionnels et de grande envergure. De la stratégie à l'exécution, nous assurons chaque détail avec créativité, rigueur et excellence, en offrant des expériences qui rapprochent les personnes, renforcent les marques et créent des opportunités.",
-      "MediaCraft Mozambique est une entreprise mozambicaine de référence en communication stratégique, gestion de la réputation et événements corporatifs. Nous aidons les marques, institutions et organisations à relever les défis, stimuler la croissance et renforcer les connexions stratégiques."
+      "Nous transformons des idées en expériences uniques, à travers la conception, la planification, l'organisation et la production d'événements corporatifs, institutionnels et de grande envergure. De la stratégie à l'exécution, nous assurons chaque détail avec créativité, rigueur et excellence, en offrant des expériences qui rapprochent les personnes, renforcent les marques et créent des opportunités."
     ],
-    "trust": "+70 partenaires · +500 participants · +15 pays",
+    "trust": "+70 partenaires · +5000 participants · +15 pays",
     "numbersEyebrow": "MediaCraft en chiffres",
     "numbersTitle": "Un impact qui se mesure en résultats.",
+    "numbersViewAll": "Voir tout",
     "flagship": {
       "live": "En direct",
       "today": "En cours",
@@ -103,7 +107,10 @@
         "t": ".",
         "hl": false
       }
-    ]
+    ],
+    "learnMore": "En savoir plus",
+    "carousel": "Points forts",
+    "goTo": "Afficher le panneau {n}"
   },
   "stats": {
     "title": "Notre portée",
@@ -121,13 +128,13 @@
         "label": "Canaux de média & couverture"
       },
       "participants": {
-        "value": "+500",
+        "value": "+5000",
         "label": "Participants touchés"
       }
     }
   },
   "services": {
-    "eyebrow": "Ce que nous faisons",
+    "eyebrow": "Que faisons-nous ?",
     "title": "Stratégie, exécution, impact.",
     "items": {
       "communication": {
@@ -151,7 +158,8 @@
         "description": "Campagnes d’information publique, implication communautaire, mobilisation et actions d’activation territoriale aux niveaux national et local."
       }
     },
-    "next": "Suivant"
+    "next": "Suivant",
+    "carousel": "Services"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -209,8 +217,14 @@
       "eyebrow": "Notre histoire",
       "title": "De deux voix à un récit national.",
       "titleParts": [
-        { "t": "De deux voix à un ", "hl": false },
-        { "t": "récit national.", "hl": true }
+        {
+          "t": "De deux voix à un ",
+          "hl": false
+        },
+        {
+          "t": "récit national.",
+          "hl": true
+        }
       ],
       "paragraphs": [
         "Tout a commencé avec deux femmes, Linda, originaire du Niassa, et Vanessa, originaire de Zambézie, unies par une passion commune : la communication. Venues d’horizons différents, elles ont suivi des chemins distincts, affronté les défis et les exigences du monde corporatif, se forgeant à travers des expériences que seule la pratique permet — jusqu’au jour où elles ont compris que le récit de leur pays devait être raconté par des voix qui lui appartiennent.",
@@ -276,7 +290,9 @@
       "period": "Période",
       "periodAll": "Toute date",
       "periodUpcoming": "À venir",
-      "periodPast": "Passés"
+      "periodPast": "Passés",
+      "recent": "Récents",
+      "label": "Filtrer les événements par année"
     },
     "empty": "Aucun événement trouvé pour les filtres sélectionnés.",
     "card": {
@@ -329,6 +345,8 @@
     "galleryPhotos": "Photos",
     "galleryVideos": "Vidéos",
     "galleryDocuments": "Documents",
+    "galleryAllDays": "Tous les jours",
+    "galleryFilter": "Filtrer la galerie",
     "qaTitle": "Posez une question au panel",
     "qaNamePlaceholder": "Votre nom",
     "qaPlaceholder": "Écrivez votre question…",
@@ -356,6 +374,9 @@
     "section": "Section"
   },
   "speakersDirectory": {
+    "panelsTitle": "Panels",
+    "panelLabel": "Panel {n}",
+    "others": "Autres",
     "searchPlaceholder": "Rechercher un intervenant par nom…",
     "allSessions": "Toutes les sessions",
     "noResults": "Aucun intervenant trouvé.",
@@ -416,14 +437,36 @@
       "submit": "Envoyer le message",
       "sending": "Envoi…",
       "success": "Message envoyé avec succès. Nous vous contacterons bientôt.",
-      "error": "Impossible d'envoyer le message. Veuillez réessayer."
+      "error": "Impossible d'envoyer le message. Veuillez réessayer.",
+      "title": "Envoyez-nous un message",
+      "subtitle": "Remplissez le formulaire ci-dessous et notre équipe vous contactera rapidement.",
+      "nameLabel": "Nom complet",
+      "namePh": "Votre nom",
+      "emailPh": "nom@email.com",
+      "subjectPh": "Comment pouvons-nous vous aider ?",
+      "messagePh": "Écrivez votre message ici !",
+      "hint": "Minimum 20 caractères. Nous respectons votre vie privée.",
+      "errors": {
+        "nameRequired": "Veuillez indiquer votre nom.",
+        "emailInvalid": "Veuillez indiquer un e-mail valide.",
+        "messageMin": "Le message doit comporter au moins 20 caractères."
+      }
     },
     "info": {
       "title": "Informations de contact",
       "email": "E-mail",
       "address": "Adresse",
-      "social": "Réseaux sociaux"
-    }
+      "social": "Réseaux sociaux",
+      "intro1": "Parlez-nous et découvrez comment MediaCraft Mozambique peut vous aider à transformer votre vision en réalité.",
+      "intro2": "Nous sommes prêts à écouter, comprendre et construire des solutions stratégiques qui créent un impact réel et durable.",
+      "office": "Adresse du bureau",
+      "phones": "Numéros de téléphone",
+      "emailAddr": "Adresse e-mail",
+      "hours": "Heures d'ouverture",
+      "hoursValue": "Lun – Ven : 8h00 – 17h00",
+      "mapTitle": "Carte du bureau MediaCraft"
+    },
+    "pageTitle": "Contact"
   },
   "footer": {
     "tagline": "Communication stratégique et événements corporatifs. Des contenus qui transforment la présence en influence.",
@@ -792,5 +835,11 @@
         "body": "Ces Conditions d'Utilisation sont régies par le droit mozambicain."
       }
     ]
+  },
+  "galeria": {
+    "title": "Galerie",
+    "allEvents": "Tous les événements",
+    "eventFilter": "Filtrer par événement",
+    "empty": "Aucune photo publiée pour le moment."
   }
 }

@@ -2,34 +2,48 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+
 import { useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { services } from "@/content/services";
+import type { Service } from "@/types";
 import { cn } from "@/lib/utils";
-import { usePageLoadSeed, pickStablePhoto } from "@/hooks/usePageLoadSeed";
 
 const N = services.length;
 const STEP = 360 / N; // 72° between areas
-const FOCUS = -8; // deg — the focus slot, just above 3 o'clock of the wheel
-const AUTO_MS = 4200;
+const FOCUS = 0; // deg — the focus slot: straight out to the right (3 o'clock)
+const AUTO_MS = 7000; // one-page brief (2026-11-11): ~7 s per service
+type Stage = NonNullable<Service["stage"]>;
+const DEFAULT_STAGE: Stage = { src: "/images/services/what-we-do-bg.png", kind: "photo" };
+const stageOf = (i: number): Stage => services[i].stage ?? DEFAULT_STAGE;
+/** Every distinct background, mounted once and cross-faded by the active area. */
+const STAGES = Array.from(
+  new Map(services.map((_, i) => [stageOf(i).src, stageOf(i)])).values(),
+);
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
+/** Cyclic distance between two wheel slots (0 = active, 1 = neighbour…). */
+const ringDist = (i: number, active: number) => {
+  const d = (((i - active) % N) + N) % N;
+  return Math.min(d, N - d);
+};
+
 /**
- * The five service areas ride a wheel whose centre sits behind the MediaCraft
- * mark, off to the left. It is NOT scroll-driven — once the section comes into
- * view (the current arriving) the mark reveals and lights, and the wheel turns
- * one area at a time on a timer, its photo + text opening in the panel on the
- * right. Tapping any title or dot jumps to that area; hovering the section
- * pauses the rotation.
+ * "O que fazemos?" — client design (2026-11-11). Each area can carry its own
+ * full-bleed background (`stage` in content/services.ts — 01 the event stage
+ * photo, 03 the social-media artwork…); they cross-fade as the wheel turns.
+ * Photos get a heavy navy wash (solid left, clear right, dark foot);
+ * graphics that already have a navy left side only get a light one. Left: the five areas ride a wheel around the
+ * MediaCraft mark (navy logo on a white disc inside a thin red ring); the
+ * active area sits at 3 o'clock joined to the ring by a short red spoke, its
+ * neighbours stay solid white, the far two fade back. Right: a solid navy card
+ * with the active area's title + description + progress dashes.
  *
- * Deterministic first render (`armed=false`, `turn=0`) so it is hydration-safe
- * and uses no `motion.*` components. Below `lg` (cropping the wheel never
- * read well at that size, tried a few variants) and under reduced-motion it
- * swaps for a single card instead — logo + title, then info, then photo —
- * showing one area (`active`) at a time, advanced by its own "Seguinte"
- * button as well as the same auto-advance timer as the wheel.
+ * Not scroll-driven — an IntersectionObserver arms it, then a timer turns the
+ * wheel one area at a time; hover pauses, tapping a node or dash jumps.
+ * Deterministic first render (`armed=false`, `turn=0`) → hydration-safe.
+ * Below `lg` / reduced motion: heading + a single navy card with "Seguinte".
  */
 export function ServicesOrbit() {
   const t = useTranslations("services");
@@ -38,40 +52,35 @@ export function ServicesOrbit() {
   const sectionRef = useRef<HTMLElement>(null);
   const [armed, setArmed] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [focused, setFocused] = useState(false);
+  // In view right now — rotation pauses while the section is off-screen and
+  // resumes on the same service when it comes back.
+  const [visible, setVisible] = useState(false);
   const [turn, setTurn] = useState(0);
   const active = ((turn % N) + N) % N;
 
-  // A real photo per area lives at `public/images/services/<id>.jpg` by
-  // default; a theme can instead list several in content/services.ts's
-  // `images` — see usePageLoadSeed for how a theme with more than one
-  // picks between them.
-  const pageLoadSeed = usePageLoadSeed();
-  const photoSrc = useCallback(
-    (id: string) => {
-      const images = services.find((s) => s.id === id)?.images;
-      if (!images || images.length === 0) return `/images/services/${id}.jpg`;
-      return pickStablePhoto(images, pageLoadSeed);
-    },
-    [pageLoadSeed],
-  );
-
-  // Reveal + start the moment the section is in view (the current is arriving).
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => e.isIntersecting && setArmed(true),
+      ([e]) => {
+        setVisible(e.isIntersecting);
+        if (e.isIntersecting) setArmed(true);
+      },
       { threshold: 0.3 },
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
+  // A fresh timeout per turn, so a click on a chip/dash restarts the 7 s
+  // from that service. Never holds the page's scroll — this only ever
+  // changes which service is shown.
   useEffect(() => {
-    if (!armed || reduce || paused) return;
-    const id = setInterval(() => setTurn((v) => v + 1), AUTO_MS);
-    return () => clearInterval(id);
-  }, [armed, reduce, paused]);
+    if (!armed || !visible || reduce || paused || focused) return;
+    const id = setTimeout(() => setTurn((v) => v + 1), AUTO_MS);
+    return () => clearTimeout(id);
+  }, [armed, visible, reduce, paused, focused, turn]);
 
   const goTo = useCallback((i: number) => {
     setTurn((v) => {
@@ -82,58 +91,96 @@ export function ServicesOrbit() {
 
   const rot = FOCUS - turn * STEP;
   const activeSvc = services[active];
-  const ActiveIcon = activeSvc.icon;
+  const stage = stageOf(active);
+  const wash = stage.wash ?? (stage.kind === "photo" ? "heavy" : "soft");
+
+  const heading = (
+    <div>
+      <h2 className="text-white">
+        <span className="font-body text-4xl font-bold tracking-wide uppercase sm:text-5xl">
+          {t("eyebrow")}
+        </span>
+      </h2>
+      <span aria-hidden className="what-rule mt-3 block h-px bg-brand-red" />
+    </div>
+  );
+
+  const dashes = (
+    <div className="mt-6 flex items-center gap-2">
+      {services.map((s, i) => (
+        <button
+          key={s.id}
+          type="button"
+          onClick={() => goTo(i)}
+          aria-label={`${pad(i + 1)} — ${t(`items.${s.id}.title`)}`}
+          aria-current={i === active}
+          className={cn(
+            "h-[5px] rounded-full transition-all duration-500",
+            i === active ? "w-10 bg-brand-red" : "w-4 bg-white hover:bg-white/70",
+          )}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <section
       ref={sectionRef}
-      className="orbit-section relative overflow-hidden"
+      className="orbit-section what-ground relative overflow-hidden"
+      aria-roledescription="carousel"
+      aria-label={t("carousel")}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+      }}
     >
-      {/* =================== lg: wheel + logo hub =================== */}
-      <div className="orbit-hub absolute inset-0">
-        {/* ---- big background photo per active area ---- */}
-        <div aria-hidden className="absolute inset-0">
-          {services.map((s, i) => (
+      {/* ---- per-area background + matching wash, cross-faded ----
+          (client, 2026-11-11) the picture never spans the full width: it sits
+          in a box anchored RIGHT at full section height that reaches only to
+          about the middle (max 1396px, so it's never upscaled); the rest is
+          plain navy and the box's left edge melts into it (.what-stage-edge)
+          under the wash, so you never see where the photo starts. */}
+      <div aria-hidden className="absolute inset-0">
+        {STAGES.map((st, i) => (
+          <div
+            key={st.src}
+            className={cn(
+              "what-stage-box transition-opacity duration-[900ms] ease-out",
+              st.src === stage.src ? "opacity-100" : "opacity-0",
+            )}
+          >
             <Image
-              key={s.id}
-              src={photoSrc(s.id)}
+              src={st.src}
               alt=""
               fill
               priority={i === 0}
-              sizes="100vw"
-              className={cn(
-                "object-cover transition-opacity duration-[900ms] ease-out",
-                armed && i === active ? "opacity-100" : "opacity-0",
-              )}
+              sizes="(min-width: 1024px) 58vw, 100vw"
+              // artwork keeps its right side (the phone/posts) whole and
+              // gives up only its plain gradient on the left
+              className={cn("object-cover", st.kind === "graphic" && "object-right")}
             />
-          ))}
-          <div
-            className={cn(
-              "absolute inset-0 bg-paper transition-opacity duration-700",
-              armed ? "opacity-0" : "opacity-100",
-            )}
-          />
-          {/* readability wash: only the left band (heading + the wheel labels).
-              The right half stays clear so the photo carries the panel. */}
-          <div
-            className={cn(
-              "absolute inset-0 transition-opacity duration-700",
-              armed ? "opacity-100" : "opacity-0",
-            )}
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(244,246,248,0.9) 0%, rgba(244,246,248,0.5) 30%, rgba(244,246,248,0) 52%, rgba(244,246,248,0) 100%)",
-            }}
-          />
-        </div>
+            <span className="what-stage-edge" />
+          </div>
+        ))}
+        <div
+          className={cn(
+            "what-wash absolute inset-0 transition-opacity duration-[900ms]",
+            wash === "heavy" ? "opacity-100" : "opacity-0",
+          )}
+        />
+        <div
+          className={cn(
+            "what-wash-soft absolute inset-0 transition-opacity duration-[900ms]",
+            wash === "soft" ? "opacity-100" : "opacity-0",
+          )}
+        />
+      </div>
 
-        <div className="pointer-events-none absolute top-10 left-10 z-30">
-          <h2 className="max-w-sm font-display text-3xl leading-tight tracking-wide text-brand-navy uppercase sm:text-4xl">
-            {t("eyebrow")}
-          </h2>
-        </div>
+      {/* =================== lg: wheel + logo hub =================== */}
+      <div className="orbit-hub absolute inset-0">
+        <div className="absolute top-14 left-14 z-30">{heading}</div>
 
         <div
           className="orbit-wheel absolute inset-0"
@@ -148,161 +195,134 @@ export function ServicesOrbit() {
             />
           ))}
 
-          {services.map((s, i) => (
-            <div
-              key={s.id}
-              className={cn("orbit-node", i === active && "is-active")}
-              style={
-                {
-                  "--phi": `${i * STEP}deg`,
-                  zIndex: i === active ? 30 : 10,
-                } as React.CSSProperties
-              }
-            >
-              <button
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={t(`items.${s.id}.title`)}
-                aria-current={i === active}
-                className="orbit-node-inner absolute top-0 left-0 w-44 rounded-2xl border border-line bg-white/95 px-3 py-2.5 text-center shadow-sm backdrop-blur"
+          {services.map((s, i) => {
+            const d = ringDist(i, active);
+            return (
+              <div
+                key={s.id}
+                className={cn(
+                  "orbit-node",
+                  d === 0 && "is-active",
+                  d === 1 && "is-near",
+                  d >= 2 && "is-far",
+                )}
+                style={
+                  {
+                    "--phi": `${i * STEP}deg`,
+                    zIndex: d === 0 ? 30 : 10,
+                  } as React.CSSProperties
+                }
               >
-                <span className="block font-display text-[10px] tracking-[0.18em] text-brand-red/70">
-                  {pad(i + 1)}
-                </span>
-                <span className="mt-0.5 block text-[13px] font-semibold leading-snug text-brand-navy">
-                  {t(`items.${s.id}.title`)}
-                </span>
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* centre: the MediaCraft mark — hidden, then revealed (`.is-armed`) and
-            ignited (`.is-lit`, from ScrollThread hitting `[data-thread-target]`) */}
-        <div
-          data-thread-target
-          className={cn(
-            "thread-star orbit-logo absolute grid h-36 w-36 place-items-center rounded-full border border-white/10 bg-brand-navy shadow-[0_18px_44px_rgba(0,27,50,0.28)]",
-            armed && "is-armed",
-          )}
-          style={{ left: "var(--wheel-cx)", top: "var(--wheel-cy)", zIndex: 20 }}
-        >
-          <span aria-hidden className="thread-star-ring" />
-          <Image
-            src="/logo/logo.png"
-            alt="MediaCraft"
-            width={3914}
-            height={1138}
-            sizes="130px"
-            className="h-auto w-[8rem]"
-          />
-        </div>
-
-        {/* right: the delivered area — a single compact card so it never clips */}
-        <div className="absolute top-1/2 right-6 z-40 w-[min(24rem,38vw)] -translate-y-1/2 lg:right-12">
-          <div
-            key={activeSvc.id}
-            className="reveal-up rounded-3xl border border-white/15 bg-brand-navy/55 p-6 shadow-[0_24px_60px_rgba(0,27,50,0.32)] backdrop-blur-md sm:p-7"
-          >
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-white/15 text-white">
-              <ActiveIcon size={20} />
-            </span>
-            <p className="mt-4 font-display text-xs tracking-[0.14em] text-white/55">
-              {pad(active + 1)} — {pad(N)}
-            </p>
-            <h3 className="mt-1 font-display text-xl leading-tight text-white">
-              {t(`items.${activeSvc.id}.title`)}
-            </h3>
-            <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/75">
-              {t(`items.${activeSvc.id}.description`)}
-            </p>
-
-            <div className="mt-6 flex items-center gap-2">
-              {services.map((s, i) => (
                 <button
-                  key={s.id}
                   type="button"
                   onClick={() => goTo(i)}
-                  aria-label={`${pad(i + 1)} — ${t(`items.${s.id}.title`)}`}
-                  aria-current={i === active}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all",
-                    i === active
-                      ? "w-8 bg-brand-red"
-                      : "w-3 bg-white/25 hover:bg-white/50",
-                  )}
-                />
-              ))}
-            </div>
+                  aria-label={t(`items.${s.id}.title`)}
+                  aria-current={d === 0}
+                  className="orbit-node-inner absolute top-0 left-0 w-[11.5rem] rounded-2xl border bg-white px-4 py-2.5 text-center"
+                >
+                  <span className="block font-body text-[13px] font-bold text-brand-red">
+                    {pad(i + 1)}
+                  </span>
+                  <span className="mt-0.5 block font-body text-[13px] leading-snug text-brand-navy">
+                    {t(`items.${s.id}.title`)}
+                  </span>
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* centre: thin red ring around a white disc with the navy mark */}
+        <div
+          className={cn("orbit-logo orbit-ring absolute grid place-items-center rounded-full", armed && "is-armed")}
+          style={{ left: "var(--wheel-cx)", top: "var(--wheel-cy)", zIndex: 20 }}
+        >
+          <div
+            data-thread-target
+            className="thread-star grid h-[6.5rem] w-[6.5rem] place-items-center rounded-full bg-white shadow-[0_12px_32px_rgba(0,0,0,0.35)]"
+          >
+            <span aria-hidden className="thread-star-ring" />
+            <Image
+              src="/logo/logo-navy.png"
+              alt="MediaCraft"
+              width={3914}
+              height={1138}
+              sizes="90px"
+              className="h-auto w-[4.75rem]"
+            />
+          </div>
+        </div>
+
+        {/* right: the active area */}
+        <div
+          className="absolute right-[5%] z-40 w-[min(24rem,32vw)] -translate-y-1/2"
+          style={{ top: "var(--wheel-cy)" }}
+        >
+          <div
+            key={activeSvc.id}
+            className="reveal-up rounded-[1.75rem] bg-brand-navy/95 p-6 shadow-[0_28px_60px_rgba(0,0,0,0.45)] sm:p-7"
+          >
+            <h3 className="text-white">
+              <span className="block font-body text-[1.4rem] leading-[1.2] font-bold uppercase">
+                {t(`items.${activeSvc.id}.title`)}
+              </span>
+            </h3>
+            <p className="mt-3 line-clamp-4 font-body text-sm leading-relaxed text-white/90">
+              {t(`items.${activeSvc.id}.description`)}
+            </p>
+            {dashes}
           </div>
         </div>
       </div>
 
-      {/* =================== fallback card (<lg / reduced motion) ===================
-          No wheel, no stacked list either — one card at a time, same area
-          the wheel would be showing (`active`), advanced by its own
-          "Seguinte" button here (plus the same auto-advance timer as the
-          wheel). Logo stays put; only the title/info/photo change. */}
-      <div className="orbit-list mx-auto max-w-container px-6 pt-10 pb-10 sm:pb-20 lg:px-10 lg:pt-20">
-        <h2 className="max-w-2xl font-display text-3xl leading-tight tracking-wide text-brand-navy uppercase sm:text-4xl">
-          {t("eyebrow")}
-        </h2>
+      {/* =================== fallback (<lg / reduced motion) =================== */}
+      <div className="orbit-list relative mx-auto max-w-container px-6 pt-14 pb-14 sm:pb-20">
+        {heading}
 
-        <article className="relative mt-8 aspect-[3/4] overflow-hidden rounded-2xl shadow-brand sm:aspect-[4/3]">
-          {/* the photo is the card's own background — the full frame, not
-              a sliver peeking around a panel. The caption panel below sits
-              over just its own bottom portion, compact on purpose so the
-              photo still reads as the background, not a border. */}
-          <Image
-            key={activeSvc.id}
-            src={photoSrc(activeSvc.id)}
-            alt=""
-            fill
-            sizes="(max-width: 1024px) 100vw, 40vw"
-            className="object-cover"
-          />
+        {/* the five numbered chips as a sideways-scrolling strip */}
+        <div className="-mx-6 mt-8 flex snap-x gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none]">
+          {services.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-current={i === active}
+              className={cn(
+                "w-40 shrink-0 snap-start rounded-2xl border px-3 py-2 text-center font-body transition-colors",
+                i === active
+                  ? "border-brand-red bg-white"
+                  : "border-transparent bg-white/25 text-white/80",
+              )}
+            >
+              <span className="block text-[12px] font-bold text-brand-red">{pad(i + 1)}</span>
+              <span
+                className={cn(
+                  "mt-0.5 block text-[12px] leading-snug",
+                  i === active ? "text-brand-navy" : "text-white/85",
+                )}
+              >
+                {t(`items.${s.id}.title`)}
+              </span>
+            </button>
+          ))}
+        </div>
 
-          <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
-            {/* info sits in its own solid panel instead of straight on the
-                photo — a soft wash over the whole image is never reliably
-                readable against every photo, a flat panel always is. */}
-            <div className="rounded-xl bg-brand-navy p-3">
-              <div className="flex items-center gap-2">
-                <div className="shrink-0 rounded-lg bg-white/10 px-1.5 py-1">
-                  <Image
-                    src="/logo/logo.png"
-                    alt="MediaCraft"
-                    width={3914}
-                    height={1138}
-                    sizes="80px"
-                    className="h-auto w-12"
-                  />
-                </div>
-                <ArrowRight size={16} className="shrink-0 text-brand-red" aria-hidden />
-                <h3 className="font-display text-sm leading-tight text-white">
-                  {t(`items.${activeSvc.id}.title`)}
-                </h3>
-              </div>
-
-              <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/85">
-                {t(`items.${activeSvc.id}.description`)}
-              </p>
-
-              <div className="mt-2.5 flex items-center justify-between gap-3">
-                <span className="font-display text-xs tracking-[0.14em] text-white/55">
-                  {pad(active + 1)} — {pad(N)}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => goTo(active + 1)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-red px-3.5 py-1.5 text-sm font-medium text-white"
-                >
-                  {t("next")}
-                  <ArrowRight size={15} />
-                </button>
-              </div>
-            </div>
-          </div>
+        <article
+          key={activeSvc.id}
+          className="reveal-up mt-5 rounded-[1.75rem] bg-brand-navy/95 p-6 shadow-[0_28px_60px_rgba(0,0,0,0.45)]"
+        >
+          <span className="font-body text-[13px] font-bold text-brand-red">
+            {pad(active + 1)} — {pad(N)}
+          </span>
+          <h3 className="mt-1 text-white">
+            <span className="block font-body text-xl leading-tight font-bold uppercase">
+              {t(`items.${activeSvc.id}.title`)}
+            </span>
+          </h3>
+          <p className="mt-3 font-body text-sm leading-relaxed text-white/90">
+            {t(`items.${activeSvc.id}.description`)}
+          </p>
+          {dashes}
         </article>
       </div>
     </section>

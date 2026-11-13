@@ -1,18 +1,21 @@
 "use client";
 
-import { Home, CalendarDays, Newspaper, Users, Mail, type LucideIcon } from "lucide-react";
+import { Home, Images, Newspaper, Users, Mail, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/config/i18n";
-import { mainNav } from "@/config/site.config";
+import { mainNav, sectionNav } from "@/config/site.config";
+import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 
 const NAV_ICONS: Record<(typeof mainNav)[number]["key"], LucideIcon> = {
   home: Home,
-  events: CalendarDays,
-  news: Newspaper,
   about: Users,
+  gallery: Images,
+  news: Newspaper,
   contact: Mail,
 };
+
+const SPY_IDS = Object.keys(sectionNav);
 
 /** The mobile main nav, app-style, fixed to the bottom — universal across
  * every page, including inside an event (the event micro-site's own fixed
@@ -21,6 +24,14 @@ const NAV_ICONS: Record<(typeof mainNav)[number]["key"], LucideIcon> = {
 export function MobileBottomNav() {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const section = useActiveSection(SPY_IDS);
+  const activeKey = pathname.startsWith("/novidades")
+    ? "news"
+    : section
+      ? sectionNav[section]
+      : pathname === "/"
+        ? "home"
+        : null;
 
   return (
     <>
@@ -36,7 +47,7 @@ export function MobileBottomNav() {
       >
         {mainNav.map((item) => {
           const Icon = NAV_ICONS[item.key];
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active = activeKey === item.key;
           return (
             <Link
               key={item.key}
@@ -45,7 +56,7 @@ export function MobileBottomNav() {
                 "flex flex-1 flex-col items-center gap-0.5 rounded-brand px-2 py-1.5 text-[11px] font-medium",
                 active ? "text-brand-red" : "text-white/60",
               )}
-              aria-current={active ? "page" : undefined}
+              aria-current={active ? "true" : undefined}
             >
               <Icon size={19} strokeWidth={active ? 2.3 : 1.8} />
               {t(item.key)}

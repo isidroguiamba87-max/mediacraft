@@ -5,35 +5,26 @@ import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { EventBook } from "@/components/events/EventBook";
-import { EventFilters } from "@/components/events/EventFilters";
+import { EventTile } from "@/components/events/EventTile";
+import { EventYearFilter } from "@/components/events/EventYearFilter";
 import { earliestScheduleDate } from "@/lib/utils";
 import type { PulseEvent } from "@/lib/pulse/types";
 
-const BOOKS_PER_SHELF = 5;
-/** Alternating lean so a row doesn't look mechanically identical. */
-const TILTS = [-1.5, 1, -0.5, 1.5, -1];
-
-function chunk<T>(items: T[], size: number): T[][] {
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
-  return rows;
+/** Start date used for ordering and the year filter. Falls back to
+ * `createdAt` when `scheduleDates` is empty — a real case for past events,
+ * since Pulse's repository filters schedule dates to `date >= now`. */
+function startTime(e: PulseEvent) {
+  const date = earliestScheduleDate(e.scheduleDates);
+  return new Date(date ?? e.createdAt);
 }
 
-/** Nearest-first: upcoming events (soonest first), then past events
- * (most recent first) — so the top shelf is always what's coming up next.
- * Falls back to `createdAt` when `scheduleDates` is empty — a real case
- * for past events, since Pulse's repository always filters schedule
- * dates to `date >= now` regardless of which period matched the event. */
-function byShelfOrder(events: PulseEvent[]): PulseEvent[] {
+/** "Recentes": upcoming events soonest-first, then past events
+ * most-recent-first — what's coming up next is always on top. */
+function byRecent(events: PulseEvent[]): PulseEvent[] {
   const now = Date.now();
-  const sortKey = (e: PulseEvent) => {
-    const date = earliestScheduleDate(e.scheduleDates);
-    return date ? new Date(date).getTime() : new Date(e.createdAt).getTime();
-  };
   return [...events].sort((a, b) => {
-    const aTime = sortKey(a);
-    const bTime = sortKey(b);
+    const aTime = startTime(a).getTime();
+    const bTime = startTime(b).getTime();
     const aUpcoming = aTime >= now;
     const bUpcoming = bTime >= now;
     if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
@@ -59,58 +50,65 @@ export async function generateMetadata({
 
 interface EventsPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ period?: string }>;
+  searchParams: Promise<{ ano?: string }>;
 }
 
 export default async function EventsPage({ params, searchParams }: EventsPageProps) {
   const { locale } = await params;
-  const { period } = await searchParams;
+  const { ano } = await searchParams;
   setRequestLocale(locale);
 
   const [t, tNav] = await Promise.all([getTranslations("events"), getTranslations("nav")]);
-  const { events, usedFallback } = await getPublicEvents({
-    status: period === "upcoming" || period === "past" ? period : undefined,
-  });
+  const { events, usedFallback } = await getPublicEvents({});
+
+  // Filter options: the last four years, plus any older year an event
+  // actually falls in — newest first.
+  const thisYear = new Date().getFullYear();
+  const years = [
+    ...new Set([
+      thisYear,
+      thisYear - 1,
+      thisYear - 2,
+      thisYear - 3,
+      ...events.map((e) => startTime(e).getFullYear()),
+    ]),
+  ].sort((a, b) => b - a);
+
+  const year = ano && /^\d{4}$/.test(ano) ? Number(ano) : null;
+  const visible = byRecent(
+    year ? events.filter((e) => startTime(e).getFullYear() === year) : events,
+  );
 
   return (
-    <div className="mx-auto max-w-container px-6 py-16 lg:px-10">
-      <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("events"), path: "/eventos" }])} />
-      <div className="max-w-2xl">
-        <h1 className="font-display text-4xl text-brand-navy">{t("title")}</h1>
-        <p className="mt-4 text-base text-slate">{t("subtitle")}</p>
-      </div>
+    <div className="bg-white">
+      <div className="mx-auto max-w-container px-6 py-14 sm:py-20 lg:px-10">
+        <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("events"), path: "/eventos" }])} />
 
-      {usedFallback && (
-        <p className="mt-6 rounded-brand border border-line bg-paper-2 px-4 py-3 text-sm text-slate">
-          {t("offline")}
-        </p>
-      )}
-
-      <div className="mt-10">
-        <EventFilters />
-      </div>
-
-      {events.length > 0 ? (
-        <div className="mt-14 space-y-16">
-          {chunk(byShelfOrder(events), BOOKS_PER_SHELF).map((row, shelfIndex) => (
-            <div key={row[0]?.id ?? shelfIndex}>
-              {shelfIndex === 0 && (
-                <p className="mb-5 text-xs font-semibold tracking-[0.14em] text-brand-red uppercase">
-                  {t("shelfNearest")}
-                </p>
-              )}
-              <div className="flex flex-wrap items-end gap-6 sm:gap-8">
-                {row.map((event, i) => (
-                  <EventBook key={event.id} event={event} tilt={TILTS[i % TILTS.length]} />
-                ))}
-              </div>
-              <div className="shelf-plank mt-4" />
-            </div>
-          ))}
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <h1 className="inline-block border-b-2 border-brand-red pb-0.5 font-body text-4xl leading-none font-bold tracking-tight text-brand-navy uppercase sm:text-5xl">
+            {tNav("events")}
+          </h1>
+          <EventYearFilter years={years} />
         </div>
-      ) : (
-        <p className="mt-10 text-sm text-slate">{t("empty")}</p>
-      )}
+
+        {usedFallback && (
+          <p className="mt-6 rounded-brand border border-line bg-paper-2 px-4 py-3 text-sm text-slate">
+            {t("offline")}
+          </p>
+        )}
+
+        {visible.length > 0 ? (
+          <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-12 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
+            {visible.map((event) => (
+              <li key={event.id}>
+                <EventTile event={event} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-12 text-sm text-slate">{t("empty")}</p>
+        )}
+      </div>
     </div>
   );
 }

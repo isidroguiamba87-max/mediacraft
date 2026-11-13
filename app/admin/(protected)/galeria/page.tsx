@@ -1,21 +1,30 @@
 import { listGallery } from "@/lib/supabase/gallery";
-import { getPublicEvents } from "@/lib/pulse/endpoints";
+import { getEvent, getPublicEvents } from "@/lib/pulse/endpoints";
 import { UploadForms } from "@/components/admin/gallery/UploadForms";
 import { GalleryItemCard } from "@/components/admin/gallery/GalleryItemCard";
 
 export default async function AdminGalleryPage() {
   const [items, { events }] = await Promise.all([listGallery(), getPublicEvents({ status: "all" })]);
   const eventTitle = new Map(events.map((e) => [e.id, e.title]));
+  // Each event's own sections (its Pulse agenda sections, set up when the
+  // event is created) — offered as the photo's "Secção" so the public
+  // /galeria and the event's Gallery tab can filter by them consistently.
+  const details = await Promise.all(events.map((e) => getEvent(e.id)));
+  const uploadEvents = events.map((e, i) => ({
+    id: e.id,
+    title: e.title,
+    sections: [...new Set((details[i].event?.sections ?? []).map((s) => s.title.trim()).filter(Boolean))],
+  }));
 
   return (
     <div>
       <h1 className="font-display text-2xl text-brand-navy">Galeria</h1>
       <p className="mt-1 text-sm text-slate">
-        Imagens e vídeos do evento — publicados aqui aparecem na aba &ldquo;Galeria&rdquo; do site.
+        Imagens e vídeos dos eventos — publicados aqui aparecem na aba &ldquo;Galeria&rdquo; do evento e na Galeria geral do site (/galeria), filtráveis por evento e por secção.
       </p>
 
       <div className="mt-6">
-        <UploadForms events={events.map((e) => ({ id: e.id, title: e.title }))} />
+        <UploadForms events={uploadEvents} />
       </div>
 
       {items.length === 0 ? (

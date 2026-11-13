@@ -33,4 +33,16 @@ export interface Service {
    * ("se dessa vez mostra essa, na próxima volta é a outra") — see
    * components/home/ServicePhoto.tsx. */
   images?: string[];
+  /** Full-bleed background for this area in the home "O que fazemos?"
+   * wheel (ServicesOrbit). `kind: "photo"` gets the heavy navy wash (an
+   * event photo needs it for legibility); `"graphic"` is an artwork that
+   * already carries its own navy left side, so it gets only a light one.
+   * A graphic is shown whole (`contain`, anchored right, fitted to the
+   * section height) over `fill` — the colour of the artwork's left edge, so
+   * it blends with no seam. A photo covers the section (`cover`).
+   * `wash` overrides which navy wash goes on top (default: heavy for a
+   * photo, light for a graphic) — e.g. a photo pre-cut with a soft left
+   * edge is laid out like a graphic but still wants the heavy wash.
+   * Omitted → the section's default stage photo. */
+  stage?: { src: string; kind: "photo" | "graphic"; fill?: string; wash?: "heavy" | "soft" };
 }

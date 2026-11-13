@@ -4,44 +4,80 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Download, Play } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
+import { PillDropdown } from "@/components/ui/PillDropdown";
 import { youtubeEmbedUrl, youtubeThumbnailUrl } from "@/lib/utils";
 import type { EventGalleryItem } from "@/lib/bff";
 
-/** Magazine-style rhythm instead of a flat uniform grid — a big feature
- * tile, one tall tile, the rest square. Index into this cyclically so any
- * gallery length still reads as laid-out on purpose, not a plain grid. */
+/** Mosaic rhythm from the gallery mock-up, on a 4-column track
+ * (2fr 1fr 2.2fr 2fr) with dense auto-placement. Eight tiles fill exactly
+ * three rows, so the pattern repeats cleanly for any gallery length:
+ *   row 1: tall · small · wide (2 cols)
+ *   row 2: (tall) · tall · small · tall
+ *   row 3: small · (tall) · small · (tall)
+ * Below lg it's a plain 2-column grid. */
 const SPANS = [
-  "col-span-2 row-span-2",
-  "row-span-2",
+  "lg:row-span-2",
+  "",
+  "lg:col-span-2",
+  "lg:row-span-2",
+  "",
+  "lg:row-span-2",
   "",
   "",
-  "row-span-2",
-  "",
-  "",
-  "col-span-2",
 ];
+
+const ALL = "";
+const VIDEOS = "__videos";
+const DOCUMENTS = "__documents";
 
 export function GalleryGrid({
   items,
   documentsSlot,
+  leading,
+  sectionOrder,
 }: {
   items: EventGalleryItem[];
   documentsSlot?: React.ReactNode;
+  /** Extra filter(s) rendered before the section dropdown — the general
+   * /galeria page puts its "evento" dropdown here. */
+  leading?: React.ReactNode;
+  /** Section names in the order the event defines them (its Pulse agenda
+   * sections); tags not in the list follow, in first-seen order. */
+  sectionOrder?: string[];
 }) {
   const t = useTranslations("eventTabs");
   const photos = items.filter((i) => i.type === "image");
   const videos = items.filter((i) => i.type === "video");
-  const [tab, setTab] = useState<"photos" | "videos" | "documents">(photos.length > 0 ? "photos" : "videos");
+  // One red dropdown drives the whole gallery: "Todos os dias" (every
+  // photo), one entry per day/session tag the admin set on photos, then
+  // Vídeos / Documentos when there's anything to show there.
+  const tagged = [...new Set(photos.map((p) => p.dayOrSession?.trim()).filter((g): g is string => !!g))];
+  const groups = sectionOrder
+    ? [...sectionOrder.filter((g) => tagged.includes(g)), ...tagged.filter((g) => !sectionOrder.includes(g))]
+    : tagged;
+  const [filter, setFilter] = useState<string>(
+    photos.length > 0 || (videos.length === 0 && !documentsSlot) ? ALL : videos.length > 0 ? VIDEOS : DOCUMENTS,
+  );
+  const tab: "photos" | "videos" | "documents" =
+    filter === VIDEOS ? "videos" : filter === DOCUMENTS ? "documents" : "photos";
+  const shownPhotos =
+    filter === ALL || tab !== "photos" ? photos : photos.filter((p) => p.dayOrSession?.trim() === filter);
+  const filterOptions = [
+    { value: ALL, label: t("galleryAllDays") },
+    ...groups.map((g) => ({ value: g, label: g })),
+    ...(videos.length > 0 ? [{ value: VIDEOS, label: t("galleryVideos") }] : []),
+    ...(documentsSlot ? [{ value: DOCUMENTS, label: t("galleryDocuments") }] : []),
+  ];
   const [openVideo, setOpenVideo] = useState<EventGalleryItem | null>(null);
   const [openPhotoIndex, setOpenPhotoIndex] = useState<number | null>(null);
-  const openPhoto = openPhotoIndex !== null ? photos[openPhotoIndex] : null;
+  const openPhoto = openPhotoIndex !== null ? shownPhotos[openPhotoIndex] : null;
   const touchStartXRef = useRef<number | null>(null);
 
   function showPrevPhoto() {
-    setOpenPhotoIndex((i) => (i === null ? null : (i - 1 + photos.length) % photos.length));
+    setOpenPhotoIndex((i) => (i === null ? null : (i - 1 + shownPhotos.length) % shownPhotos.length));
   }
   function showNextPhoto() {
-    setOpenPhotoIndex((i) => (i === null ? null : (i + 1) % photos.length));
+    setOpenPhotoIndex((i) => (i === null ? null : (i + 1) % shownPhotos.length));
   }
   function handlePhotoTouchStart(e: React.TouchEvent) {
     touchStartXRef.current = e.touches[0].clientX;
@@ -57,7 +93,7 @@ export function GalleryGrid({
   }
 
   useEffect(() => {
-    if (openPhotoIndex === null || photos.length <= 1) return;
+    if (openPhotoIndex === null || shownPhotos.length <= 1) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "ArrowLeft") showPrevPhoto();
       if (e.key === "ArrowRight") showNextPhoto();
@@ -69,53 +105,46 @@ export function GalleryGrid({
 
   return (
     <div>
-      <div className="mb-6 flex gap-2">
-        <button
-          type="button"
-          onClick={() => setTab("photos")}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium ${tab === "photos" ? "bg-brand-red/10 text-brand-red" : "text-slate"}`}
-        >
-          {t("galleryPhotos")}
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("videos")}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium ${tab === "videos" ? "bg-brand-red/10 text-brand-red" : "text-slate"}`}
-        >
-          {t("galleryVideos")}
-        </button>
-        {documentsSlot && (
-          <button
-            type="button"
-            onClick={() => setTab("documents")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${tab === "documents" ? "bg-brand-red/10 text-brand-red" : "text-slate"}`}
-          >
-            {t("galleryDocuments")}
-          </button>
-        )}
-      </div>
+      {(filterOptions.length > 1 || leading) && (
+        <div className="mb-5 flex flex-wrap items-center gap-3">
+          {leading}
+          {filterOptions.length > 1 && (
+          <PillDropdown
+            ariaLabel={t("galleryFilter")}
+            align="left"
+            size="md"
+            value={filter}
+            onChange={(v) => {
+              setFilter(v);
+              setOpenPhotoIndex(null);
+            }}
+            options={filterOptions}
+          />
+          )}
+        </div>
+      )}
 
       {tab === "documents" ? (
         documentsSlot
       ) : tab === "photos" ? (
-        photos.length === 0 ? (
+        shownPhotos.length === 0 ? (
           <p className="text-sm text-slate">{t("galleryEmpty")}</p>
         ) : (
-          <div className="grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[200px] sm:grid-cols-4 lg:auto-rows-[220px]">
-            {photos.map((item, i) => {
+          <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:gap-4 lg:grid-flow-row-dense lg:auto-rows-[165px] lg:grid-cols-[2fr_1fr_2.2fr_2fr] xl:auto-rows-[180px]">
+            {shownPhotos.map((item, i) => {
               const span = SPANS[i % SPANS.length];
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => setOpenPhotoIndex(i)}
-                  className={`group relative overflow-hidden rounded-brand bg-brand-navy text-left ${span}`}
+                  className={`group relative overflow-hidden rounded-[1.25rem] bg-brand-navy text-left ${span}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- Supabase Storage image */}
                   <img
                     src={item.storageUrl ?? ""}
                     alt={item.caption ?? ""}
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                   {(item.caption || item.dayOrSession) && (
                     <>
@@ -145,7 +174,7 @@ export function GalleryGrid({
                 key={item.id}
                 type="button"
                 onClick={() => setOpenVideo(item)}
-                className="group relative aspect-video overflow-hidden rounded-brand bg-brand-navy text-left"
+                className="group relative aspect-video overflow-hidden rounded-[1.25rem] bg-brand-navy text-left"
               >
                 {thumbUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- external YouTube thumbnail
@@ -203,7 +232,7 @@ export function GalleryGrid({
                 alt={openPhoto.caption ?? ""}
                 className="max-h-[70vh] w-full object-contain"
               />
-              {photos.length > 1 && (
+              {shownPhotos.length > 1 && (
                 <>
                   <button
                     type="button"

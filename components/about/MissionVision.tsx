@@ -1,150 +1,57 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Target, Eye, type LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Award, Eye, Target, type LucideIcon } from "lucide-react";
 
-const CARDS: {
-  id: "mission" | "vision";
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-}[] = [
-  { id: "mission", icon: Target, iconBg: "bg-brand-red/10", iconColor: "text-brand-red" },
-  { id: "vision", icon: Eye, iconBg: "bg-brand-navy/10", iconColor: "text-brand-navy" },
-];
+const VALUE_KEYS = ["boldness", "inclusion", "curiosity", "empathy"] as const;
 
-const AUTO_MS = 4500;
-const PREVIEW_LENGTH = 110;
+/** White rounded card with a soft grey edge and drop shadow (mock-up). */
+const cardClass =
+  "rounded-[1.5rem] border border-black/15 bg-white px-5 py-6 shadow-[2px_4px_10px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7";
 
-/** Smaller radius, lighter shadow, more discreet border than the shared
- * `Card` component's defaults, same styling this pair has used since
- * 2026-10-26. */
-const cardClass = "rounded-xl border border-line bg-white p-6 shadow-sm";
+function CardHeading({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
+  return (
+    <h2 className="flex items-center gap-2.5 font-body text-lg font-bold text-brand-navy">
+      <Icon aria-hidden className="h-6 w-6 shrink-0 text-brand-red" strokeWidth={2.5} />
+      {children}
+    </h2>
+  );
+}
 
 /**
- * Missão & Visão, as their own section right under the Intro photo band
- * (2026-11-01: "Missão e Visão devem estar lá em cima depois [da] imagem
- * que devolvemos" — pulled back out of History's sidebar, where they'd
- * been folded in during the previous pass, and given their own soft
- * decorative backdrop per the newest reference). Full mission/vision text
- * on desktop/tablet; an auto-sliding, tap-to-expand carousel on mobile —
- * unchanged from the interaction this pair already had before the fold.
+ * Missão, Visão and Os nossos valores as three stacked full-width cards
+ * right under the Intro (2026-11-11 mock-up): red icon + bold navy title,
+ * then the text; each value as a red name over its description.
  */
 export function MissionVision() {
   const t = useTranslations("about");
 
   return (
-    <section className="relative overflow-hidden bg-paper py-16 lg:py-20">
-      <span
-        aria-hidden
-        className="absolute -top-24 -right-16 h-72 w-72 rounded-full bg-brand-red/10 blur-3xl"
-      />
-      <span
-        aria-hidden
-        className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-brand-navy/10 blur-3xl"
-      />
+    <section className="bg-white pb-14 sm:pb-20">
+      <div className="mx-auto flex max-w-container flex-col gap-6 px-6 sm:gap-8 lg:px-10">
+        {(["mission", "vision"] as const).map((id) => (
+          <article key={id} className={cardClass}>
+            <CardHeading icon={id === "mission" ? Target : Eye}>{t(`${id}.title`)}</CardHeading>
+            <p className="mt-3 font-body text-sm leading-relaxed text-ink sm:text-justify sm:text-[15px]">
+              {t(`${id}.text`)}
+            </p>
+          </article>
+        ))}
 
-      <div className="relative mx-auto max-w-container px-6 lg:px-10">
-        <div className="hidden gap-6 sm:grid sm:grid-cols-2">
-          {CARDS.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div key={card.id} className={cn(cardClass, "flex flex-col gap-4")}>
-                <div
-                  className={cn(
-                    "flex h-11 w-11 items-center justify-center rounded-full",
-                    card.iconBg,
-                    card.iconColor,
-                  )}
-                >
-                  <Icon size={20} />
-                </div>
-                <h3 className="font-display text-2xl text-brand-navy">{t(`${card.id}.title`)}</h3>
-                <p className="text-sm leading-relaxed text-slate">{t(`${card.id}.text`)}</p>
+        <article className={cardClass}>
+          <CardHeading icon={Award}>{t("values.title")}</CardHeading>
+          <dl className="mt-4 flex flex-col gap-4 sm:gap-5">
+            {VALUE_KEYS.map((key) => (
+              <div key={key}>
+                <dt className="font-body text-[15px] font-medium text-brand-red">
+                  {t(`values.items.${key}.title`)}
+                </dt>
+                <dd className="font-body text-sm leading-relaxed text-ink sm:text-[15px]">
+                  {t(`values.items.${key}.description`)}
+                </dd>
               </div>
-            );
-          })}
-        </div>
-
-        <div className="sm:hidden">
-          <MissionVisionCarousel />
-        </div>
+            ))}
+          </dl>
+        </article>
       </div>
     </section>
-  );
-}
-
-function MissionVisionCarousel() {
-  const t = useTranslations("about");
-  const [active, setActive] = useState(0);
-  const [expanded, setExpanded] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (expanded) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % CARDS.length), AUTO_MS);
-    return () => clearInterval(id);
-  }, [expanded]);
-
-  return (
-    <div>
-      <div className="overflow-hidden">
-        <div
-          className="flex transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${active * 100}%)` }}
-        >
-          {CARDS.map((card) => {
-            const Icon = card.icon;
-            const isExpanded = expanded === card.id;
-            const text = t(`${card.id}.text`);
-            const preview = text.length > PREVIEW_LENGTH ? `${text.slice(0, PREVIEW_LENGTH).trimEnd()}…` : text;
-
-            return (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => setExpanded(isExpanded ? null : card.id)}
-                aria-expanded={isExpanded}
-                className="w-full shrink-0 px-0.5 text-left"
-              >
-                <div className={cn(cardClass, "transition-shadow", isExpanded && "shadow-md")}>
-                  <div
-                    className={cn(
-                      "flex h-11 w-11 items-center justify-center rounded-full",
-                      card.iconBg,
-                      card.iconColor,
-                    )}
-                  >
-                    <Icon size={20} />
-                  </div>
-                  <h3 className="mt-4 font-display text-2xl text-brand-navy">{t(`${card.id}.title`)}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate">{isExpanded ? text : preview}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="mt-4 flex justify-center gap-2">
-        {CARDS.map((card, i) => (
-          <button
-            key={card.id}
-            type="button"
-            aria-label={t(`${card.id}.title`)}
-            aria-current={i === active}
-            onClick={() => {
-              setActive(i);
-              setExpanded(null);
-            }}
-            className={cn(
-              "h-1.5 rounded-full transition-all",
-              i === active ? "w-8 bg-brand-red" : "w-3 bg-line",
-            )}
-          />
-        ))}
-      </div>
-    </div>
   );
 }

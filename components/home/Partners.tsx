@@ -1,13 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { partners } from "@/content/partners";
-import { SectionHead } from "@/components/ui/SectionHead";
 import { Marquee } from "@/components/ui/Marquee";
-import { Modal } from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import type { Partner } from "@/types";
 
@@ -21,7 +17,7 @@ function PartnerMark({ partner, className }: { partner: Partner; className?: str
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-brand border border-brand-red/15 bg-white px-2.5 py-1.5 transition-colors hover:border-brand-red/40",
+        "flex shrink-0 items-center justify-center rounded-[1.25rem] border border-brand-red bg-white px-5 py-3",
         className,
       )}
     >
@@ -42,31 +38,18 @@ function PartnerMark({ partner, className }: { partner: Partner; className?: str
 
 export function Partners() {
   const t = useTranslations("partners");
-  const [open, setOpen] = useState(false);
 
   return (
-    <section className="mx-auto max-w-container px-6 py-14 sm:py-20 lg:px-10">
-      <SectionHead eyebrow={t("eyebrow")} title={t("title")} align="center" className="mx-auto" />
+    <section className="mx-auto max-w-container px-6 pt-14 pb-12 sm:pt-20 sm:pb-14 lg:px-10">
+      <h2 className="inline-block border-b-[1.5px] border-brand-red pb-2 font-body text-2xl leading-none font-bold tracking-tight text-brand-navy sm:text-3xl">
+        {t("title")}
+      </h2>
 
-      <Marquee className="mt-8 sm:mt-12">
+      <Marquee className="mt-8 sm:mt-10">
         {partners.map((p) => (
-          <PartnerMark key={p.id} partner={p} className="h-16 w-32 sm:h-20 sm:w-44" />
+          <PartnerMark key={p.id} partner={p} className="h-20 w-40 sm:h-24 sm:w-52" />
         ))}
       </Marquee>
-
-      <div className="mt-6 flex justify-center sm:mt-10">
-        <Button variant="ghost" onClick={() => setOpen(true)}>
-          {t("viewAll")}
-        </Button>
-      </div>
-
-      <Modal open={open} onClose={() => setOpen(false)} title={t("modalTitle")}>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {partners.map((p) => (
-            <PartnerMark key={p.id} partner={p} className="h-20" />
-          ))}
-        </div>
-      </Modal>
     </section>
   );
 }

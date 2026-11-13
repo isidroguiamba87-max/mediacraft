@@ -14,8 +14,6 @@ const staticPaths: StaticPath[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/eventos", changeFrequency: "daily", priority: 0.9 },
   { path: "/novidades", changeFrequency: "daily", priority: 0.8 },
-  { path: "/sobre", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/contacto", changeFrequency: "monthly", priority: 0.5 },
   { path: "/politica-privacidade", changeFrequency: "yearly", priority: 0.2 },
   { path: "/termos-de-uso", changeFrequency: "yearly", priority: 0.2 },
 ];

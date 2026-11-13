@@ -39,6 +39,8 @@ const TAB_ICONS: Record<EventTabKey, LucideIcon> = {
 export interface EventSectionDef {
   key: EventTabKey;
   node: React.ReactNode;
+  /** Heading override for the section body (the side button keeps the tab label). */
+  title?: string;
 }
 
 // How long one section-change's fade+slide transition takes.
@@ -187,8 +189,18 @@ export function EventShell({
                 transition={{ duration: TRANSITION_MS / 1000, ease: "easeOut" }}
               >
                 <div className="p-6 sm:p-8 lg:p-10">
-                  <h2 className="font-display text-2xl text-brand-navy sm:text-3xl">{t(active.key)}</h2>
-                  <div className="mt-6">{active.node}</div>
+                  <h2
+                    className={cn(
+                      "inline-block border-b-[1.5px] border-brand-red pb-3 font-body text-3xl leading-none font-bold tracking-tight text-brand-navy sm:text-4xl lg:text-5xl",
+                      // Tab names render in caps (GALERIA); a custom heading
+                      // ("Painéis") keeps its own casing, with the rule
+                      // running on past the word as in the mock-up.
+                      active.title ? "pr-14" : "uppercase",
+                    )}
+                  >
+                    {active.title ?? t(active.key)}
+                  </h2>
+                  <div className="mt-8">{active.node}</div>
                 </div>
               </motion.div>
             </AnimatePresence>

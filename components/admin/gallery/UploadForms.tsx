@@ -24,7 +24,62 @@ function SubmitButton({ label, pendingLabel, icon: Icon }: { label: string; pend
   );
 }
 
-export function UploadForms({ events }: { events: { id: string; title: string }[] }) {
+type UploadEvent = { id: string; title: string; sections: string[] };
+
+const OTHER = "__other";
+
+/** "Secção" for the photos/video: the chosen event's own sections (from its
+ * Pulse programme) as a list, plus "Outra…" for a free-text one — or just
+ * free text when the event has no sections. Submits as `dayOrSession`. */
+function SectionField({ id, sections }: { id: string; sections: string[] }) {
+  const [choice, setChoice] = useState("");
+  if (sections.length === 0) {
+    return (
+      <div>
+        <label className={labelClass} htmlFor={id}>
+          Secção (opcional)
+        </label>
+        <input id={id} name="dayOrSession" placeholder="ex.: Painel, Stands, Foto geral…" className={inputClass} />
+      </div>
+    );
+  }
+  return (
+    <div>
+      <label className={labelClass} htmlFor={id}>
+        Secção
+      </label>
+      <select
+        id={id}
+        name={choice === OTHER ? undefined : "dayOrSession"}
+        value={choice}
+        onChange={(e) => setChoice(e.target.value)}
+        className={inputClass}
+      >
+        <option value="">Sem secção</option>
+        {sections.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+        <option value={OTHER}>Outra…</option>
+      </select>
+      {choice === OTHER && (
+        <input
+          name="dayOrSession"
+          required
+          autoFocus
+          placeholder="Nome da secção"
+          className={`mt-2 ${inputClass}`}
+        />
+      )}
+    </div>
+  );
+}
+
+export function UploadForms({ events }: { events: UploadEvent[] }) {
+  const [imgEvent, setImgEvent] = useState("");
+  const [vidEvent, setVidEvent] = useState("");
+  const sectionsOf = (id: string) => events.find((e) => e.id === id)?.sections ?? [];
   const [tab, setTab] = useState<"images" | "video">("images");
   const imageFormRef = useRef<HTMLFormElement>(null);
   const videoFormRef = useRef<HTMLFormElement>(null);
@@ -72,7 +127,14 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
               <label className={labelClass} htmlFor="img-event">
                 Evento
               </label>
-              <select id="img-event" name="eventId" required defaultValue="" className={inputClass}>
+              <select
+                id="img-event"
+                name="eventId"
+                required
+                value={imgEvent}
+                onChange={(e) => setImgEvent(e.target.value)}
+                className={inputClass}
+              >
                 <option value="" disabled>
                   Escolhe o evento…
                 </option>
@@ -83,12 +145,7 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
                 ))}
               </select>
             </div>
-            <div>
-              <label className={labelClass} htmlFor="img-day">
-                Dia/sessão (opcional)
-              </label>
-              <input id="img-day" name="dayOrSession" className={inputClass} />
-            </div>
+            <SectionField key={imgEvent} id="img-day" sections={sectionsOf(imgEvent)} />
           </div>
           <div>
             <label className={labelClass} htmlFor="img-caption">
@@ -126,7 +183,14 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
               <label className={labelClass} htmlFor="vid-event">
                 Evento
               </label>
-              <select id="vid-event" name="eventId" required defaultValue="" className={inputClass}>
+              <select
+                id="vid-event"
+                name="eventId"
+                required
+                value={vidEvent}
+                onChange={(e) => setVidEvent(e.target.value)}
+                className={inputClass}
+              >
                 <option value="" disabled>
                   Escolhe o evento…
                 </option>
@@ -137,12 +201,7 @@ export function UploadForms({ events }: { events: { id: string; title: string }[
                 ))}
               </select>
             </div>
-            <div>
-              <label className={labelClass} htmlFor="vid-day">
-                Dia/sessão (opcional)
-              </label>
-              <input id="vid-day" name="dayOrSession" className={inputClass} />
-            </div>
+            <SectionField key={vidEvent} id="vid-day" sections={sectionsOf(vidEvent)} />
           </div>
           <div>
             <label className={labelClass} htmlFor="vid-caption">

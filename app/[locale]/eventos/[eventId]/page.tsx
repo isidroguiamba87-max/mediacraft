@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getEvent } from "@/lib/pulse/endpoints";
 import { getActiveRatingForm, getEventOverride } from "@/lib/bff";
-import { buildSpeakerDirectory } from "@/lib/pulse/panels";
-import { stripHtml, darkenHex, isEventFree } from "@/lib/utils";
+import { buildPanels, buildSpeakerDirectory } from "@/lib/pulse/panels";
+import { stripHtml, darkenHex } from "@/lib/utils";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema, eventSchema } from "@/lib/schema";
@@ -47,10 +47,11 @@ export default async function EventPage({ params, searchParams }: EventPageProps
   const { event } = await getEvent(eventId);
   if (!event) notFound();
 
-  const [ratingForm, override, tNav] = await Promise.all([
+  const [ratingForm, override, tNav, tSpeakers] = await Promise.all([
     getActiveRatingForm(event.id),
     getEventOverride(event.id),
     getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "speakersDirectory" }),
   ]);
 
   // Sections that only make sense with real data behind them stay hidden
@@ -58,7 +59,10 @@ export default async function EventPage({ params, searchParams }: EventPageProps
   // "Perguntas" needs the admin to turn it on for this event (toggle on
   // the admin's Perguntas screen, 2026-10-10) — off by default so a new
   // event doesn't show an empty Q&A section before anyone's opted in.
+  const speakerDirectory = buildSpeakerDirectory(event.speakers, event.sections);
+  // No speakers at all → no "Oradores"/"Painéis" section (nothing to show).
   const hiddenTabs: EventTabKey[] = [
+    ...(speakerDirectory.length > 0 ? [] : (["speakers"] as const)),
     ...(override?.qaEnabled ? [] : (["qa"] as const)),
     ...(event.location.eventLink ? [] : (["live"] as const)),
   ];
@@ -98,8 +102,10 @@ export default async function EventPage({ params, searchParams }: EventPageProps
         return (
           <Oradores
             eventId={event.id}
-            isFree={isEventFree(event)}
-            speakers={buildSpeakerDirectory(event.speakers, event.sections)}
+            speakers={speakerDirectory}
+            panels={buildPanels(event.sections)
+              .filter((p) => p.speakers.length > 0)
+              .map((p) => ({ key: p.key, title: p.title }))}
           />
         );
       case "gallery":
@@ -122,7 +128,12 @@ export default async function EventPage({ params, searchParams }: EventPageProps
     }
   }
 
-  const sections: EventSectionDef[] = visibleKeys.map((key) => ({ key, node: sectionNode(event, key) }));
+  const sections: EventSectionDef[] = visibleKeys.map((key) => ({
+    key,
+    node: sectionNode(event, key),
+    // Speakers are organised by panel, so that section is headed "Painéis".
+    title: key === "speakers" ? tSpeakers("panelsTitle") : undefined,
+  }));
 
   return (
     <div style={accentStyle}>
