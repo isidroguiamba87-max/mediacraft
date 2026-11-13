@@ -14,7 +14,7 @@ export const contactSchema = z.object({
   email: z.email().max(254),
   phone: z.string().trim().max(40).optional().or(z.literal("")),
   subject: z.string().trim().max(200).optional().or(z.literal("")),
-  message: z.string().trim().min(1).max(5000),
+  message: z.string().trim().min(20).max(5000),
   website: z.string().max(200).optional().or(z.literal("")),
 });
 

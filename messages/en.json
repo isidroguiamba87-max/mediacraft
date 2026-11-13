@@ -28,7 +28,11 @@
       "title": "Terms of Use — MediaCraft",
       "description": "Terms and conditions for using the MediaCraft Mozambique website and services."
     },
-    "keywords": "Strategic communication, MediaCraft, corporate events, reputation management, public relations, Mozambique"
+    "keywords": "Strategic communication, MediaCraft, corporate events, reputation management, public relations, Mozambique",
+    "galeria": {
+      "title": "Gallery — MediaCraft",
+      "description": "Photos and videos from every MediaCraft Mozambique event."
+    }
   },
   "nav": {
     "home": "Home",
@@ -37,25 +41,25 @@
     "about": "About Us",
     "contact": "Contact",
     "cta": "Talk to us",
-    "pulse": "Sign in (Pulse)"
+    "pulse": "Sign in (Pulse)",
+    "gallery": "Gallery"
   },
   "showcase": {
     "metaTitle": "Visual demo — MediaCraft",
     "pillars": [
       "Communication",
       "Reputation",
-      "Events",
-      "Content"
+      "Events"
     ],
     "pillarDescriptions": [
       "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and corporate events. We help brands, institutions and organizations navigate challenges, drive growth and strengthen strategic connections.",
       "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and corporate events. We help brands, institutions and organizations navigate challenges, drive growth and strengthen strategic connections.",
-      "We turn ideas into unique experiences, through the concept, planning, organisation and production of corporate, institutional and large-scale events. From strategy to execution, we take care of every detail with creativity, rigour and excellence, delivering experiences that bring people together, strengthen brands and create opportunities.",
-      "MediaCraft Mozambique is a leading Mozambican company in strategic communication, reputation management and corporate events. We help brands, institutions and organizations navigate challenges, drive growth and strengthen strategic connections."
+      "We turn ideas into unique experiences, through the concept, planning, organisation and production of corporate, institutional and large-scale events. From strategy to execution, we take care of every detail with creativity, rigour and excellence, delivering experiences that bring people together, strengthen brands and create opportunities."
     ],
-    "trust": "+70 partners · +500 attendees · +15 countries",
+    "trust": "+70 partners · +5000 attendees · +15 countries",
     "numbersEyebrow": "MediaCraft in numbers",
     "numbersTitle": "Impact you can measure in results.",
+    "numbersViewAll": "View all",
     "flagship": {
       "live": "Live",
       "today": "Happening now",
@@ -103,7 +107,10 @@
         "t": ".",
         "hl": false
       }
-    ]
+    ],
+    "learnMore": "Learn more",
+    "carousel": "Highlights",
+    "goTo": "Show panel {n}"
   },
   "stats": {
     "title": "Our reach",
@@ -121,13 +128,13 @@
         "label": "Media & coverage channels"
       },
       "participants": {
-        "value": "+500",
+        "value": "+5000",
         "label": "Attendees reached"
       }
     }
   },
   "services": {
-    "eyebrow": "What we do",
+    "eyebrow": "What do we do?",
     "title": "Strategy, delivery, impact.",
     "items": {
       "communication": {
@@ -151,7 +158,8 @@
         "description": "Public information campaigns, community involvement, mobilization and territorial activation initiatives at national and local level."
       }
     },
-    "next": "Next"
+    "next": "Next",
+    "carousel": "Services"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -209,8 +217,14 @@
       "eyebrow": "Our story",
       "title": "From two voices to a national narrative.",
       "titleParts": [
-        { "t": "From two voices to a ", "hl": false },
-        { "t": "national narrative.", "hl": true }
+        {
+          "t": "From two voices to a ",
+          "hl": false
+        },
+        {
+          "t": "national narrative.",
+          "hl": true
+        }
       ],
       "paragraphs": [
         "It all began with two women, Linda from Niassa and Vanessa from Zambézia, united by a shared passion: communication. Coming from different backgrounds, they followed different paths, facing the challenges and demands of the corporate world and shaping themselves through experience that only practice allows — until the day they understood that their country's story needed to be told by voices that belonged to it.",
@@ -276,7 +290,9 @@
       "period": "Period",
       "periodAll": "Any date",
       "periodUpcoming": "Upcoming",
-      "periodPast": "Past"
+      "periodPast": "Past",
+      "recent": "Recent",
+      "label": "Filter events by year"
     },
     "empty": "No events found for the selected filters.",
     "card": {
@@ -329,6 +345,8 @@
     "galleryPhotos": "Photos",
     "galleryVideos": "Videos",
     "galleryDocuments": "Documents",
+    "galleryAllDays": "All days",
+    "galleryFilter": "Filter gallery",
     "qaTitle": "Ask the panel",
     "qaNamePlaceholder": "Your name",
     "qaPlaceholder": "Type your question…",
@@ -356,6 +374,9 @@
     "section": "Track"
   },
   "speakersDirectory": {
+    "panelsTitle": "Panels",
+    "panelLabel": "Panel {n}",
+    "others": "Others",
     "searchPlaceholder": "Search for a speaker by name…",
     "allSessions": "All sessions",
     "noResults": "No speakers found.",
@@ -413,17 +434,39 @@
       "phone": "Phone (optional)",
       "subject": "Subject",
       "message": "Message",
-      "submit": "Send message",
+      "submit": "Send the message",
       "sending": "Sending…",
       "success": "Message sent successfully. We'll be in touch soon.",
-      "error": "Couldn't send the message. Please try again."
+      "error": "Couldn't send the message. Please try again.",
+      "title": "Send us a message",
+      "subtitle": "Fill in the form below and our team will be in touch shortly.",
+      "nameLabel": "Full name",
+      "namePh": "Your name",
+      "emailPh": "name@email.com",
+      "subjectPh": "How can we help?",
+      "messagePh": "Type your message here!",
+      "hint": "Minimum 20 characters. We respect your privacy.",
+      "errors": {
+        "nameRequired": "Please enter your name.",
+        "emailInvalid": "Please enter a valid email.",
+        "messageMin": "Your message must be at least 20 characters."
+      }
     },
     "info": {
       "title": "Contact information",
       "email": "Email",
       "address": "Address",
-      "social": "Social media"
-    }
+      "social": "Social media",
+      "intro1": "Talk to us and discover how MediaCraft Mozambique can help turn your vision into reality.",
+      "intro2": "We are ready to listen, understand and build strategic solutions that create real, lasting impact.",
+      "office": "Office location",
+      "phones": "Phone numbers",
+      "emailAddr": "Email address",
+      "hours": "Working hours",
+      "hoursValue": "Mon – Fri: 8:00 – 17:00",
+      "mapTitle": "Map of the MediaCraft office"
+    },
+    "pageTitle": "Contact"
   },
   "footer": {
     "tagline": "Strategic communication and corporate events. Content that turns presence into influence.",
@@ -793,5 +836,11 @@
         "body": "These Terms of Use are governed by Mozambican law."
       }
     ]
+  },
+  "galeria": {
+    "title": "Gallery",
+    "allEvents": "All events",
+    "eventFilter": "Filter by event",
+    "empty": "No photos published yet."
   }
 }

@@ -1,5 +1,5 @@
 import { getEventGallery } from "@/lib/bff";
-import { getEventMaterials } from "@/lib/pulse/endpoints";
+import { getEvent, getEventMaterials } from "@/lib/pulse/endpoints";
 import { GalleryGrid } from "./GalleryGrid";
 import { Library } from "./Library";
 
@@ -12,14 +12,17 @@ import { Library } from "./Library";
  * ticket-gated materials (2026-10-10: admin-uploaded documents retired,
  * "todos os documentos virão da plataforma Pulse"). */
 export async function Gallery({ eventId, isMaterialPublic }: { eventId: string; isMaterialPublic: boolean }) {
-  const [items, { materials, locked }] = await Promise.all([
+  const [items, { materials, locked }, { event }] = await Promise.all([
     getEventGallery(eventId),
     getEventMaterials(eventId),
+    getEvent(eventId),
   ]);
+  const sectionOrder = (event?.sections ?? []).map((s) => s.title.trim()).filter(Boolean);
 
   return (
     <GalleryGrid
       items={items}
+      sectionOrder={sectionOrder}
       documentsSlot={
         <Library eventId={eventId} initialMaterials={materials} initialLocked={locked} isPublic={isMaterialPublic} />
       }

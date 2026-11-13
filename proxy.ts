@@ -58,7 +58,7 @@ function buildCsp(nonce: string): string {
     `img-src 'self' data: blob: https://*.supabase.co https://minio.devpulsemz.cloud https://img.youtube.com https://images.unsplash.com`,
     `font-src 'self' data:`,
     `connect-src ${connectSrc.join(" ")}`,
-    `frame-src https://www.youtube.com`,
+    `frame-src https://www.youtube.com https://www.google.com https://maps.google.com`,
     `object-src 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,

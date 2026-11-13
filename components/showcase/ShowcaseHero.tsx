@@ -4,14 +4,23 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Link } from "@/config/i18n";
 import { buttonVariants } from "@/components/ui/Button";
-import { useCycledIndex } from "@/hooks/useCycledIndex";
 import { usePageLoadSeed, pickStablePhoto } from "@/hooks/usePageLoadSeed";
 import { cn } from "@/lib/utils";
-import { SandHeadline } from "./SandHeadline";
 
-const WORD_MS = 5200;
+// One-page brief (2026-11-11): ~6 s per panel, loop, Eventos → Comunicação
+// → Reputação (the intro video only plays once, before the first loop).
+const WORD_MS = 6000;
+/** Display order, as indexes into the i18n `showcase.pillars` arrays
+ * (stored Comunicação, Reputação, Eventos). */
+const ORDER = [2, 0, 1] as const;
+/** Each panel's button, same display order: Eventos → "Explorar eventos"
+ * (the #eventos section), the other two → "Saiba mais" (#o-que-fazemos). */
+const PANEL_CTA: { key: "secondaryCta" | "learnMore"; href: string }[] = [
+  { key: "secondaryCta", href: "#eventos" },
+  { key: "learnMore", href: "#o-que-fazemos" },
+  { key: "learnMore", href: "#o-que-fazemos" },
+];
 const INTRO_VIDEO_SRC = "/video/hero-intro.mp4";
 // Shot specifically for a tall/portrait screen (confirmed: vertical
 // framing, not just the desktop clip letterboxed) — picked over the
@@ -47,10 +56,15 @@ async function playVideo(video: HTMLVideoElement, onGiveUp: () => void) {
 
 /** One photo set per `showcase.pillars` entry, same order across every
  * locale (Comunicação/Communication, Reputação/Reputation, Eventos/
- * Events, Conteúdos/Content — confirmed in messages/*.json) — indexed
- * rather than matched by (translated) word. `undefined` for a theme with
- * no photo yet; the background just stays the plain wash for it
- * (2026-10-22: "o que faltar deixa em branco"). */
+ * Events — confirmed in messages/*.json) — indexed rather than matched
+ * by (translated) word. `undefined` for a theme with no photo yet; the
+ * background just stays the plain wash for it (2026-10-22: "o que
+ * faltar deixa em branco").
+ *
+ * Only 3 pillars now — "Conteúdos" was dropped (2026-11-11: "só
+ * ficamos com três títulos... Eventos, Comunicação e Reputação, o
+ * outro remova"); see messages/*.json's `showcase.pillars`/
+ * `pillarDescriptions`, which dropped their 4th entry the same way. */
 const PILLAR_PHOTOS: (string[] | undefined)[] = [
   // 2026-10-27: swapped to a different photo for the hero specifically
   // ("essa deve ser a imagem a ser usada agora com o título Comunicação
@@ -67,18 +81,25 @@ const PILLAR_PHOTOS: (string[] | undefined)[] = [
   // content/services.ts's own "Eventos" card further down the page
   // keeps using those, unaffected by this hero-only change.
   ["/images/services/events.jpg"],
-  ["/images/home-services/content.jpg"],
 ];
 
 export function ShowcaseHero() {
   const t = useTranslations("showcase");
   const tHero = useTranslations("hero");
-  const pillars = useMemo(() => t.raw("pillars") as string[], [t]);
+  const pillars = useMemo(() => {
+    const raw = t.raw("pillars") as string[];
+    return ORDER.map((i) => raw[i]).filter((w): w is string => !!w);
+  }, [t]);
   // One paragraph per pillar, same index as PILLAR_PHOTOS/pillars — swaps
   // in alongside the photo and headline as the cycle advances, replacing
   // the single fixed tagline the hero used to show regardless of theme.
-  const pillarDescriptions = useMemo(() => t.raw("pillarDescriptions") as string[], [t]);
+  const pillarDescriptions = useMemo(() => {
+    const raw = t.raw("pillarDescriptions") as string[];
+    return ORDER.map((i) => raw[i] ?? "");
+  }, [t]);
+  const photos = ORDER.map((i) => PILLAR_PHOTOS[i]);
   const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
   const reduceMotion = useReducedMotion();
   const pageLoadSeed = usePageLoadSeed();
 
@@ -107,7 +128,15 @@ export function ShowcaseHero() {
   // sees should always be the actual first one, not whichever the timer
   // had already ticked to behind the video (2026-10-26: "logo aparece o
   // primeiro título").
-  const active = useCycledIndex(pillars.length, WORD_MS, hovered || videoPhase !== "done");
+  const [active, setActive] = useState(0);
+  const paused = hovered || focused || videoPhase !== "done" || !!reduceMotion;
+  // Restarted on every change of `active` (auto or a dot click), so a jump
+  // always gets a full 6 s before the next panel. Cleared on unmount.
+  useEffect(() => {
+    if (paused || pillars.length <= 1) return;
+    const id = setTimeout(() => setActive((v) => (v + 1) % pillars.length), WORD_MS);
+    return () => clearTimeout(id);
+  }, [paused, active, pillars.length]);
 
   // Autoplay (muted) on mount — tried ourselves rather than relying only
   // on the `autoPlay` attribute, so a browser that blocks it still falls
@@ -144,14 +173,38 @@ export function ShowcaseHero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-[calc(100vh-5rem)] flex-col items-center justify-start overflow-hidden bg-brand-navy px-6 pt-10 pb-16 text-center sm:justify-center sm:py-24">
+    <section
+      aria-roledescription="carousel"
+      aria-label={tHero("carousel")}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+      }}
+      className="flex min-h-[calc(100svh-5rem)] flex-col bg-paper px-6 pb-6 sm:px-10 sm:pb-10 lg:px-16 lg:pb-16"
+    >
+      {/* The card itself: rounded corners + overflow-hidden clip the photo
+       * underneath to match, white margin around it coming from the
+       * section's own padding above (2026-11-11: "olhe as bordas
+       * brancas... tem aqui a imagem com a frase no centro" — the hero
+       * isn't full-bleed in the new design, it's an inset card;
+       * "esse retângulo da foto está muito grande... ter bordas brancas
+       * mais grandes" — margin bumped up further so the card itself
+       * reads smaller against the white page background. No top padding
+       * though — "temos na parte da navbar a parte branca que eu quero
+       * para a parte de cima... apenas deixa isso nos lados esquerdo e
+       * direito": the header's own white background already is the top
+       * margin, so the card starts right under it, flush, with the
+       * white gutter only left/right/bottom). */}
+      <div className="relative flex flex-1 flex-col items-center justify-start overflow-hidden rounded-[2rem] bg-brand-navy px-6 pt-10 pb-16 text-center sm:justify-center sm:py-24">
       {/* The themed photo behind everything, with a flat dark wash over it
        * so white text stays legible regardless of what's in the photo
        * (2026-11-11: "esse aqui deve ser o novo visual da tela de início" —
        * replaces the previous light wash + navy text treatment; same
        * dark-overlay-over-photo pattern EventHero already uses). */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        {PILLAR_PHOTOS.map((images, i) =>
+        {photos.map((images, i) =>
           images && images.length > 0 ? (
             <Image
               key={i}
@@ -176,18 +229,28 @@ export function ShowcaseHero() {
       </div>
 
       <div className="relative flex w-full max-w-[1500px] flex-col items-center">
-        <SandHeadline
-          words={pillars}
-          index={active}
-          onHoverChange={setHovered}
-          // The word sits vertically centred inside this box (canvas
-          // `textBaseline: "middle"`), so a box taller than the glyphs
-          // themselves reads as dead space above the word — exactly what
-          // was pushing "Reputação" down on mobile (2026-10-23: "esse
-          // espaço aí em cima podes remover... fazer o texto subir um
-          // pouco... para o modo mobile"). Smaller box on mobile only.
-          className="h-[16vh] max-h-[180px] min-h-[110px] w-full max-w-[1300px] sm:h-[22vh] sm:max-h-[240px] sm:min-h-[140px]"
-        />
+        {/* Plain bold word, cross-fading between pillars — replaces the
+         * sand-particle canvas (SandHeadline) for this redesign
+         * (2026-11-11: "tem uma coisa as letras... mostra exatamente como
+         * deve ficar" — the mockup's title is clean solid type, not a
+         * grain texture). Stacked absolutely so the crossfade doesn't
+         * reflow layout; hover still pauses the cycle, same as before. */}
+        <div className="relative flex h-[16vh] max-h-[190px] min-h-[100px] w-full max-w-[1300px] items-center justify-center sm:h-[24vh] sm:max-h-[270px] sm:min-h-[150px]">
+          <span className="sr-only">{pillars.join(", ")}</span>
+          {pillars.map((word, i) => (
+            <span
+              key={word}
+              aria-hidden={active !== i}
+              style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+              className={cn(
+                "absolute text-6xl font-extrabold tracking-tight text-white uppercase transition-opacity duration-[800ms] ease-out sm:text-7xl lg:text-8xl",
+                active === i ? "opacity-100" : "opacity-0",
+              )}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
 
         {/* One paragraph per pillar (pillarDescriptions[active]) — replaces
          * the single fixed tagline that used to show here regardless of
@@ -196,8 +259,8 @@ export function ShowcaseHero() {
          * search engines regardless of which pillar happened to be
          * animating in when the page was crawled. */}
         <h1
-          className="reveal-up mt-6 max-w-2xl font-body text-base leading-relaxed text-white/90 sm:text-lg"
-          style={{ animationDelay: "0.1s" }}
+          className="reveal-up mt-6 max-w-2xl text-lg leading-relaxed font-normal text-white/90 sm:text-xl"
+          style={{ animationDelay: "0.1s", fontFamily: "Arial, Helvetica, sans-serif" }}
         >
           {pillarDescriptions[active]}
         </h1>
@@ -207,18 +270,35 @@ export function ShowcaseHero() {
           style={{ animationDelay: "0.3s" }}
         >
           <motion.span whileTap={{ scale: 0.95 }} className="inline-flex">
-            <Link
-              href="/eventos"
+            <a
+              href={PANEL_CTA[active]?.href ?? "#eventos"}
               className={buttonVariants(
                 "ghost",
                 "lg",
                 "border-transparent bg-white text-brand-navy uppercase tracking-wide hover:bg-white/90",
               )}
             >
-              {tHero("secondaryCta")}
-            </Link>
+              {tHero(PANEL_CTA[active]?.key ?? "secondaryCta")}
+            </a>
           </motion.span>
         </div>
+      </div>
+
+      {/* segmented indicators — jump straight to any panel */}
+      <div className="absolute inset-x-0 bottom-6 z-10 flex justify-center gap-2 sm:bottom-8">
+        {pillars.map((word, i) => (
+          <button
+            key={word}
+            type="button"
+            onClick={() => setActive(i)}
+            aria-label={tHero("goTo", { n: i + 1 })}
+            aria-current={active === i}
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+              active === i ? "w-10 bg-brand-red" : "w-5 bg-white/60 hover:bg-white",
+            )}
+          />
+        ))}
       </div>
 
       {!reduceMotion && (
@@ -256,6 +336,7 @@ export function ShowcaseHero() {
           </video>
         </div>
       )}
+      </div>
     </section>
   );
 }

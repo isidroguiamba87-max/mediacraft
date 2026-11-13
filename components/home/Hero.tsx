@@ -62,7 +62,7 @@ export function Hero() {
               {t("primaryCta")}
               <ArrowRight size={18} />
             </Link>
-            <Link href="/sobre" className={buttonVariants("ghost", "lg")}>
+            <Link href="/#sobre-nos" className={buttonVariants("ghost", "lg")}>
               {t("secondaryCta")}
             </Link>
           </div>

@@ -1,51 +1,13 @@
-import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ContactForm } from "@/components/contact/ContactForm";
-import { ContactInfo } from "@/components/contact/ContactInfo";
-import type { Locale } from "@/config/i18n";
-import { buildMetadata } from "@/lib/seo";
-import { breadcrumbSchema } from "@/lib/schema";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { setRequestLocale } from "next-intl/server";
+import { redirect } from "@/config/i18n";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "meta.contact" });
-  return buildMetadata({
-    locale: locale as Locale,
-    path: "/contacto",
-    title: t("title"),
-    description: t("description"),
-  });
-}
-
-export default async function ContactPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+/**
+ * One-page site (2026-11-11): this content now lives on the home page as
+ * the #contacto section. The old route is kept only so existing links and
+ * bookmarks still land in the right place.
+ */
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, tNav] = await Promise.all([getTranslations("contact"), getTranslations("nav")]);
-
-  return (
-    <div className="mx-auto max-w-container px-6 py-16 lg:px-10">
-      <JsonLd data={breadcrumbSchema(locale as Locale, [{ name: tNav("contact"), path: "/contacto" }])} />
-      <div className="max-w-2xl">
-        <p className="mb-3 text-xs font-semibold tracking-[0.14em] text-brand-red uppercase">
-          {t("eyebrow")}
-        </p>
-        <h1 className="font-display text-4xl text-brand-navy">{t("title")}</h1>
-        <p className="mt-4 text-base text-slate">{t("subtitle")}</p>
-      </div>
-
-      <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_380px]">
-        <ContactForm />
-        <ContactInfo />
-      </div>
-    </div>
-  );
+  redirect({ href: "/#contacto", locale });
 }

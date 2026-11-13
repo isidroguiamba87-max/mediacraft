@@ -28,7 +28,11 @@
       "title": "Termos de Uso — MediaCraft",
       "description": "Condições de utilização do website e dos serviços da MediaCraft Moçambique."
     },
-    "keywords": "Comunicação estratégica, MediaCraft, eventos corporativos, gestão de reputação, relações públicas, Moçambique"
+    "keywords": "Comunicação estratégica, MediaCraft, eventos corporativos, gestão de reputação, relações públicas, Moçambique",
+    "galeria": {
+      "title": "Galeria — MediaCraft",
+      "description": "Fotografias e vídeos de todos os eventos da MediaCraft Moçambique."
+    }
   },
   "nav": {
     "home": "Início",
@@ -37,25 +41,25 @@
     "about": "Sobre Nós",
     "contact": "Contacto",
     "cta": "Fale connosco",
-    "pulse": "Entrar (Pulse)"
+    "pulse": "Entrar (Pulse)",
+    "gallery": "Galeria"
   },
   "showcase": {
     "metaTitle": "Demonstração visual — MediaCraft",
     "pillars": [
       "Comunicação",
       "Reputação",
-      "Eventos",
-      "Conteúdos"
+      "Eventos"
     ],
     "pillarDescriptions": [
       "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e eventos corporativos. Ajudamos marcas, instituições e organizações a navegar desafios, impulsionar o crescimento e fortalecer conexões estratégicas.",
       "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e eventos corporativos. Ajudamos marcas, instituições e organizações a navegar desafios, impulsionar o crescimento e fortalecer conexões estratégicas.",
-      "Transformamos ideias em experiências únicas, através da concepção, planeamento, organização e produção de eventos corporativos, institucionais e de grande dimensão. Da estratégia à execução, asseguramos cada detalhe com criatividade, rigor e excelência, proporcionando experiências que aproximam pessoas, fortalecem marcas e geram oportunidades.",
-      "A MediaCraft Mozambique é uma empresa moçambicana de referência em comunicação estratégica, gestão de reputação e eventos corporativos. Ajudamos marcas, instituições e organizações a navegar desafios, impulsionar o crescimento e fortalecer conexões estratégicas."
+      "Transformamos ideias em experiências únicas, através da concepção, planeamento, organização e produção de eventos corporativos, institucionais e de grande dimensão. Da estratégia à execução, asseguramos cada detalhe com criatividade, rigor e excelência, proporcionando experiências que aproximam pessoas, fortalecem marcas e geram oportunidades."
     ],
-    "trust": "+70 parceiros · +500 participantes · +15 países",
+    "trust": "+70 parceiros · +5000 participantes · +15 países",
     "numbersEyebrow": "MediaCraft em números",
     "numbersTitle": "Impacto que se mede em resultados.",
+    "numbersViewAll": "Ver tudo",
     "flagship": {
       "live": "Ao vivo",
       "today": "A decorrer agora",
@@ -103,7 +107,10 @@
         "t": ".",
         "hl": false
       }
-    ]
+    ],
+    "learnMore": "Saiba mais",
+    "carousel": "Destaques",
+    "goTo": "Mostrar painel {n}"
   },
   "stats": {
     "title": "O nosso alcance",
@@ -121,13 +128,13 @@
         "label": "Canais de média & cobertura"
       },
       "participants": {
-        "value": "+500",
+        "value": "+5000",
         "label": "Participantes alcançados"
       }
     }
   },
   "services": {
-    "eyebrow": "O que fazemos",
+    "eyebrow": "O que fazemos?",
     "title": "Estratégia, execução e impacto.",
     "items": {
       "communication": {
@@ -151,7 +158,8 @@
         "description": "Campanhas de informação pública, envolvimento comunitário, mobilização e acções de activação territorial a nível nacional e local."
       }
     },
-    "next": "Seguinte"
+    "next": "Seguinte",
+    "carousel": "Serviços"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -167,7 +175,7 @@
   },
   "cta": {
     "title": "Tens um evento para acontecer?",
-    "subtitle": "Da primeira ideia ao relatório final — construímos a experiência completa, no palco e no ecrã.",
+    "subtitle": "Da primeira ideia ao relatório final, construímos a experiência completa, no palco e no ecrã",
     "button": "Fale connosco"
   },
   "about": {
@@ -182,7 +190,7 @@
     },
     "vision": {
       "title": "Visão",
-      "text": "Ser referência incontornável em comunicação estratégica, desenvolvimento de conteúdos impactantes e organização de eventos memoráveis em Moçambique e no continente africano — criando narrativas poderosas, fortalecendo reputações e impulsionando conexões estratégicas que geram valor sustentável."
+      "text": "Ser referência incontornável em comunicação estratégica, desenvolvimento de conteúdos impactantes e organização de eventos memoráveis em Moçambique e no continente africano, criando narrativas poderosas, fortalecendo reputações e impulsionando conexões estratégicas que geram valor sustentável."
     },
     "values": {
       "title": "Os nossos valores",
@@ -209,8 +217,14 @@
       "eyebrow": "A nossa história",
       "title": "De duas vozes a uma narrativa nacional.",
       "titleParts": [
-        { "t": "De duas vozes a uma ", "hl": false },
-        { "t": "narrativa nacional.", "hl": true }
+        {
+          "t": "De duas vozes a uma ",
+          "hl": false
+        },
+        {
+          "t": "narrativa nacional.",
+          "hl": true
+        }
       ],
       "paragraphs": [
         "Tudo começou com duas mulheres, Linda do Niassa, e Vanessa da Zambézia, unidas por uma paixão em comum: a comunicação. Vindas de origens distintas, percorreram caminhos diferentes, enfrentaram os desafios e as exigências do mundo corporativo, moldando-se nas experiências que só a prática permite, até que um dia compreenderam que a narrativa do seu país precisava ser contada por vozes que lhe pertencem.",
@@ -276,7 +290,9 @@
       "period": "Período",
       "periodAll": "Qualquer data",
       "periodUpcoming": "Próximos",
-      "periodPast": "Já realizados"
+      "periodPast": "Já realizados",
+      "recent": "Recentes",
+      "label": "Filtrar eventos por ano"
     },
     "empty": "Nenhum evento encontrado para os filtros seleccionados.",
     "card": {
@@ -329,6 +345,8 @@
     "galleryPhotos": "Fotos",
     "galleryVideos": "Vídeos",
     "galleryDocuments": "Documentos",
+    "galleryAllDays": "Todos os dias",
+    "galleryFilter": "Filtrar galeria",
     "qaTitle": "Perguntas ao painel",
     "qaNamePlaceholder": "O seu nome",
     "qaPlaceholder": "Escreva a sua pergunta…",
@@ -356,6 +374,9 @@
     "section": "Secção"
   },
   "speakersDirectory": {
+    "panelsTitle": "Painéis",
+    "panelLabel": "Painel {n}",
+    "others": "Outros",
     "searchPlaceholder": "Procurar orador pelo nome…",
     "allSessions": "Todas as sessões",
     "noResults": "Nenhum orador encontrado.",
@@ -413,17 +434,39 @@
       "phone": "Telefone (opcional)",
       "subject": "Assunto",
       "message": "Mensagem",
-      "submit": "Enviar mensagem",
+      "submit": "Enviar a mensagem",
       "sending": "A enviar…",
       "success": "Mensagem enviada com sucesso. Entraremos em contacto em breve.",
-      "error": "Não foi possível enviar a mensagem. Tente novamente."
+      "error": "Não foi possível enviar a mensagem. Tente novamente.",
+      "title": "Envie-nos uma mensagem",
+      "subtitle": "Preencha o formulário abaixo e a nossa equipa entrará em contacto em breve.",
+      "nameLabel": "Nome completo",
+      "namePh": "O seu nome",
+      "emailPh": "nome@email.com",
+      "subjectPh": "Como podemos ajudar?",
+      "messagePh": "Digite a sua mensagem aqui!",
+      "hint": "Mínimo 20 caracteres. Respeitamos a sua privacidade.",
+      "errors": {
+        "nameRequired": "Indique o seu nome.",
+        "emailInvalid": "Indique um e-mail válido.",
+        "messageMin": "A mensagem deve ter pelo menos 20 caracteres."
+      }
     },
     "info": {
       "title": "Informações de contacto",
       "email": "E-mail",
       "address": "Endereço",
-      "social": "Redes sociais"
-    }
+      "social": "Redes sociais",
+      "intro1": "Fale connosco e descubra como a MediaCraft Mozambique pode ajudar a transformar a sua visão em realidade.",
+      "intro2": "Estamos prontos para ouvir, compreender e construir soluções estratégicas que criem impacto real e sustentável.",
+      "office": "Localização do escritório",
+      "phones": "Números de telefone",
+      "emailAddr": "Endereço de e-mail",
+      "hours": "Horário de trabalho",
+      "hoursValue": "Seg – Sex: 8:00 – 17:00",
+      "mapTitle": "Mapa do escritório da MediaCraft"
+    },
+    "pageTitle": "Contacto"
   },
   "footer": {
     "tagline": "Comunicação estratégica e eventos corporativos. Conteúdos que transformam presença em influência.",
@@ -793,5 +836,11 @@
         "body": "Estes Termos de Uso regem-se pela lei moçambicana."
       }
     ]
+  },
+  "galeria": {
+    "title": "Galeria",
+    "allEvents": "Todos os eventos",
+    "eventFilter": "Filtrar por evento",
+    "empty": "Ainda não há fotografias publicadas."
   }
 }

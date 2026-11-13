@@ -6,7 +6,9 @@ import { HeroVideoReplayButton } from "./HeroVideoReplayButton";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur">
+    // Fixed and always visible on the one-page site (2026-11-11) — the old
+    // ScrollFadeHeader (faded out while scrolling) is no longer used here.
+    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
       <div className="relative mx-auto flex h-20 max-w-container items-center justify-between px-6 lg:px-10">
         <Link
           href="/"
