@@ -11,7 +11,8 @@ import { Footer } from "./Footer";
 // nothing should appear or shift below the event content. Every other
 // route (the events list, a panel's own detail page) keeps the real
 // Footer always.
-const EVENT_DETAIL_PATTERN = /^\/eventos\/[^/]+$/;
+// …and the panelists' private interaction page (/eventos/<id>/interacao/<token>).
+const EVENT_DETAIL_PATTERN = /^\/eventos\/[^/]+(\/interacao\/[^/]+)?$/;
 
 export function ConditionalFooter() {
   const pathname = usePathname();

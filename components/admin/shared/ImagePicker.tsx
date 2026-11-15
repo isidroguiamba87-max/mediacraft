@@ -23,7 +23,7 @@ function fileKey(f: File) {
  * FileList via DataTransfer every time it changes, since a native file
  * input's FileList can't be edited in place.
  *
- * Shared between the Galeria and Novidades admin uploaders — give it a
+ * Used by the Galeria admin uploader — give it a
  * fresh `key` after a successful submit to clear it (`form.reset()`
  * alone doesn't fire its onChange).
  */

@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       // Defense in depth alongside the `robots: { index: false }` metadata
       // already set on these routes (app/admin/layout.tsx) — keeps
       // crawlers from spending budget on them in the first place.
-      disallow: ["/admin", "/api", "/responder"],
+      disallow: ["/admin", "/api"],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };

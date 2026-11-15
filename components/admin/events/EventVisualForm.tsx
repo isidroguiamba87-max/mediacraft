@@ -17,6 +17,14 @@ const inputClass =
 const labelClass = "mb-1.5 block text-xs font-medium text-slate";
 
 const DEFAULT_ACCENT = "#bf262e";
+/** The cover's default shadow: brand navy at 60%. */
+const DEFAULT_OVERLAY = "#001b32";
+const DEFAULT_OVERLAY_PCT = 60;
+
+const toHexAlpha = (pct: number) =>
+  Math.round((Math.min(100, Math.max(0, pct)) / 100) * 255)
+    .toString(16)
+    .padStart(2, "0");
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -40,13 +48,36 @@ export function EventVisualForm({
 }) {
   const [removeCover, setRemoveCover] = useState(false);
   const [accentColor, setAccentColor] = useState(override?.accentColor ?? "");
+  // Cover shadow, stored as "#rrggbbaa" — split here into colour + strength.
+  // "#rrggbbaa" or, for a gradient, "#rrggbbaa,#rrggbbaa" (left → right).
+  const savedOverlay = override?.overlayColor ?? null;
+  const savedStops = savedOverlay ? savedOverlay.split(",") : [];
+  const [overlayHex, setOverlayHex] = useState(savedStops[0] ? savedStops[0].slice(0, 7) : DEFAULT_OVERLAY);
+  const [overlayHex2, setOverlayHex2] = useState<string | null>(savedStops[1] ? savedStops[1].slice(0, 7) : null);
+  const [overlayPct, setOverlayPct] = useState(
+    savedStops[0] ? Math.round((parseInt(savedStops[0].slice(7, 9), 16) / 255) * 100) : DEFAULT_OVERLAY_PCT,
+  );
+  const [overlayTouched, setOverlayTouched] = useState(!!savedOverlay);
+  const alpha = toHexAlpha(overlayPct);
+  const overlayValue = overlayHex2 ? `${overlayHex}${alpha},${overlayHex2}${alpha}` : `${overlayHex}${alpha}`;
+  const overlayCss = overlayHex2
+    ? `linear-gradient(100deg, ${overlayHex}${alpha}, ${overlayHex2}${alpha})`
+    : `${overlayHex}${alpha}`;
+  const [removeLogo, setRemoveLogo] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const boundAction = saveEventOverrideAction.bind(null, eventId, override?.coverImageUrl ?? null);
+  const boundAction = saveEventOverrideAction.bind(
+    null,
+    eventId,
+    override?.coverImageUrl ?? null,
+    override?.logoUrl ?? null,
+    override?.tagline ?? null,
+    override?.liveInfo ?? null,
+  );
   const effectiveCover = override?.coverImageUrl ?? pulseCoverUrl;
 
   function onReset() {
-    if (!confirm("Repor este evento para o visual original do Pulse? A capa e a cor personalizadas são removidas.")) {
+    if (!confirm("Repor este evento para o visual original do Pulse? A capa, a cor e a sombra personalizadas são removidas.")) {
       return;
     }
     startTransition(async () => {
@@ -64,6 +95,7 @@ export function EventVisualForm({
       action={async (formData) => {
         try {
           await replaceFileField(formData, "cover");
+          await replaceFileField(formData, "logo");
           await boundAction(formData);
           toast.success("Alterações guardadas com sucesso!");
         } catch {
@@ -108,6 +140,221 @@ export function EventVisualForm({
           </label>
           <input id="cover" name="cover" type="file" accept="image/*" className={inputClass} />
         </div>
+      </div>
+
+      <div className="rounded-brand border border-line bg-paper p-5">
+        <h2 className="font-display text-lg text-brand-navy">Logótipo e tema</h2>
+        <p className="mt-1 text-sm text-slate">
+          O logótipo aparece na barra de cima da página do evento (no lugar do da MediaCraft). O tema aparece por
+          baixo do nome do evento, na primeira tela.
+        </p>
+
+        {override?.logoUrl && !removeLogo && (
+          <div className="mt-4 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- Supabase Storage image */}
+            <img src={override.logoUrl} alt="" className="h-12 w-auto rounded border border-line bg-white p-1" />
+            <label className="flex items-center gap-2 text-xs text-slate">
+              <input type="checkbox" name="removeLogo" onChange={(e) => setRemoveLogo(e.target.checked)} />
+              Remover logótipo
+            </label>
+          </div>
+        )}
+
+        <div className="mt-4">
+          <label className={labelClass} htmlFor="logo">
+            {override?.logoUrl ? "Novo logótipo" : "Logótipo do evento"} (PNG com fundo transparente, de preferência)
+          </label>
+          <input id="logo" name="logo" type="file" accept="image/*" className={inputClass} />
+        </div>
+
+        <div className="mt-4">
+          <label className={labelClass} htmlFor="tagline">
+            Tema (ex.: &ldquo;Tema: Transformar actividade económica em activos financiáveis…&rdquo;)
+          </label>
+          <textarea
+            id="tagline"
+            name="tagline"
+            rows={2}
+            defaultValue={override?.tagline ?? ""}
+            className="w-full rounded-brand border border-line bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors focus-visible:border-brand-red"
+          />
+        </div>
+      </div>
+
+      <div className="rounded-brand border border-line bg-paper p-5">
+        <h2 className="font-display text-lg text-brand-navy">Ao Vivo (Zoom)</h2>
+        <p className="mt-1 text-sm text-slate">
+          Aparece na secção &ldquo;Ao Vivo&rdquo; do evento. O link de entrada vem do Pulse (link do evento); só
+          preencha aqui se quiser usar outro. O ID da reunião é lido do link do Zoom quando não é preenchido.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label className={labelClass} htmlFor="liveJoinUrl">
+              Link para entrar (opcional)
+            </label>
+            <input
+              id="liveJoinUrl"
+              name="liveJoinUrl"
+              type="url"
+              placeholder="https://zoom.us/j/…"
+              defaultValue={override?.liveInfo?.joinUrl ?? ""}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="liveMeetingId">
+              ID da reunião
+            </label>
+            <input
+              id="liveMeetingId"
+              name="liveMeetingId"
+              placeholder="842 7512 2896"
+              defaultValue={override?.liveInfo?.meetingId ?? ""}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="livePasscode">
+              Senha
+            </label>
+            <input
+              id="livePasscode"
+              name="livePasscode"
+              placeholder="751947"
+              defaultValue={override?.liveInfo?.passcode ?? ""}
+              className={inputClass}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelClass} htmlFor="liveChatUrl">
+              Link do chat da reunião (opcional)
+            </label>
+            <input
+              id="liveChatUrl"
+              name="liveChatUrl"
+              type="url"
+              placeholder="https://…"
+              defaultValue={override?.liveInfo?.chatUrl ?? ""}
+              className={inputClass}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelClass} htmlFor="liveInstructions">
+              Instruções de acesso (opcional)
+            </label>
+            <textarea
+              id="liveInstructions"
+              name="liveInstructions"
+              rows={4}
+              defaultValue={override?.liveInfo?.instructions ?? ""}
+              className="w-full rounded-brand border border-line bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors focus-visible:border-brand-red"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-brand border border-line bg-paper p-5">
+        <h2 className="font-display text-lg text-brand-navy">Sombra da capa</h2>
+        <p className="mt-1 text-sm text-slate">
+          A cor que cobre a imagem de capa no topo da página do evento, por baixo do título. Escolhe a cor e a
+          intensidade — a pré-visualização mostra como fica.
+        </p>
+
+        <div className="relative mt-4 h-32 overflow-hidden rounded-brand bg-brand-navy">
+          {effectiveCover && (
+            // eslint-disable-next-line @next/next/no-img-element -- Pulse or Supabase Storage image
+            <img src={effectiveCover} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          )}
+          <span className="absolute inset-0" style={{ background: overlayCss }} />
+          <span className="relative flex h-full items-center px-5 font-display text-lg text-white">
+            Título do evento
+          </span>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <input
+            type="color"
+            aria-label="Cor da sombra"
+            value={overlayHex}
+            onChange={(e) => {
+              setOverlayHex(e.target.value);
+              setOverlayTouched(true);
+            }}
+            className="h-11 w-14 cursor-pointer rounded-brand border border-line bg-paper"
+          />
+          <label className="flex flex-1 items-center gap-3 text-sm text-slate">
+            Intensidade
+            <input
+              type="range"
+              min={0}
+              max={95}
+              value={overlayPct}
+              onChange={(e) => {
+                setOverlayPct(Number(e.target.value));
+                setOverlayTouched(true);
+              }}
+              className="flex-1 accent-brand-red"
+            />
+            <span className="w-10 text-right tabular-nums">{overlayPct}%</span>
+          </label>
+          {overlayHex2 ? (
+            <>
+              <span className="text-sm text-slate">→</span>
+              <input
+                type="color"
+                aria-label="Segunda cor do degradé"
+                value={overlayHex2}
+                onChange={(e) => {
+                  setOverlayHex2(e.target.value);
+                  setOverlayTouched(true);
+                }}
+                className="h-11 w-14 cursor-pointer rounded-brand border border-line bg-paper"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setOverlayHex2(null);
+                  setOverlayTouched(true);
+                }}
+                className="text-xs text-slate underline hover:text-brand-red"
+              >
+                Só uma cor
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setOverlayHex2("#1f8a7a");
+                setOverlayTouched(true);
+              }}
+              className="text-xs text-slate underline hover:text-brand-red"
+            >
+              + Degradé (2.ª cor)
+            </button>
+          )}
+          {overlayTouched && (
+            <button
+              type="button"
+              onClick={() => {
+                setOverlayHex2(null);
+                setOverlayHex(DEFAULT_OVERLAY);
+                setOverlayPct(DEFAULT_OVERLAY_PCT);
+                setOverlayTouched(false);
+              }}
+              className="text-xs text-slate underline hover:text-brand-red"
+            >
+              Usar a padrão
+            </button>
+          )}
+        </div>
+        {/* changed → the new value; reset after one was saved → "default"
+            (clears it); otherwise empty (left as is) */}
+        <input
+          type="hidden"
+          name="overlayColor"
+          value={overlayTouched ? overlayValue : savedOverlay ? "default" : ""}
+        />
       </div>
 
       <div className="rounded-brand border border-line bg-paper p-5">

@@ -1,10 +1,9 @@
 import {
   Handshake,
   LayoutDashboard,
-  Newspaper,
   Images,
   Star,
-  MessageCircleQuestion,
+  MessagesSquare,
   Database,
   Palette,
   ShieldCheck,
@@ -21,10 +20,9 @@ import {
  * Networking funnel's metrics. */
 export const ADMIN_NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/novidades", label: "Novidades", icon: Newspaper },
   { href: "/admin/galeria", label: "Galeria", icon: Images },
   { href: "/admin/avaliacao", label: "Avaliação", icon: Star },
-  { href: "/admin/perguntas", label: "Perguntas", icon: MessageCircleQuestion },
+  { href: "/admin/interacao", label: "Interação", icon: MessagesSquare },
   { href: "/admin/networking", label: "Networking", icon: Handshake },
   { href: "/admin/eventos", label: "Visual do Evento", icon: Palette },
   { href: "/admin/pulse", label: "Dados do Pulse", icon: Database },

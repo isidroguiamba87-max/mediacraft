@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Images, Newspaper, Users, Mail, type LucideIcon } from "lucide-react";
+import { Home, Images, Users, Mail, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/config/i18n";
 import { mainNav, sectionNav } from "@/config/site.config";
@@ -11,7 +11,6 @@ const NAV_ICONS: Record<(typeof mainNav)[number]["key"], LucideIcon> = {
   home: Home,
   about: Users,
   gallery: Images,
-  news: Newspaper,
   contact: Mail,
 };
 
@@ -25,13 +24,7 @@ export function MobileBottomNav() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const section = useActiveSection(SPY_IDS);
-  const activeKey = pathname.startsWith("/novidades")
-    ? "news"
-    : section
-      ? sectionNav[section]
-      : pathname === "/"
-        ? "home"
-        : null;
+  const activeKey = section ? sectionNav[section] : pathname === "/" ? "home" : null;
 
   return (
     <>

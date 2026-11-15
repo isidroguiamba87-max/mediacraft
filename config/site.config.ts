@@ -37,9 +37,6 @@ export const mainNav = [
   { key: "home", href: "/", section: "inicio" },
   { key: "about", href: "/#sobre-nos", section: "sobre-nos" },
   { key: "gallery", href: "/#galeria", section: "galeria" },
-  // Novidades is its own page (not a home section) — back in the nav at
-  // the user's request (2026-11-12). `section: null` = no scroll-spy.
-  { key: "news", href: "/novidades", section: null },
   { key: "contact", href: "/#contacto", section: "contacto" },
 ] as const;
 

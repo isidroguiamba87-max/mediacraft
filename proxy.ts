@@ -96,13 +96,6 @@ function withNonce(request: NextRequest, nonce: string, csp: string): NextReques
  * /pt|/en|/fr-prefixed URL. So: /admin paths get the Supabase session
  * refresh only; everything else gets the original next-intl behaviour,
  * untouched.
- *
- * /responder/** (2026-10-09, the per-speaker answer-link feature) is the
- * same situation: a short, unauthenticated link an admin copies and sends
- * straight to a panelist over WhatsApp/email, so it stays out of
- * [locale] too, on purpose — no session refresh needed there (it's not
- * behind Supabase auth, just an unguessable token), so it just skips the
- * intl rewrite entirely.
  */
 export default async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -112,8 +105,6 @@ export default async function proxy(request: NextRequest) {
   let response: NextResponse;
   if (request.nextUrl.pathname.startsWith("/admin")) {
     response = await refreshSupabaseSession(nonceRequest);
-  } else if (request.nextUrl.pathname.startsWith("/responder")) {
-    response = NextResponse.next({ request: nonceRequest });
   } else {
     response = intlProxy(nonceRequest);
   }

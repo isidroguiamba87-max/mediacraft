@@ -8,10 +8,6 @@
       "title": "Événements — MediaCraft",
       "description": "Découvrez les événements corporatifs organisés par MediaCraft : conférences, forums et rencontres qui relient marques, médias et public."
     },
-    "novidades": {
-      "title": "Actualités — MediaCraft",
-      "description": "Les dernières actualités et mises à jour de MediaCraft Mozambique."
-    },
     "about": {
       "title": "À propos — MediaCraft",
       "description": "Mission, vision, valeurs et l'équipe derrière MediaCraft Mozambique."
@@ -37,7 +33,6 @@
   "nav": {
     "home": "Accueil",
     "events": "Événements",
-    "news": "Actualités",
     "about": "À propos",
     "contact": "Contact",
     "cta": "Contactez-nous",
@@ -306,14 +301,12 @@
   "eventTabs": {
     "details": "Détails",
     "detailsEmpty": "Il n'y a pas encore de description pour cet événement.",
-    "news": "Actualités",
     "live": "En direct",
     "program": "Programme",
     "speakers": "Intervenants",
     "gallery": "Galerie",
     "partners": "Partenaires",
     "organizer": "Organisateur",
-    "qa": "Questions",
     "tickets": "Billets",
     "ageLimit": "+{count} ans",
     "wheelchairAccess": "Accès pour fauteuil roulant",
@@ -321,6 +314,8 @@
     "partnersSectionEmpty": "Aucun partenaire dans cette section pour l'instant.",
     "organizerEmpty": "Informations sur l'organisateur non disponibles.",
     "organizerLabel": "Organisé par",
+    "partnersSupport": "Partenaires et Soutiens",
+    "allRightsReserved": "Tous droits réservés",
     "newsEmpty": "Pas encore d'actualités pour cet événement.",
     "newsFeatured": "En vedette",
     "liveOffline": "La diffusion en direct n'a pas encore commencé.",
@@ -347,22 +342,21 @@
     "galleryDocuments": "Documents",
     "galleryAllDays": "Tous les jours",
     "galleryFilter": "Filtrer la galerie",
-    "qaTitle": "Posez une question au panel",
-    "qaNamePlaceholder": "Votre nom",
-    "qaPlaceholder": "Écrivez votre question…",
-    "qaSubmit": "Envoyer la question",
-    "qaEmpty": "Soyez le premier à poser une question.",
-    "qaSending": "Envoi…",
-    "qaSent": "Question envoyée ! Elle apparaîtra ici dès qu'elle aura été validée par les organisateurs.",
-    "qaPanelLabel": "Panel / session (facultatif)",
-    "qaPanelPlaceholder": "Aucun panel spécifique",
-    "qaSpeakerLabel": "Intervenant (facultatif)",
-    "qaSpeakerPlaceholder": "Aucun intervenant spécifique",
-    "qaAnswerLabel": "Réponse",
     "programDay": "Jour {n}",
     "programToday": "Aujourd'hui",
     "programSessions": "{count, plural, one {# session} other {# sessions}}",
-    "heroFree": "Participer"
+    "heroFree": "Participer",
+    "viewProgram": "Voir le programme",
+    "reserveTicket": "Réserver un billet",
+    "liveZoomChat": "Chat de la réunion",
+    "liveZoomInstructions": "Instructions d’accès",
+    "liveZoomMeetingId": "ID de réunion",
+    "liveZoomPasscode": "Code secret",
+    "liveCopy": "toucher pour copier",
+    "liveJoinTitle": "Participez aussi via {platform}",
+    "liveJoinTitleGeneric": "Participez aussi en ligne",
+    "liveJoinVia": "Rejoindre sur {platform}",
+    "liveJoinGeneric": "Rejoindre"
   },
   "panel": {
     "back": "Retour aux panneaux",
@@ -374,17 +368,19 @@
     "section": "Section"
   },
   "speakersDirectory": {
-    "panelsTitle": "Panels",
+    "panelsTitle": "Panels & sessions",
     "panelLabel": "Panel {n}",
     "others": "Autres",
     "searchPlaceholder": "Rechercher un intervenant par nom…",
     "allSessions": "Toutes les sessions",
     "noResults": "Aucun intervenant trouvé.",
-    "empty": "Aucun intervenant confirmé pour cet événement pour l'instant."
-  },
-  "speakerProfile": {
-    "back": "Retour aux intervenants",
-    "sessions": "Participe à"
+    "empty": "Aucun intervenant confirmé pour cet événement pour l'instant.",
+    "prevPanel": "Panel précédent",
+    "nextPanel": "Panel suivant",
+    "partners": "Partenaires",
+    "othersTitle": "Autres intervenants",
+    "speakerTitle": "Intervenant",
+    "close": "Fermer"
   },
   "tickets": {
     "title": "Billets",
@@ -625,7 +621,7 @@
       "mediaHint": "Glissez une image ou vidéo",
       "publishCta": "Publier sur l'événement",
       "listTitle": "Déjà publié",
-      "listSubtitle": "Apparaît dans les Actualités du mini-site"
+      "listSubtitle": "Affiché sur le micro-site de l’événement"
     },
     "communications": {
       "title": "Communications",
@@ -739,15 +735,6 @@
       "talk": "Discuter"
     }
   },
-  "novidades": {
-    "title": "Actualités",
-    "subtitle": "Les dernières actualités et mises à jour de MediaCraft.",
-    "empty": "Aucune actualité publiée pour le moment.",
-    "backToList": "Actualités",
-    "viewEvent": "Voir l'événement",
-    "gallery": "Galerie",
-    "share": "Partager"
-  },
   "cookieConsent": {
     "message": "Nous utilisons uniquement des cookies techniques, essentiels au fonctionnement du site. Nous n'utilisons pas de cookies publicitaires ni de suivi sans ton consentement.",
     "accept": "Accepter",
@@ -841,5 +828,19 @@
     "allEvents": "Tous les événements",
     "eventFilter": "Filtrer par événement",
     "empty": "Aucune photo publiée pour le moment."
+  },
+  "panelRoom": {
+    "kicker": "Espace d’échange des panélistes",
+    "title": "Échanges",
+    "intro": "Écrivez ici vos questions et commentaires. Seules les personnes ayant ce lien voient cette conversation.",
+    "name": "Votre nom",
+    "message": "Message",
+    "placeholder": "Écrivez votre question ou commentaire…",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "error": "Impossible d’envoyer. Veuillez réessayer.",
+    "conversation": "Conversation",
+    "loading": "Chargement…",
+    "empty": "Pas encore de messages. Soyez le premier à écrire."
   }
 }
