@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-/** app/api/bff/events/[eventId]/questions POST — see lib/bff/addQuestion. */
-export const addQuestionSchema = z.object({
-  name: z.string().trim().min(1).max(80),
-  question: z.string().trim().min(1).max(500),
-  panelTitle: z.string().trim().max(200).optional(),
-  speakerName: z.string().trim().max(120).optional(),
-});
-
 /** app/api/bff/networking/intents POST — see lib/bff/addNetworkingIntent. */
 export const networkingIntentSchema = z.object({
   eventId: z.string().trim().min(1).max(200),
@@ -17,13 +9,6 @@ export const networkingIntentSchema = z.object({
   connectionReason: z.enum(["negocio", "parceria", "tema", "carreira", "investimento", "outro"]),
   channel: z.enum(["linkedin", "whatsapp", "other"]),
   attendeeId: z.string().trim().min(1).max(200),
-});
-
-/** app/api/bff/questions/[questionId]/feedback POST — see
- * lib/bff/voteQuestionFeedback. */
-export const questionFeedbackSchema = z.object({
-  type: z.enum(["helpful", "unhelpful"]),
-  action: z.enum(["vote", "undo"]).optional(),
 });
 
 /** [locale]/eventos/[eventId]/rating-actions.ts submitRatingAction — see

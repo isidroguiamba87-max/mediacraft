@@ -10,7 +10,7 @@ import { Select } from "@/components/ui/Select";
 const fieldClass =
   "h-11 w-full rounded-brand border border-line bg-paper px-4 text-sm text-ink outline-none transition-colors focus-visible:border-brand-red";
 
-const MODULE_KEYS = ["news", "live", "program", "speakers", "library", "gallery", "qa", "tickets"] as const;
+const MODULE_KEYS = ["live", "program", "speakers", "library", "gallery", "qa", "tickets"] as const;
 
 export function CreateEvent() {
   const t = useTranslations("pulse.create");

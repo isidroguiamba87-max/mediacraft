@@ -13,19 +13,13 @@ const SPY_IDS = Object.keys(sectionNav);
  * anchors on the home page (smooth scroll + header offset come from CSS —
  * `scroll-behavior` on <html>, `scroll-mt-20` on each section). On the home
  * page the link of the section in view is highlighted (scroll-spy); on any
- * other page (an event, a news item) "Início" stays lit.
+ * other page (an event) "Início" stays lit.
  */
 export function Nav({ className }: { className?: string }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const section = useActiveSection(SPY_IDS);
-  const activeKey = pathname.startsWith("/novidades")
-    ? "news"
-    : section
-      ? sectionNav[section]
-      : pathname === "/"
-        ? "home"
-        : null;
+  const activeKey = section ? sectionNav[section] : pathname === "/" ? "home" : null;
 
   return (
     <nav className={cn("flex items-center gap-2", className)}>

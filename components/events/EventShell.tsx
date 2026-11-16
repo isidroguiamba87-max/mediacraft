@@ -1,15 +1,13 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
-  HelpCircle,
   Image as ImageIcon,
   Info,
   Menu,
   Mic,
-  Newspaper,
   Radio,
   Ticket,
   Users,
@@ -18,7 +16,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { EventHero } from "./EventHero";
+import { EventHero, EventTopBar } from "./EventHero";
 import { EventFooter } from "./EventFooter";
 import { NetworkingPrompt } from "@/components/networking/NetworkingPrompt";
 import type { EventTabKey } from "@/lib/events/tabs";
@@ -26,13 +24,11 @@ import type { PulseEventDetail } from "@/lib/pulse/types";
 
 const TAB_ICONS: Record<EventTabKey, LucideIcon> = {
   details: Info,
-  news: Newspaper,
   live: Radio,
   program: CalendarDays,
   speakers: Mic,
   gallery: ImageIcon,
   organizer: Users,
-  qa: HelpCircle,
   tickets: Ticket,
 };
 
@@ -41,6 +37,8 @@ export interface EventSectionDef {
   node: React.ReactNode;
   /** Heading override for the section body (the side button keeps the tab label). */
   title?: string;
+  /** Render the heading as written ("Painéis") instead of in caps. */
+  keepTitleCase?: boolean;
 }
 
 // How long one section-change's fade+slide transition takes.
@@ -90,11 +88,19 @@ export function EventShell({
   event,
   sections,
   initialKey,
+  logoUrl = null,
+  tagline = null,
 }: {
   event: PulseEventDetail;
   sections: EventSectionDef[];
   initialKey?: EventTabKey;
+  /** The event's own logo / theme line, from the admin's "Visual do Evento". */
+  logoUrl?: string | null;
+  tagline?: string | null;
 }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const programIndex = sections.findIndex((s) => s.key === "program");
+  const ticketsIndex = sections.findIndex((s) => s.key === "tickets");
   const t = useTranslations("eventTabs");
   const initialIndex = initialKey ? sections.findIndex((s) => s.key === initialKey) : -1;
   const [index, setIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
@@ -111,9 +117,26 @@ export function EventShell({
 
   return (
     <div className="flex flex-col">
+      <EventTopBar logoUrl={logoUrl} title={event.title} />
       <EventHero
         event={event}
-        onTicketsClick={() => goTo(sections.findIndex((s) => s.key === "tickets"))}
+        tagline={tagline}
+        onProgramClick={
+          programIndex >= 0
+            ? () => {
+                goTo(programIndex);
+                contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            : null
+        }
+        onTicketsClick={
+          ticketsIndex >= 0
+            ? () => {
+                goTo(ticketsIndex);
+                contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            : null
+        }
       />
 
       <NetworkingPrompt
@@ -168,7 +191,7 @@ export function EventShell({
         </div>
       </div>
 
-      <div className="relative flex flex-col md:flex-row-reverse">
+      <div ref={contentRef} className="relative flex scroll-mt-4 flex-col md:flex-row-reverse">
         <nav
           className="hidden shrink-0 gap-2 overflow-x-auto px-4 py-3 md:sticky md:top-24 md:flex md:w-56 md:flex-col md:self-start md:overflow-x-visible md:px-4 md:py-6 lg:w-64"
           aria-label="Event sections"
@@ -195,7 +218,7 @@ export function EventShell({
                       // Tab names render in caps (GALERIA); a custom heading
                       // ("Painéis") keeps its own casing, with the rule
                       // running on past the word as in the mock-up.
-                      active.title ? "pr-14" : "uppercase",
+                      active.keepTitleCase ? "pr-14" : "uppercase",
                     )}
                   >
                     {active.title ?? t(active.key)}

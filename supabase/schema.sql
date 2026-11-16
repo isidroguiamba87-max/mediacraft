@@ -122,6 +122,15 @@ create table event_overrides (
   event_id text primary key,
   cover_image_url text,
   accent_color text,
+  -- cover overlay ("sombra") colour + strength as #rrggbbaa; null = default
+  overlay_color text,
+  -- the event's own logo (event page top bar) and its theme/tagline line
+  logo_url text,
+  tagline text,
+  -- "Ao Vivo" (Zoom) extras: {joinUrl, meetingId, passcode, chatUrl, instructions}
+  live_info jsonb,
+  -- private link token for the panelists' interaction space (unique)
+  panel_token text unique,
   qa_enabled boolean not null default false,
   updated_at timestamptz not null default now()
 );
@@ -130,6 +139,25 @@ alter table event_overrides enable row level security;
 
 create policy "admin full access" on event_overrides for all using (is_admin()) with check (is_admin());
 create policy "public read" on event_overrides for select using (true);
+
+-- ============================================================================
+-- panel_messages
+-- Panelists' private interaction space (2026-11-13; replaced public Q&A).
+-- Written/read by the server after checking event_overrides.panel_token.
+-- ============================================================================
+create table panel_messages (
+  id uuid primary key default gen_random_uuid(),
+  event_id text not null,
+  name text not null,
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+create index panel_messages_event_id_idx on panel_messages (event_id, created_at);
+
+alter table panel_messages enable row level security;
+
+create policy "admin full access" on panel_messages for all using (is_admin()) with check (is_admin());
 
 -- ============================================================================
 -- gallery_media

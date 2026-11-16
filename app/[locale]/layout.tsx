@@ -9,6 +9,7 @@ import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/layout/Header";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
+import { ConditionalHeader } from "@/components/layout/ConditionalHeader";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { PulseLauncher } from "@/components/pulse/PulseLauncher";
@@ -67,7 +68,9 @@ export default async function LocaleLayout({
         <JsonLd data={websiteSchema(locale as Locale)} />
         <NextIntlClientProvider messages={messages}>
           <PulseLauncher>
-            <Header />
+            <ConditionalHeader>
+              <Header />
+            </ConditionalHeader>
             <main className="flex-1">{children}</main>
             <ConditionalFooter />
             {/* After the footer, not before: MobileBottomNav's own spacer

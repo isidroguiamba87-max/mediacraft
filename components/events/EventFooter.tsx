@@ -29,9 +29,6 @@ export function EventFooter() {
           <Link href="/eventos" className="hover:text-white">
             {tNav("events")}
           </Link>
-          <Link href="/novidades" className="hover:text-white">
-            {tNav("news")}
-          </Link>
           <a href={`mailto:${siteConfig.contact.email}`} className="hidden hover:text-white sm:inline">
             {siteConfig.contact.email}
           </a>

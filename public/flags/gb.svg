@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <!-- Union Jack (public-domain design), drawn on a square for the round
+       language switcher icon. -->
+  <clipPath id="s"><path d="M0,0 v60 h60 v-60 z"/></clipPath>
+  <clipPath id="t"><path d="M30,30 h30 v30 z v30 h-30 z h-30 v-30 z v-30 h30 z"/></clipPath>
+  <g clip-path="url(#s)">
+    <rect width="60" height="60" fill="#012169"/>
+    <path d="M0,0 L60,60 M60,0 L0,60" stroke="#fff" stroke-width="12"/>
+    <path d="M0,0 L60,60 M60,0 L0,60" clip-path="url(#t)" stroke="#C8102E" stroke-width="8"/>
+    <path d="M30,0 v60 M0,30 h60" stroke="#fff" stroke-width="20"/>
+    <path d="M30,0 v60 M0,30 h60" stroke="#C8102E" stroke-width="12"/>
+  </g>
+</svg>

@@ -56,19 +56,10 @@ async function Overview() {
           label="Média de estrelas"
           value={stats.ratingsCount > 0 ? stats.averageStars.toFixed(1) : "—"}
         />
-        <StatCard
-          label="Perguntas"
-          value={stats.questions.new + stats.questions.reviewed + stats.questions.archived}
-          caption={`${stats.questions.new} novas · ${stats.questions.relevant} visíveis no site`}
-        />
-        <StatCard
-          label="Conteúdo publicado"
-          value={stats.news.published + stats.galleryCount}
-          caption={`${stats.news.published} novidades · ${stats.galleryCount} na galeria`}
-        />
+        <StatCard label="Na galeria" value={stats.galleryCount} caption="fotos e vídeos publicados" />
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid gap-4">
         <div className="rounded-brand border border-line bg-paper p-5">
           <p className="mb-4 text-xs font-semibold tracking-wide text-slate uppercase">
             Distribuição das avaliações
@@ -80,23 +71,6 @@ async function Overview() {
           )}
         </div>
 
-        <div className="rounded-brand border border-line bg-paper p-5">
-          <p className="mb-4 text-xs font-semibold tracking-wide text-slate uppercase">Novidades por estado</p>
-          <div className="flex flex-col gap-2 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-slate">Publicadas</span>
-              <span className="font-medium text-ink">{stats.news.published}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate">Agendadas</span>
-              <span className="font-medium text-ink">{stats.news.scheduled}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate">Rascunhos</span>
-              <span className="font-medium text-ink">{stats.news.draft}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );
@@ -195,12 +169,12 @@ async function Report({ eventId }: { eventId: string }) {
         </div>
       </section>
 
-      {/* Perguntas relevantes */}
+      {/* Perguntas relevantes — histórico: as perguntas públicas foram
+          removidas a 2026-11-13; só aparece em eventos que as tiveram. */}
+      {data.relevantQuestions.length > 0 && (
       <section>
         <SectionTitle>Perguntas relevantes</SectionTitle>
-        {data.relevantQuestions.length === 0 ? (
-          <p className="text-sm text-slate">Sem perguntas marcadas como relevantes.</p>
-        ) : (
+        {(
           <ul className="flex flex-col gap-2">
             {data.relevantQuestions.map((q, i) => (
               <li key={i} className="rounded-brand border border-line bg-paper-2 p-3 text-sm">
@@ -212,6 +186,7 @@ async function Report({ eventId }: { eventId: string }) {
           </ul>
         )}
       </section>
+      )}
 
       {/* Imagens */}
       <section>
