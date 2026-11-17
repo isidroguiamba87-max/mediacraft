@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { HistoryText } from "./HistoryText";
 
 /**
  * "A nossa história" (2026-11-11 mock-up): uppercase navy heading with the
@@ -23,11 +24,7 @@ export function History() {
           {th("title").replace(/\.$/, "")}
         </p>
 
-        <div className="mt-5 flex flex-col gap-5 font-body text-sm leading-relaxed text-ink sm:text-justify sm:text-[15px]">
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
+        <HistoryText paragraphs={paragraphs} readMore={th("readMore")} readLess={th("readLess")} />
 
         <QuoteCard quote={t("quote")} signatureRole={t("signatureRole")} />
       </div>

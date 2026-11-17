@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, ChevronRight, MapPin, Ticket } from "lucide-react";
@@ -7,6 +8,8 @@ import { Link } from "@/config/i18n";
 import { LangSwitcher } from "@/components/layout/LangSwitcher";
 import { formatDateRange, scheduleDateRange } from "@/lib/utils";
 import { formatEventDays } from "@/lib/events/dates";
+import { liveSessions, type LiveSessions } from "@/lib/events/liveSession";
+import { buildPanels } from "@/lib/pulse/panels";
 import type { PulseEventDetail } from "@/lib/pulse/types";
 
 /**
@@ -41,6 +44,84 @@ export function EventTopBar({ logoUrl, title }: { logoUrl: string | null; title:
   );
 }
 
+/** Re-evaluated every 30 s; null on the server and first paint so the
+ * markup always matches (the card simply appears once mounted). */
+function useLiveSessions(event: PulseEventDetail): LiveSessions | null {
+  const panels = useMemo(() => buildPanels(event.sections), [event.sections]);
+  const [live, setLive] = useState<LiveSessions | null>(null);
+  useEffect(() => {
+    const tick = () => setLive(liveSessions(panels, event.timezone || "Africa/Maputo"));
+    const first = setTimeout(tick, 0);
+    const id = setInterval(tick, 30_000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
+  }, [panels, event.timezone]);
+  return live;
+}
+
+/**
+ * "Agora / A seguir" (2026-11-17): on the event day only, a floating card on
+ * the cover with the session running right now (and the next one), from the
+ * Pulse programme times in the event's timezone. Clicking opens the
+ * Programa on that session.
+ */
+function LiveNowCard({
+  live,
+  onSessionClick,
+}: {
+  live: LiveSessions;
+  onSessionClick: ((key: string) => void) | null;
+}) {
+  const t = useTranslations("eventTabs");
+  const main = live.current ?? live.next!;
+  const isNow = !!live.current;
+  const following = live.current ? live.next : null;
+  const time = (p: { timeFrom: string; timeTo: string }) =>
+    [p.timeFrom, p.timeTo].filter(Boolean).join(" – ");
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSessionClick?.(main.key)}
+      disabled={!onSessionClick}
+      className="reveal-up mt-8 w-full max-w-md rounded-2xl bg-white/95 px-5 py-4 text-left text-brand-navy shadow-[0_18px_44px_rgba(0,0,0,0.35)] backdrop-blur transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:mt-10"
+    >
+      <span className="flex items-center gap-2 text-[11px] font-bold tracking-[0.16em] uppercase">
+        {isNow ? (
+          <>
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-red" />
+            </span>
+            <span className="text-brand-red">{t("liveNowLabel")}</span>
+          </>
+        ) : (
+          <span className="text-brand-red">{t("liveNextLabel")}</span>
+        )}
+        <span className="font-semibold text-slate tabular-nums">· {time(main)}</span>
+      </span>
+      <span className="mt-1.5 block font-body text-base leading-snug font-bold sm:text-lg">{main.title}</span>
+      {main.sectionTitle && <span className="mt-0.5 block text-xs text-slate">{main.sectionTitle}</span>}
+
+      {following && (
+        <span className="mt-3 block border-t border-line pt-2.5 text-xs text-slate">
+          <span className="font-bold tracking-[0.12em] text-brand-navy uppercase">{t("liveNextLabel")}</span>{" "}
+          <span className="tabular-nums">· {following.timeFrom}</span> — {following.title}
+        </span>
+      )}
+
+      {onSessionClick && (
+        <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand-red">
+          {t("liveSeeInProgram")}
+          <ChevronRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+        </span>
+      )}
+    </button>
+  );
+}
+
 /**
  * The event's first screen (client design 2026-11-13) — nothing else on it:
  * a big rounded card with the cover under the event's shadow colour (set in
@@ -53,9 +134,12 @@ export function EventHero({
   tagline,
   onProgramClick,
   onTicketsClick,
+  onSessionClick = null,
 }: {
   event: PulseEventDetail;
   tagline: string | null;
+  /** Opens the Programa on one session (the "Agora" card). */
+  onSessionClick?: ((key: string) => void) | null;
   /** null when the event has no programme tab to open. */
   onProgramClick: (() => void) | null;
   /** null when the event has no tickets tab. */
@@ -74,6 +158,7 @@ export function EventHero({
   // done in the Bilhetes section). Nothing on sale → no button at all.
   const onSale = event.tickets.filter((tk) => tk.state === "ACTIVE" && tk.quantitySold < tk.quantity);
   const paidOnSale = onSale.some((tk) => tk.price > 0);
+  const live = useLiveSessions(event);
 
   return (
     <section className="bg-white px-4 pb-4 sm:px-6 sm:pb-6 lg:px-10 lg:pb-10">
@@ -150,6 +235,8 @@ export function EventHero({
             </button>
           )}
           </div>
+
+          {live && <LiveNowCard live={live} onSessionClick={onSessionClick} />}
         </div>
       </div>
     </section>

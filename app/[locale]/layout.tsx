@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/layout/Header";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { ConditionalHeader } from "@/components/layout/ConditionalHeader";
+import { AutoTranslate } from "@/components/layout/AutoTranslate";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { PulseLauncher } from "@/components/pulse/PulseLauncher";
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
              * on-screen position doesn't depend on this DOM order. */}
             <MobileBottomNav />
             <CookieConsent />
+            <AutoTranslate />
           </PulseLauncher>
         </NextIntlClientProvider>
       </body>

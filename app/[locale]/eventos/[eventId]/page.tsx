@@ -109,7 +109,15 @@ export default async function EventPage({ params, searchParams }: EventPageProps
           />
         );
       case "program":
-        return <Program eventId={event.id} sections={event.sections} speakers={event.speakers} />;
+        return (
+          <Program
+            eventId={event.id}
+            sections={event.sections}
+            speakers={event.speakers}
+            eventTitle={event.title}
+            logoUrl={override?.logoUrl ?? null}
+          />
+        );
       case "speakers": {
         // "Painéis & Sessões" as posters (2026-11-13): one slide per panel
         // with speakers, plus "Outros oradores" for anyone on no session.
@@ -150,6 +158,7 @@ export default async function EventPage({ params, searchParams }: EventPageProps
         const range = scheduleDateRange(event.scheduleDates);
         return (
           <PanelPosters
+            eventId={eventId}
             eventTitle={event.title}
             logoUrl={override?.logoUrl ?? null}
             coverUrl={override?.coverImageUrl ?? event.coverUrl}

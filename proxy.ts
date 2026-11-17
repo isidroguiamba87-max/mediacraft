@@ -49,16 +49,19 @@ function buildCsp(nonce: string): string {
     supabaseOrigin,
     supabaseOrigin?.replace(/^https:/, "wss:"),
     pulseOrigin,
+    // Whole-page machine translation for EN/FR (components/layout/AutoTranslate.tsx)
+    "https://translate.googleapis.com",
+    "https://translate-pa.googleapis.com",
   ].filter(Boolean);
 
   const directives = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    `style-src 'self' 'unsafe-inline'`,
-    `img-src 'self' data: blob: https://*.supabase.co https://minio.devpulsemz.cloud https://img.youtube.com https://images.unsplash.com`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://translate.google.com https://translate.googleapis.com`,
+    `style-src 'self' 'unsafe-inline' https://www.gstatic.com`,
+    `img-src 'self' data: blob: https://*.supabase.co https://minio.devpulsemz.cloud https://img.youtube.com https://images.unsplash.com https://www.gstatic.com https://translate.google.com https://translate.googleapis.com https://www.google.com`,
     `font-src 'self' data:`,
     `connect-src ${connectSrc.join(" ")}`,
-    `frame-src https://www.youtube.com https://www.google.com https://maps.google.com`,
+    `frame-src https://www.youtube.com https://www.google.com https://maps.google.com https://translate.google.com`,
     `object-src 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,

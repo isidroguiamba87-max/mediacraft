@@ -30,7 +30,7 @@ export function MissionVision() {
         {(["mission", "vision"] as const).map((id) => (
           <article key={id} className={cardClass}>
             <CardHeading icon={id === "mission" ? Target : Eye}>{t(`${id}.title`)}</CardHeading>
-            <p className="mt-3 font-body text-sm leading-relaxed text-ink sm:text-justify sm:text-[15px]">
+            <p className="mt-3 font-body text-sm leading-relaxed text-ink text-justify hyphens-auto sm:text-[15px]">
               {t(`${id}.text`)}
             </p>
           </article>

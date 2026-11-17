@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { services } from "@/content/services";
 import type { Service } from "@/types";
@@ -279,8 +280,11 @@ export function ServicesOrbit() {
       <div className="orbit-list relative mx-auto max-w-container px-6 pt-14 pb-14 sm:pb-20">
         {heading}
 
-        {/* the five numbered chips as a sideways-scrolling strip */}
-        <div className="-mx-6 mt-8 flex snap-x gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none]">
+        {/* the five numbered chips as a sideways-scrolling strip — tablet
+            only; on phones it's just the card with side arrows
+            (2026-11-17: "tira esses cartões… o modo mobile é só ter o
+            cartão com a imagem de fundo com esses botões de lado") */}
+        <div className="-mx-6 mt-8 hidden snap-x gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] sm:flex">
           {services.map((s, i) => (
             <button
               key={s.id}
@@ -307,9 +311,10 @@ export function ServicesOrbit() {
           ))}
         </div>
 
+        <div className="relative mt-8 sm:mt-5">
         <article
           key={activeSvc.id}
-          className="reveal-up mt-5 rounded-[1.75rem] bg-brand-navy/95 p-6 shadow-[0_28px_60px_rgba(0,0,0,0.45)]"
+          className="reveal-up rounded-[1.75rem] bg-[rgba(0,27,50,0.75)] px-11 py-6 shadow-[0_16px_40px_rgba(0,0,0,0.3)] sm:p-6"
         >
           <span className="font-body text-[13px] font-bold text-brand-red">
             {pad(active + 1)} — {pad(N)}
@@ -324,6 +329,28 @@ export function ServicesOrbit() {
           </p>
           {dashes}
         </article>
+
+        {/* phone-only side arrows, straddling the card's edges */}
+        {(
+          [
+            ["prev", -1, ChevronLeft, "-left-3"],
+            ["next", 1, ChevronRight, "-right-3"],
+          ] as const
+        ).map(([key, dir, Icon, side]) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setTurn((v) => v + dir)}
+            aria-label={t(key === "prev" ? "previous" : "next")}
+            className={cn(
+              "absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white text-brand-navy shadow-[0_6px_16px_rgba(0,0,0,0.35)] transition-colors hover:bg-brand-red hover:text-white sm:hidden",
+              side,
+            )}
+          >
+            <Icon aria-hidden className="h-5 w-5" strokeWidth={2.75} />
+          </button>
+        ))}
+        </div>
       </div>
     </section>
   );

@@ -154,7 +154,8 @@
       }
     },
     "next": "Next",
-    "carousel": "Services"
+    "carousel": "Services",
+    "previous": "Previous"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -258,9 +259,6 @@
       "joaquina-novela": {
         "role": "Marketing Assistant"
       },
-      "eugenia-sive": {
-        "role": "Project Manager"
-      },
       "benicio-moises": {
         "role": "Graphic Designer"
       },
@@ -356,7 +354,11 @@
     "liveJoinTitle": "Join us on {platform} too",
     "liveJoinTitleGeneric": "Join us online too",
     "liveJoinVia": "Join on {platform}",
-    "liveJoinGeneric": "Join"
+    "liveJoinGeneric": "Join",
+    "liveNowLabel": "Now",
+    "liveNextLabel": "Up next",
+    "liveSeeInProgram": "See in the programme",
+    "backToEvents": "Back"
   },
   "panel": {
     "back": "Back to panels",
@@ -365,11 +367,16 @@
     "room": "Room",
     "details": "Details",
     "schedule": "Schedule",
-    "section": "Track"
+    "section": "Track",
+    "participants": "Speakers",
+    "dayLabel": "Day {day} · {weekday}",
+    "prevSpeaker": "Previous speaker",
+    "nextSpeaker": "Next speaker"
   },
   "speakersDirectory": {
     "panelsTitle": "Panels & Sessions",
     "panelLabel": "Panel {n}",
+    "sessionLabel": "Session",
     "others": "Others",
     "searchPlaceholder": "Search for a speaker by name…",
     "allSessions": "All sessions",
@@ -380,7 +387,8 @@
     "partners": "Partners",
     "othersTitle": "Other speakers",
     "speakerTitle": "Speaker",
-    "close": "Close"
+    "close": "Close",
+    "openPanel": "View panel"
   },
   "tickets": {
     "title": "Tickets",

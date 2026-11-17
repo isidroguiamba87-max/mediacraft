@@ -271,9 +271,13 @@ body {
     linear-gradient(180deg, rgba(0, 27, 50, 0.35) 0%, rgba(0, 27, 50, 0) 22%),
     linear-gradient(90deg, rgba(0, 27, 50, 0.8) 0%, rgba(0, 27, 50, 0.68) 18%, rgba(0, 27, 50, 0.38) 36%, rgba(0, 27, 50, 0.08) 56%, rgba(0, 27, 50, 0) 70%);
 }
+/* Below lg the photo should read clearly (2026-11-17: "o fundo deve ser
+   bem visível… no modo mobile deve ser mudado") — just a light shade at
+   the top for the white heading; the service card carries its own
+   translucent navy instead (ServicesOrbit's .orbit-list card). */
 @media (max-width: 1023px) {
   .what-wash {
-    background: linear-gradient(180deg, rgba(0, 27, 50, 0.92) 0%, rgba(0, 27, 50, 0.7) 45%, rgba(0, 27, 50, 0.92) 100%);
+    background: linear-gradient(180deg, rgba(0, 27, 50, 0.45) 0%, rgba(0, 27, 50, 0) 30%);
   }
 }
 /* lighter wash for artwork backgrounds that already fade to navy on the left */
@@ -282,7 +286,7 @@ body {
 }
 @media (max-width: 1023px) {
   .what-wash-soft {
-    background: linear-gradient(180deg, rgba(0, 27, 50, 0.85) 0%, rgba(0, 27, 50, 0.6) 45%, rgba(0, 27, 50, 0.85) 100%);
+    background: linear-gradient(180deg, rgba(0, 27, 50, 0.45) 0%, rgba(0, 27, 50, 0) 30%);
   }
 }
 /* the section's own navy (same as the design / footer) and the right-anchored
@@ -565,4 +569,25 @@ body {
     background-repeat: repeat-y;
     background-position: left top;
   }
+}
+
+/* Google Translate (components/layout/AutoTranslate.tsx): translate the
+   page silently — no top banner pushing the layout down, no hover
+   tooltip/highlight on translated text. */
+.goog-te-banner-frame,
+body > .skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+.goog-text-highlight,
+.VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q {
+  background: none !important;
+  box-shadow: none !important;
 }

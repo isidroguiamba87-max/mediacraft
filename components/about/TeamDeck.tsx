@@ -245,7 +245,7 @@ export function TeamDeck() {
           </div>
 
           {/* controls */}
-          <div className="mx-auto mt-3 flex items-center justify-center gap-4 sm:mt-8">
+          <div className="relative z-10 mx-auto mt-3 flex items-center justify-center gap-4 sm:mt-0 md:-mt-14">
             <button
               type="button"
               onClick={() => go(-1)}

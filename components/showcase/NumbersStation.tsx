@@ -1,10 +1,19 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Handshake, Globe2, Radio, Users, type LucideIcon } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 const KEYS = ["partners", "countries", "channels", "participants"] as const;
+
+/** Mobile-only (2026-11-17: "os pontos, dá pra usar ícones... para o modo
+ * mobile") — the plain red dot stays as-is from `sm:` up. */
+const ICONS: Record<(typeof KEYS)[number], LucideIcon> = {
+  partners: Handshake,
+  countries: Globe2,
+  channels: Radio,
+  participants: Users,
+};
 
 /**
  * "Impacto que se mede em resultados" — one full screen on the one-page
@@ -18,8 +27,11 @@ export function NumbersStation() {
   const tShow = useTranslations("showcase");
 
   return (
-    <section className="flex min-h-[calc(100svh-5rem)] items-center bg-white text-brand-navy">
-      <div className="mx-auto w-full max-w-container px-6 py-14 sm:py-20 lg:px-10">
+    // Natural height on every screen — the old full-screen min-height (with
+    // the content centred in it) opened a big blank gap between the hero
+    // and this title (2026-11-17, mobile then desktop).
+    <section className="bg-white text-brand-navy">
+      <div className="mx-auto w-full max-w-container px-6 pt-4 pb-14 sm:pt-6 sm:pb-20 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-body text-2xl leading-[1.1] font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl">
             {tShow("numbersTitle").replace(/\.$/, "")}
@@ -44,11 +56,13 @@ export function NumbersStation() {
               {KEYS.map((key) => {
                 const raw = t(`items.${key}.value`); // e.g. "+70"
                 const n = parseInt(raw.replace(/\D/g, ""), 10) || 0;
+                const Icon = ICONS[key];
                 return (
                   <li key={key} className="flex flex-col items-center text-center">
+                    <Icon aria-hidden strokeWidth={1.75} className="h-7 w-7 text-brand-red sm:hidden" />
                     <span
                       aria-hidden
-                      className="h-[15px] w-[15px] rounded-full bg-brand-red sm:h-5 sm:w-5 sm:-mt-[3px]"
+                      className="hidden rounded-full bg-brand-red sm:-mt-[3px] sm:block sm:h-5 sm:w-5"
                     />
                     <p className="mt-6 font-body text-3xl leading-none font-bold tracking-tight sm:mt-8 sm:text-4xl lg:text-5xl">
                       <AnimatedCounter value={n} prefix="+" />
