@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  ArrowLeft,
   CalendarDays,
   Image as ImageIcon,
   Info,
@@ -16,7 +17,9 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { Link } from "@/config/i18n";
 import { EventHero, EventTopBar } from "./EventHero";
+import { requestSessionFocus } from "@/lib/events/liveSession";
 import { EventFooter } from "./EventFooter";
 import { NetworkingPrompt } from "@/components/networking/NetworkingPrompt";
 import type { EventTabKey } from "@/lib/events/tabs";
@@ -61,7 +64,7 @@ function TabPill({
       type="button"
       onClick={onSelect}
       className={cn(
-        "flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-colors",
+        "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-medium whitespace-nowrap shadow-sm transition-colors",
         isActive
           ? "border-brand-red bg-brand-red text-white"
           : "border-line bg-paper text-ink hover:border-brand-red hover:text-brand-red",
@@ -105,6 +108,15 @@ export function EventShell({
   const initialIndex = initialKey ? sections.findIndex((s) => s.key === initialKey) : -1;
   const [index, setIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  // Past the cover, the floating "Voltar" goes translucent so it never hides
+  // the content under it (client, 2026-11-17).
+  const [pastCover, setPastCover] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setPastCover(window.scrollY > 160);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const active = sections[index];
 
@@ -117,6 +129,22 @@ export function EventShell({
 
   return (
     <div className="flex flex-col">
+      {/* Floating "Voltar" (2026-11-17): always on screen, takes the visitor
+          out of the event back to the events list on the home page. Top
+          left, just under the event's top bar (client: "deve estar na parte
+          de cima"). */}
+      <Link
+        href="/#eventos"
+        className={cn(
+          "fixed top-[5.75rem] left-7 z-40 inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 font-body text-sm font-bold ring-1 backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-brand-red hover:opacity-100 hover:shadow-[0_8px_24px_rgba(0,27,50,0.25)] focus-visible:bg-white focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red sm:left-11 lg:left-[3.75rem]",
+          pastCover
+            ? "bg-white/25 text-brand-navy/70 opacity-80 shadow-none ring-brand-navy/10"
+            : "bg-white/95 text-brand-navy shadow-[0_8px_24px_rgba(0,27,50,0.25)] ring-brand-navy/10",
+        )}
+      >
+        <ArrowLeft aria-hidden className="h-4 w-4" strokeWidth={2.6} />
+        {t("backToEvents")}
+      </Link>
       <EventTopBar logoUrl={logoUrl} title={event.title} />
       <EventHero
         event={event}
@@ -134,6 +162,17 @@ export function EventShell({
             ? () => {
                 goTo(ticketsIndex);
                 contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            : null
+        }
+        onSessionClick={
+          programIndex >= 0
+            ? (key) => {
+                goTo(programIndex);
+                contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                // ask the Programa to switch day, scroll to the session and
+                // highlight it (picked up on mount if it isn't open yet)
+                requestSessionFocus(key);
               }
             : null
         }
@@ -191,9 +230,16 @@ export function EventShell({
         </div>
       </div>
 
-      <div ref={contentRef} className="relative flex scroll-mt-4 flex-col md:flex-row-reverse">
+      {/* Same side gutters as the hero card above (px-4 / sm:px-6 / lg:px-10),
+          so the content's left edge and the buttons' right edge line up with
+          the photo; one gap between content and buttons, no stacked paddings
+          (2026-11-17: "muito espaçamento sem ser usado"). */}
+      <div
+        ref={contentRef}
+        className="relative flex scroll-mt-4 flex-col px-4 sm:px-6 md:flex-row-reverse md:gap-6 lg:gap-8 lg:px-10"
+      >
         <nav
-          className="hidden shrink-0 gap-2 overflow-x-auto px-4 py-3 md:sticky md:top-24 md:flex md:w-56 md:flex-col md:self-start md:overflow-x-visible md:px-4 md:py-6 lg:w-64"
+          className="hidden shrink-0 gap-2 md:sticky md:top-6 md:flex md:w-44 md:flex-col md:self-start md:pt-2 lg:w-48"
           aria-label="Event sections"
         >
           {sections.map((s, i) => (
@@ -201,7 +247,7 @@ export function EventShell({
           ))}
         </nav>
 
-        <div className="min-w-0 flex-1 px-4 pb-4 md:px-6 md:pb-6">
+        <div className="min-w-0 flex-1 pb-6 md:pb-10">
           <div className="relative min-h-[240px] bg-paper">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -211,7 +257,7 @@ export function EventShell({
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: TRANSITION_MS / 1000, ease: "easeOut" }}
               >
-                <div className="p-6 sm:p-8 lg:p-10">
+                <div className="pt-2">
                   <h2
                     className={cn(
                       "inline-block border-b-[1.5px] border-brand-red pb-3 font-body text-3xl leading-none font-bold tracking-tight text-brand-navy sm:text-4xl lg:text-5xl",

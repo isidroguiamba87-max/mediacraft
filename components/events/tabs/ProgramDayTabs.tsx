@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Check, MapPin } from "lucide-react";
 import { Link } from "@/config/i18n";
 import { cn } from "@/lib/utils";
 import { usePageLoadSeed } from "@/hooks/usePageLoadSeed";
 import { Avatar } from "./Program";
-import type { DayGroup, Panel } from "@/lib/pulse/panels";
+import { SpeakerButton } from "./SpeakerButton";
+import { speakerSlug, type DayGroup, type Panel } from "@/lib/pulse/panels";
+import { FOCUS_SESSION_EVENT, clearPendingSessionFocus, peekPendingSessionFocus } from "@/lib/events/liveSession";
+
+/** Every session a speaker is on, keyed by `speakerSlug(name, company)` —
+ * built once in Program.tsx (buildSpeakerDirectory) and threaded down
+ * here so clicking a speaker on any session card opens the same popup
+ * PanelPosters already has, listing every session they're on, not just
+ * the one card they were clicked from (2026-11-17: "podes fazer ser
+ * possível... clicar em um orador e mostrar as informações"). */
+type SessionsBySlug = Map<string, { label: string; title: string }[]>;
 
 /** "24" / "QUI" / "OUT" from an ISO date — parsed at noon UTC so no local
  * timezone can roll it back a day (the classic `new Date("2026-10-24")`
@@ -49,10 +59,56 @@ function daySummary(day: DayGroup, t: ReturnType<typeof useTranslations>): strin
  * organizado o programa do evento"). Each session still links to its own
  * detail page (where the per-panel rating lives), just restyled.
  */
-export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGroup[] }) {
+export function ProgramDayTabs({
+  eventId,
+  days,
+  sessionsBySlug,
+  eventTitle,
+  logoUrl,
+}: {
+  eventId: string;
+  days: DayGroup[];
+  sessionsBySlug: SessionsBySlug;
+  eventTitle: string;
+  logoUrl: string | null;
+}) {
   const t = useTranslations("eventTabs");
   const locale = useLocale();
   const [activeIdx, setActiveIdx] = useState(0);
+  // A session the event cover asked us to show ("Agora" card, 2026-11-17):
+  // switch to its day, scroll to it, and highlight it for a few seconds.
+  const [focusKey, setFocusKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    function focus(key: string) {
+      clearPendingSessionFocus();
+      const dayIdx = days.findIndex((d) => d.sections.some((sec) => sec.panels.some((p) => p.key === key)));
+      if (dayIdx < 0) return;
+      setActiveIdx(dayIdx);
+      setFocusKey(key);
+    }
+    const onFocus = (e: Event) => focus((e as CustomEvent<string>).detail);
+    // a request made before this tab was open
+    const pending = peekPendingSessionFocus();
+    const first = pending ? setTimeout(() => focus(pending), 0) : undefined;
+    window.addEventListener(FOCUS_SESSION_EVENT, onFocus);
+    return () => {
+      clearTimeout(first);
+      window.removeEventListener(FOCUS_SESSION_EVENT, onFocus);
+    };
+  }, [days]);
+
+  useEffect(() => {
+    if (!focusKey) return;
+    const scroll = setTimeout(() => {
+      document.getElementById(`sessao-${focusKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+    const clear = setTimeout(() => setFocusKey(null), 4500);
+    return () => {
+      clearTimeout(scroll);
+      clearTimeout(clear);
+    };
+  }, [focusKey]);
 
   // `Date.now()` returns a different value on every call, which makes a
   // bare `useSyncExternalStore` read of it violate React's "getSnapshot
@@ -154,6 +210,10 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
                 eventId={eventId}
                 panel={panel}
                 last={i === dayPanels.length - 1}
+                highlighted={panel.key === focusKey}
+                sessionsBySlug={sessionsBySlug}
+                eventTitle={eventTitle}
+                logoUrl={logoUrl}
               />
             ))}
           </ol>
@@ -163,11 +223,30 @@ export function ProgramDayTabs({ eventId, days }: { eventId: string; days: DayGr
   );
 }
 
-function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; last: boolean }) {
+function ProgramItem({
+  eventId,
+  panel,
+  last,
+  highlighted = false,
+  sessionsBySlug,
+  eventTitle,
+  logoUrl,
+}: {
+  eventId: string;
+  panel: Panel;
+  last: boolean;
+  highlighted?: boolean;
+  sessionsBySlug: SessionsBySlug;
+  eventTitle: string;
+  logoUrl: string | null;
+}) {
   const overflow = panel.speakers.length - 4;
 
   return (
-    <li className="grid grid-cols-[3.25rem_1.5rem_1fr] gap-x-3 sm:grid-cols-[4rem_1.5rem_1fr]">
+    <li
+      id={`sessao-${panel.key}`}
+      className="grid scroll-mt-24 grid-cols-[3.25rem_1.5rem_1fr] gap-x-3 sm:grid-cols-[4rem_1.5rem_1fr]"
+    >
       {/* time */}
       <div className="pt-4 text-right tabular-nums">
         {panel.timeFrom && (
@@ -194,7 +273,12 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
       <div className="min-w-0 pb-5">
         <Link
           href={`/eventos/${eventId}/paineis/${panel.key}`}
-          className="block rounded-brand border border-line bg-paper px-4 py-3.5 transition-colors hover:border-brand-red/40 hover:bg-paper-2"
+          className={cn(
+            "block rounded-brand border bg-paper px-4 py-3.5 transition-all duration-500 hover:border-brand-red/40 hover:bg-paper-2",
+            highlighted
+              ? "border-brand-red shadow-[0_0_0_4px_rgba(191,38,46,0.15)] ring-1 ring-brand-red"
+              : "border-line",
+          )}
         >
           {panel.sectionTitle && (
             <p className="mb-1.5 inline-block rounded-full bg-brand-red/10 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-[0.1em] text-brand-red uppercase">
@@ -210,13 +294,37 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
           <p className="font-display text-base leading-snug text-brand-navy">{panel.title}</p>
 
           {panel.speakers.length === 1 ? (
-            <SingleSpeakerRow speaker={panel.speakers[0]!} />
+            <SingleSpeakerRow
+              speaker={panel.speakers[0]!}
+              sessionsBySlug={sessionsBySlug}
+              eventTitle={eventTitle}
+              logoUrl={logoUrl}
+            />
           ) : (
             panel.speakers.length > 1 && (
               <div className="mt-3 flex -space-x-2.5">
-                {panel.speakers.slice(0, 4).map((sp, i) => (
-                  <Avatar key={i} photoUrl={sp.photoUrl} name={sp.name} size={32} ring />
-                ))}
+                {panel.speakers.slice(0, 4).map((sp, i) => {
+                  const slug = speakerSlug(sp.name, sp.company);
+                  return (
+                    <SpeakerButton
+                      key={i}
+                      className="rounded-full"
+                      speaker={{
+                        slug,
+                        name: sp.name,
+                        role: [sp.occupation, sp.company].filter(Boolean).join(", "),
+                        occupation: sp.occupation || undefined,
+                        company: sp.company || undefined,
+                        photoUrl: sp.photoUrl,
+                      }}
+                      sessions={sessionsBySlug.get(slug) ?? []}
+                      eventTitle={eventTitle}
+                      logoUrl={logoUrl}
+                    >
+                      <Avatar photoUrl={sp.photoUrl} name={sp.name} size={32} ring />
+                    </SpeakerButton>
+                  );
+                })}
                 {overflow > 0 && (
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-brand-navy font-mono text-[10px] text-white">
                     +{overflow}
@@ -231,15 +339,39 @@ function ProgramItem({ eventId, panel, last }: { eventId: string; panel: Panel; 
   );
 }
 
-function SingleSpeakerRow({ speaker }: { speaker: Panel["speakers"][number] }) {
+function SingleSpeakerRow({
+  speaker,
+  sessionsBySlug,
+  eventTitle,
+  logoUrl,
+}: {
+  speaker: Panel["speakers"][number];
+  sessionsBySlug: SessionsBySlug;
+  eventTitle: string;
+  logoUrl: string | null;
+}) {
   const role = [speaker.occupation, speaker.company].filter(Boolean).join(" · ");
+  const slug = speakerSlug(speaker.name, speaker.company);
   return (
-    <div className="mt-3 flex items-center gap-2.5">
+    <SpeakerButton
+      className="mt-3 flex items-center gap-2.5 text-left"
+      speaker={{
+        slug,
+        name: speaker.name,
+        role: [speaker.occupation, speaker.company].filter(Boolean).join(", "),
+        occupation: speaker.occupation || undefined,
+        company: speaker.company || undefined,
+        photoUrl: speaker.photoUrl,
+      }}
+      sessions={sessionsBySlug.get(slug) ?? []}
+      eventTitle={eventTitle}
+      logoUrl={logoUrl}
+    >
       <Avatar photoUrl={speaker.photoUrl} name={speaker.name} size={32} />
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-ink">{speaker.name}</p>
         {role && <p className="truncate text-[11px] text-slate">{role}</p>}
       </div>
-    </div>
+    </SpeakerButton>
   );
 }

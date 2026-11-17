@@ -2,19 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { CalendarDays, ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LangSwitcher } from "@/components/layout/LangSwitcher";
+import { Link, useRouter } from "@/config/i18n";
+import { SpeakerPopup, type PopupSpeaker } from "./SpeakerPopup";
 
-export interface PosterSpeaker {
-  slug: string;
-  name: string;
-  /** "occupation, company" — shown under the name on the poster. */
-  role: string;
-  occupation?: string;
-  company?: string;
-  photoUrl: string | null;
-}
+export type PosterSpeaker = PopupSpeaker;
 
 export interface PosterPanel {
   key: string;
@@ -39,114 +32,6 @@ function balancedRows<T>(items: T[], max = 5): T[][] {
 }
 
 /**
- * "Interveniente" popup (client design 2026-11-13): opens on a panelist
- * click — photo card on the left; name (event accent colour), role, a rule,
- * then "Painel N:" + title for every panel they're on. Shows only what
- * Pulse has (no bio field exists). No profile page any more (removed
- * 2026-11-13 at the client's request) — the popup is the speaker view.
- */
-function SpeakerPopup({
-  speaker,
-  panels,
-  onClose,
-  logoUrl,
-  eventTitle,
-}: {
-  logoUrl: string | null;
-  eventTitle: string;
-  speaker: PosterSpeaker;
-  panels: { label: string; title: string }[];
-  onClose: () => void;
-}) {
-  const t = useTranslations("speakersDirectory");
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [onClose]);
-
-  const role = speaker.occupation ?? speaker.role;
-  const company = speaker.occupation ? speaker.company : undefined;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="speaker-popup-name">
-      <button type="button" aria-label={t("close")} onClick={onClose} className="absolute inset-0 bg-brand-navy/55 backdrop-blur-[2px]" />
-      <div className="reveal-up relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[1.5rem] bg-white p-6 font-body shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-10">
-        {/* header like the event page: the event's logo with its name beside
-            it on the left, the language flags + close on the right */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3">
-            {logoUrl && (
-              // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage image
-              <img src={logoUrl} alt="" className="h-10 w-auto max-w-[120px] shrink-0 object-contain sm:h-12" />
-            )}
-            <span className="max-w-[16rem] text-xs leading-tight font-bold text-brand-navy uppercase sm:text-sm">
-              {eventTitle}
-            </span>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <LangSwitcher />
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={t("close")}
-              autoFocus
-              className="grid h-9 w-9 place-items-center rounded-full text-slate transition-colors hover:bg-paper-2 hover:text-brand-navy"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        <p className="mt-6 inline-block border-b-[1.5px] border-brand-red pr-10 pb-1.5 text-lg font-bold tracking-wide text-brand-red uppercase sm:text-xl">
-          {t("speakerTitle")}
-        </p>
-
-        <div className="mt-6 grid gap-6 sm:grid-cols-[minmax(0,15rem)_1fr] sm:items-center sm:gap-10">
-          <div className="mx-auto aspect-[4/5] w-48 overflow-hidden rounded-[1.25rem] bg-paper-2 shadow-[0_14px_34px_rgba(0,27,50,0.25)] sm:w-full">
-            {speaker.photoUrl && (
-              // eslint-disable-next-line @next/next/no-img-element -- remote Pulse media
-              <img src={speaker.photoUrl} alt={speaker.name} className="h-full w-full object-cover object-top" />
-            )}
-          </div>
-
-          <div>
-            <h3 id="speaker-popup-name" className="text-brand-red">
-              <span className="block font-body text-2xl leading-tight font-bold sm:text-3xl">{speaker.name}</span>
-            </h3>
-            {role && <p className="mt-2 text-base leading-snug text-brand-navy">{role}</p>}
-            {company && <p className="mt-0.5 text-sm text-slate">{company}</p>}
-
-            {panels.length > 0 && (
-              <>
-                <span aria-hidden className="mt-5 block h-px w-full max-w-sm bg-brand-red" />
-                <ul className="mt-4 space-y-3">
-                  {panels.map((p) => (
-                    <li key={p.label + p.title}>
-                      <p className="font-bold text-brand-red">{p.label}:</p>
-                      <p className="text-base text-brand-navy">{p.title}</p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
  * "Painéis & Sessões" as posters (client design 2026-11-13): one slide per
  * panel (agenda session with speakers), laid out like the event's own panel
  * artwork — the event cover under its shadow, the event logo + name top
@@ -156,6 +41,7 @@ function SpeakerPopup({
  * Each panelist opens their profile page, as before.
  */
 export function PanelPosters({
+  eventId,
   eventTitle,
   logoUrl,
   coverUrl,
@@ -164,6 +50,7 @@ export function PanelPosters({
   panels,
   partners,
 }: {
+  eventId: string;
   eventTitle: string;
   logoUrl: string | null;
   coverUrl: string | null;
@@ -173,6 +60,7 @@ export function PanelPosters({
   partners: PosterPartner[];
 }) {
   const t = useTranslations("speakersDirectory");
+  const router = useRouter();
   const [index, setIndex] = useState(0);
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const closePopup = useCallback(() => setOpenSlug(null), []);
@@ -195,6 +83,17 @@ export function PanelPosters({
   if (count === 0) return <p className="text-sm text-slate">{t("empty")}</p>;
   const panel = panels[Math.min(index, count - 1)];
   const rows = balancedRows(panel.speakers);
+  // "Outros oradores" isn't a real session — it has no panel page.
+  const panelHref = panel.key === "__others" ? null : `/eventos/${eventId}/paineis/${encodeURIComponent(panel.key)}`;
+  // Anywhere on the poster opens the panel page (client 2026-11-17) —
+  // except the panelists themselves (they open their popup) and the
+  // partners' logo links, which keep their own behaviour.
+  const onPosterClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!panelHref) return;
+    if ((e.target as HTMLElement).closest("button, a")) return;
+    if (window.getSelection()?.toString()) return;
+    router.push(panelHref);
+  };
 
   const arrow =
     "grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-red text-white shadow-md transition-colors hover:bg-brand-red-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red disabled:opacity-40";
@@ -212,7 +111,11 @@ export function PanelPosters({
           key={panel.key}
           aria-roledescription="slide"
           aria-label={`${panel.label}: ${panel.title}`}
-          className="reveal-up relative min-w-0 flex-1 overflow-hidden rounded-[1.25rem] bg-brand-navy font-body text-white shadow-[0_18px_44px_rgba(0,27,50,0.25)]"
+          onClick={onPosterClick}
+          className={cn(
+            "reveal-up relative min-w-0 flex-1 overflow-hidden rounded-[1.25rem] bg-brand-navy font-body text-white shadow-[0_18px_44px_rgba(0,27,50,0.25)]",
+            panelHref && "cursor-pointer transition-shadow hover:shadow-[0_22px_52px_rgba(0,27,50,0.35)]",
+          )}
         >
           {coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element -- remote Pulse / Supabase media
@@ -243,6 +146,15 @@ export function PanelPosters({
                     {panel.title}
                   </span>
                 </h3>
+                {panelHref && (
+                  <Link
+                    href={panelHref}
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-bold tracking-wide text-[#F2C14E] uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {t("openPanel")}
+                    <ChevronRight aria-hidden className="h-3.5 w-3.5" strokeWidth={2.6} />
+                  </Link>
+                )}
               </div>
 
               {(dateLabel || venueLabel) && (
@@ -381,7 +293,7 @@ export function PanelPosters({
       </div>
 
       {count > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-3">
+        <div className="-mt-1 flex items-center justify-center gap-3 sm:mt-4">
           <button type="button" onClick={() => go(-1)} aria-label={t("prevPanel")} className={cn(arrow, "sm:hidden")}>
             <ChevronLeft className="h-6 w-6" strokeWidth={2.6} />
           </button>
@@ -402,7 +314,7 @@ export function PanelPosters({
           const speaker = panel.speakers.find((sp) => sp.slug === openSlug);
           if (!speaker) return null;
           const on = panel.key === "__others" ? [] : [{ label: panel.label, title: panel.title }];
-          return <SpeakerPopup speaker={speaker} panels={on} onClose={closePopup} logoUrl={logoUrl} eventTitle={eventTitle} />;
+          return <SpeakerPopup speaker={speaker} sessions={on} onClose={closePopup} logoUrl={logoUrl} eventTitle={eventTitle} />;
         })()}
     </div>
   );

@@ -154,7 +154,8 @@
       }
     },
     "next": "Suivant",
-    "carousel": "Services"
+    "carousel": "Services",
+    "previous": "Précédent"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -258,9 +259,6 @@
       "joaquina-novela": {
         "role": "Assistante Marketing"
       },
-      "eugenia-sive": {
-        "role": "Gestionnaire de Projets"
-      },
       "benicio-moises": {
         "role": "Designer Graphique"
       },
@@ -356,7 +354,11 @@
     "liveJoinTitle": "Participez aussi via {platform}",
     "liveJoinTitleGeneric": "Participez aussi en ligne",
     "liveJoinVia": "Rejoindre sur {platform}",
-    "liveJoinGeneric": "Rejoindre"
+    "liveJoinGeneric": "Rejoindre",
+    "liveNowLabel": "En ce moment",
+    "liveNextLabel": "Ensuite",
+    "liveSeeInProgram": "Voir dans le programme",
+    "backToEvents": "Retour"
   },
   "panel": {
     "back": "Retour aux panneaux",
@@ -365,11 +367,16 @@
     "room": "Salle",
     "details": "Détails",
     "schedule": "Horaire",
-    "section": "Section"
+    "section": "Section",
+    "participants": "Intervenants",
+    "dayLabel": "Jour {day} · {weekday}",
+    "prevSpeaker": "Intervenant précédent",
+    "nextSpeaker": "Intervenant suivant"
   },
   "speakersDirectory": {
     "panelsTitle": "Panels & sessions",
     "panelLabel": "Panel {n}",
+    "sessionLabel": "Session",
     "others": "Autres",
     "searchPlaceholder": "Rechercher un intervenant par nom…",
     "allSessions": "Toutes les sessions",
@@ -380,7 +387,8 @@
     "partners": "Partenaires",
     "othersTitle": "Autres intervenants",
     "speakerTitle": "Intervenant",
-    "close": "Fermer"
+    "close": "Fermer",
+    "openPanel": "Voir le panel"
   },
   "tickets": {
     "title": "Billets",

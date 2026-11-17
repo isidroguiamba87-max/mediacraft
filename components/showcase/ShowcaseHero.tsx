@@ -21,7 +21,8 @@ const PANEL_CTA: { key: "secondaryCta" | "learnMore"; href: string }[] = [
   { key: "learnMore", href: "#o-que-fazemos" },
   { key: "learnMore", href: "#o-que-fazemos" },
 ];
-const INTRO_VIDEO_SRC = "/video/hero-intro.mp4";
+// 2026-11-17: client's new "Media Craft - Abertura.mp4" (desktop); mobile unchanged.
+const INTRO_VIDEO_SRC = "/video/hero-intro-2026.mp4";
 // Shot specifically for a tall/portrait screen (confirmed: vertical
 // framing, not just the desktop clip letterboxed) — picked over the
 // desktop source below `sm`'s breakpoint (640px) via the <source media>
@@ -243,7 +244,12 @@ export function ShowcaseHero() {
               aria-hidden={active !== i}
               style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
               className={cn(
-                "absolute text-6xl font-extrabold tracking-tight text-white uppercase transition-opacity duration-[800ms] ease-out sm:text-7xl lg:text-8xl",
+                // Fluid size tied to the viewport width so the longest
+                // pillar ("COMMUNICATION", 13 caps) always fits on one line
+                // inside the card on phones — a fixed text-6xl overflowed
+                // both edges on mobile (2026-11-17). Caps at the old
+                // desktop size (text-8xl = 6rem).
+                "absolute px-2 text-[clamp(1.5rem,8vw,6rem)] leading-none font-extrabold tracking-tight whitespace-nowrap text-white uppercase transition-opacity duration-[800ms] ease-out",
                 active === i ? "opacity-100" : "opacity-0",
               )}
             >
@@ -284,22 +290,8 @@ export function ShowcaseHero() {
         </div>
       </div>
 
-      {/* segmented indicators — jump straight to any panel */}
-      <div className="absolute inset-x-0 bottom-6 z-10 flex justify-center gap-2 sm:bottom-8">
-        {pillars.map((word, i) => (
-          <button
-            key={word}
-            type="button"
-            onClick={() => setActive(i)}
-            aria-label={tHero("goTo", { n: i + 1 })}
-            aria-current={active === i}
-            className={cn(
-              "h-1.5 rounded-full transition-all duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-              active === i ? "w-10 bg-brand-red" : "w-5 bg-white/60 hover:bg-white",
-            )}
-          />
-        ))}
-      </div>
+      {/* Segmented panel indicators removed (2026-11-17: "não é preciso
+       * ter") — the pillars still cycle on their own. */}
 
       {!reduceMotion && (
         // Solid navy backdrop behind the video, not just the video itself

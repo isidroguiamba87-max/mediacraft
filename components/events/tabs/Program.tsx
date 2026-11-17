@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { initials } from "@/lib/utils";
-import { buildPanels, groupPanelsByDay, speakerSlug } from "@/lib/pulse/panels";
+import { buildPanels, buildSpeakerDirectory, groupPanelsByDay, speakerSlug } from "@/lib/pulse/panels";
 import { ProgramDayTabs } from "./ProgramDayTabs";
+import { SpeakerButton } from "./SpeakerButton";
 import type { PulseEventSection, PulseEventSpeaker } from "@/lib/pulse/types";
 
 /**
@@ -23,12 +24,21 @@ export async function Program({
   eventId,
   sections,
   speakers,
+  eventTitle,
+  logoUrl,
 }: {
   eventId: string;
   sections: PulseEventSection[];
   speakers: PulseEventSpeaker[];
+  /** For the speaker popup's header — same data EventPage already passes
+   * to PanelPosters for the exact same popup. */
+  eventTitle: string;
+  logoUrl: string | null;
 }) {
-  const t = await getTranslations("eventTabs");
+  const [t, tSpeakers] = await Promise.all([
+    getTranslations("eventTabs"),
+    getTranslations("speakersDirectory"),
+  ]);
   const panels = buildPanels(sections);
   const days = groupPanelsByDay(panels);
 
@@ -41,9 +51,32 @@ export async function Program({
     return <p className="text-sm text-slate">{t("programEmpty")}</p>;
   }
 
+  // Every session a speaker is on, by slug — same identity (name+company)
+  // and same aggregation buildSpeakerDirectory already does for the
+  // Painéis tab, reused here so clicking a speaker on a session card shows
+  // every session they're on, not just the one card they were clicked
+  // from (2026-11-17: "podes fazer ser possível... clicar em um orador e
+  // mostrar as informações assim como eu tinha pedido").
+  const directory = buildSpeakerDirectory(speakers, sections);
+  const sessionLabel = tSpeakers("sessionLabel");
+  const sessionsBySlug = new Map(
+    directory.map((entry) => [
+      entry.slug,
+      entry.sessions.map((s) => ({ label: sessionLabel, title: s.title })),
+    ]),
+  );
+
   return (
     <div className="flex flex-col gap-12">
-      {panels.length > 0 && <ProgramDayTabs eventId={eventId} days={days} />}
+      {panels.length > 0 && (
+        <ProgramDayTabs
+          eventId={eventId}
+          days={days}
+          sessionsBySlug={sessionsBySlug}
+          eventTitle={eventTitle}
+          logoUrl={logoUrl}
+        />
+      )}
 
       {others.length > 0 && (
         <div>
@@ -51,19 +84,36 @@ export async function Program({
             {t("speakersOthers")}
           </p>
           <div className="mt-4 grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6">
-            {others.map((sp, i) => (
-              <div key={`${sp.name}-${i}`} className="flex flex-col items-center gap-2 text-center">
-                <Avatar photoUrl={sp.photoUrl} name={sp.name} size={56} />
-                <div>
-                  <p className="text-xs font-medium text-ink">{sp.name}</p>
-                  {(sp.occupation || sp.company) && (
-                    <p className="text-[10px] text-slate">
-                      {[sp.occupation, sp.company].filter(Boolean).join(" · ")}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
+            {others.map((sp, i) => {
+              const slug = speakerSlug(sp.name, sp.company);
+              return (
+                <SpeakerButton
+                  key={`${sp.name}-${i}`}
+                  className="flex flex-col items-center gap-2 text-center"
+                  speaker={{
+                    slug,
+                    name: sp.name,
+                    role: [sp.occupation, sp.company].filter(Boolean).join(", "),
+                    occupation: sp.occupation || undefined,
+                    company: sp.company || undefined,
+                    photoUrl: sp.photoUrl,
+                  }}
+                  sessions={sessionsBySlug.get(slug) ?? []}
+                  eventTitle={eventTitle}
+                  logoUrl={logoUrl}
+                >
+                  <Avatar photoUrl={sp.photoUrl} name={sp.name} size={56} />
+                  <div>
+                    <p className="text-xs font-medium text-ink">{sp.name}</p>
+                    {(sp.occupation || sp.company) && (
+                      <p className="text-[10px] text-slate">
+                        {[sp.occupation, sp.company].filter(Boolean).join(" · ")}
+                      </p>
+                    )}
+                  </div>
+                </SpeakerButton>
+              );
+            })}
           </div>
         </div>
       )}

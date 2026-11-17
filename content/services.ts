@@ -18,7 +18,8 @@ export const services: Service[] = [
     // (what-we-do-bg.png) in ServicesOrbit.tsx, which "content" (02) also
     // falls back to; overwriting that one would have changed 02's
     // background too, which wasn't asked for.
-    stage: { src: "/images/services/what-we-do-events.png", kind: "photo" },
+    // 2026-11-17: client's "ATIVO 1 (1)" (BFSI group photo) replaces Ativo 1
+    stage: { src: "/images/services/what-we-do-events-v2.jpg", kind: "photo" },
   },
   {
     id: "content",
@@ -26,7 +27,9 @@ export const services: Service[] = [
     images: ["/images/home-services/content.jpg"],
     // client's "Ativo 7" (app/fotos novas/1x), its transparent left cut
     // away and a soft left fade baked in — sits right over the navy.
-    stage: { src: "/images/services/what-we-do-content.png", kind: "graphic", fill: "#17223a", wash: "heavy" },
+    // 2026-11-17: client's "ATIVO 1 (2)" (full photo, no transparent band)
+    // replaces Ativo 7
+    stage: { src: "/images/services/what-we-do-content-v2.jpg", kind: "photo" },
   },
   {
     id: "campaigns",

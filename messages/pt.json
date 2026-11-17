@@ -154,7 +154,8 @@
       }
     },
     "next": "Seguinte",
-    "carousel": "Serviços"
+    "carousel": "Serviços",
+    "previous": "Anterior"
   },
   "eventsShowcase": {
     "eyebrow": "Agenda",
@@ -258,9 +259,6 @@
       "joaquina-novela": {
         "role": "Assistente de Marketing"
       },
-      "eugenia-sive": {
-        "role": "Gestora de Projectos"
-      },
       "benicio-moises": {
         "role": "Designer Gráfico"
       },
@@ -356,7 +354,11 @@
     "liveJoinTitle": "Participe também pelo {platform}",
     "liveJoinTitleGeneric": "Participe também online",
     "liveJoinVia": "Entrar pelo {platform}",
-    "liveJoinGeneric": "Entrar"
+    "liveJoinGeneric": "Entrar",
+    "liveNowLabel": "Agora",
+    "liveNextLabel": "A seguir",
+    "liveSeeInProgram": "Ver no programa",
+    "backToEvents": "Voltar"
   },
   "panel": {
     "back": "Voltar aos painéis",
@@ -365,11 +367,16 @@
     "room": "Sala",
     "details": "Detalhes",
     "schedule": "Horário",
-    "section": "Secção"
+    "section": "Secção",
+    "participants": "Intervenientes",
+    "dayLabel": "Dia {day} · {weekday}",
+    "prevSpeaker": "Interveniente anterior",
+    "nextSpeaker": "Interveniente seguinte"
   },
   "speakersDirectory": {
     "panelsTitle": "Painéis & Sessões",
     "panelLabel": "Painel {n}",
+    "sessionLabel": "Sessão",
     "others": "Outros",
     "searchPlaceholder": "Procurar orador pelo nome…",
     "allSessions": "Todas as sessões",
@@ -380,7 +387,8 @@
     "partners": "Parceiros",
     "othersTitle": "Outros oradores",
     "speakerTitle": "Interveniente",
-    "close": "Fechar"
+    "close": "Fechar",
+    "openPanel": "Ver painel"
   },
   "tickets": {
     "title": "Bilhetes",

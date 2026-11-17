@@ -48,7 +48,7 @@ export function LangSwitcher() {
   }, []);
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={ref} translate="no">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
