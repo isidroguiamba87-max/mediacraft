@@ -5,7 +5,7 @@ const VALUE_KEYS = ["boldness", "inclusion", "curiosity", "empathy"] as const;
 
 /** White rounded card with a soft grey edge and drop shadow (mock-up). */
 const cardClass =
-  "rounded-[1.5rem] border border-black/15 bg-white px-5 py-6 shadow-[2px_4px_10px_rgba(0,0,0,0.18)] sm:px-6 sm:py-7";
+  "rounded-[1.5rem] border-2 border-brand-red/40 bg-white px-5 py-6 shadow-[0_0_18px_rgba(191,38,46,0.45)] sm:px-6 sm:py-7";
 
 function CardHeading({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
   return (
@@ -25,7 +25,7 @@ export function MissionVision() {
   const t = useTranslations("about");
 
   return (
-    <section className="bg-white pb-14 sm:pb-20">
+    <section className="pb-14 sm:pb-20">
       <div className="mx-auto flex max-w-container flex-col gap-6 px-6 sm:gap-8 lg:px-10">
         {(["mission", "vision"] as const).map((id) => (
           <article key={id} className={cardClass}>

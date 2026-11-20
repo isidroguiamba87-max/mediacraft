@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getEvent } from "@/lib/pulse/endpoints";
 import { getActiveRatingForm, getEventOverride } from "@/lib/bff";
 import { buildPanels, buildSpeakerDirectory, speakerSlug } from "@/lib/pulse/panels";
-import { stripHtml, darkenHex, formatDateRange, formatEventLocation, scheduleDateRange } from "@/lib/utils";
+import { stripHtml, htmlParagraphs, darkenHex, formatDateRange, formatEventLocation, scheduleDateRange } from "@/lib/utils";
 import type { Locale } from "@/config/i18n";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema, eventSchema } from "@/lib/schema";
@@ -61,6 +61,9 @@ export default async function EventPage({ params, searchParams }: EventPageProps
   const hiddenTabs: EventTabKey[] = [
     ...(speakerDirectory.length > 0 ? [] : (["speakers"] as const)),
     ...(event.location.eventLink || override?.liveInfo?.joinUrl ? [] : (["live"] as const)),
+    // Comunicação already shows the description on its first screen
+    // (client 2026-11-19: "remova essa página de detalhes").
+    ...(override?.category === "comunicacao" ? (["details"] as const) : []),
   ];
   const visibleKeys = EVENT_TAB_DISPLAY_ORDER.filter((key) => !hiddenTabs.includes(key));
 
@@ -116,6 +119,8 @@ export default async function EventPage({ params, searchParams }: EventPageProps
             speakers={event.speakers}
             eventTitle={event.title}
             logoUrl={override?.logoUrl ?? null}
+            pdfUrl={override?.programPdfUrl ?? null}
+            pdfUpdatedAt={override?.programPdfUpdatedAt ?? null}
           />
         );
       case "speakers": {
@@ -226,6 +231,11 @@ export default async function EventPage({ params, searchParams }: EventPageProps
         initialKey={initialKey}
         logoUrl={override?.logoUrl ?? null}
         tagline={override?.tagline ?? null}
+        communication={
+          override?.category === "comunicacao"
+            ? { channels: override.channels, paragraphs: htmlParagraphs(event.details ?? "") }
+            : null
+        }
       />
     </div>
   );

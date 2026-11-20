@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Film, Save, Trash2 } from "lucide-react";
+import { Film, Save, Star, Trash2 } from "lucide-react";
 import {
   deleteGalleryItemAction,
+  setGalleryCoverAction,
   updateGalleryItemAction,
 } from "@/app/admin/(protected)/galeria/actions";
 import type { AdminGalleryItem } from "@/lib/supabase/gallery";
@@ -38,6 +39,21 @@ export function GalleryItemCard({
     });
   }
 
+  function onMakeCover() {
+    startTransition(async () => {
+      try {
+        const result = await setGalleryCoverAction(item.id, item.eventId);
+        if (result?.error) {
+          toast.error(result.error, { duration: 10000 });
+          return;
+        }
+        toast.success("Capa do álbum definida.");
+      } catch {
+        toast.error("Não foi possível definir a capa.");
+      }
+    });
+  }
+
   function onDelete() {
     if (!confirm("Apagar este item da galeria? Não é possível desfazer.")) return;
     startTransition(async () => {
@@ -61,6 +77,12 @@ export function GalleryItemCard({
             <Film size={22} />
             <span className="text-xs">Vídeo</span>
           </div>
+        )}
+        {item.isCover && (
+          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-[#D4962B] px-2.5 py-1 text-[11px] font-bold text-white shadow">
+            <Star size={12} fill="currentColor" />
+            Capa do álbum
+          </span>
         )}
       </div>
 
@@ -94,6 +116,18 @@ export function GalleryItemCard({
           Publicado
         </label>
         <div className="flex gap-2">
+          {item.type === "image" && !item.isCover && (
+            <button
+              type="button"
+              onClick={onMakeCover}
+              disabled={pending}
+              aria-label="Usar como capa do álbum"
+              title="Usar como capa do álbum"
+              className="grid h-8 w-8 place-items-center rounded-full border border-line text-[#D4962B] hover:border-[#D4962B] hover:bg-[#D4962B]/10 disabled:opacity-50"
+            >
+              <Star size={14} />
+            </button>
+          )}
           <button
             type="button"
             onClick={onSave}

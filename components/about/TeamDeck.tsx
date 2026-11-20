@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { team } from "@/content/team";
 import { cn, initials } from "@/lib/utils";
 import { LinkedinIcon, WhatsappIcon } from "@/components/ui/SocialIcons";
@@ -40,6 +40,7 @@ export function TeamDeck() {
   const [active, setActive] = useState(START);
   const [paused, setPaused] = useState(false);
   const [bioOpen, setBioOpen] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const wheelLock = useRef(0);
   const dragFrom = useRef<number | null>(null);
 
@@ -94,7 +95,7 @@ export function TeamDeck() {
 
   return (
     <div
-      className="team-deck relative mt-14 overflow-hidden rounded-3xl px-4 py-8 sm:px-8 sm:py-14"
+      className="team-deck relative overflow-hidden pt-8 pb-2 sm:pt-12 sm:pb-4"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -102,10 +103,10 @@ export function TeamDeck() {
         {/* ---------- left: the centred person's story ---------- */}
         <div className="order-2 lg:order-1">
           <div key={member.id} className="reveal-up">
-            <h3 className="font-display text-2xl leading-tight text-brand-navy sm:text-3xl">
+            <h3 className="font-body text-2xl leading-tight font-medium text-brand-red sm:text-[1.75rem]">
               {member.name}
             </h3>
-            <p className="mt-2 font-mono text-xs tracking-wide text-slate">
+            <p className="mt-1 font-body text-base text-slate">
               {t(`${member.id}.role`)}
             </p>
 
@@ -125,7 +126,7 @@ export function TeamDeck() {
               </button>
             )}
 
-            <ContactRow member={member} className="mt-6 justify-start" />
+            <ContactRow member={member} className="mt-4 justify-start" />
           </div>
         </div>
 
@@ -154,7 +155,7 @@ export function TeamDeck() {
                 go(-1);
               }
             }}
-            className="relative mx-auto h-[320px] cursor-grab touch-pan-y select-none outline-none focus-visible:ring-2 focus-visible:ring-brand-red active:cursor-grabbing sm:h-[440px] md:h-[520px]"
+            className="relative mx-auto h-[300px] cursor-grab touch-pan-y select-none outline-none focus-visible:ring-2 focus-visible:ring-brand-red active:cursor-grabbing sm:h-[360px] md:h-[380px]"
           >
             {team.map((m, i) => {
               let off = mod(i - active);
@@ -162,11 +163,15 @@ export function TeamDeck() {
               const abs = Math.abs(off);
               const shown = abs <= SPAN;
               const isActive = off === 0;
-              const scale = isActive ? 1 : abs === 1 ? 0.8 : 0.62;
-              const shiftY = isActive ? 0 : 18 + abs * 10;
+              // Hovering a faded side card brings it forward so its photo
+              // and name read clearly without having to click it to the
+              // centre first ("ver as pessoas / as fotos por interação").
+              const isHovered = shown && !isActive && hoveredIdx === i;
+              const scale = isActive ? 1 : isHovered ? 0.94 : abs === 1 ? 0.86 : 0.76;
+              const shiftY = isActive ? 0 : isHovered ? 4 : 10 + abs * 6;
               const opacity = !shown
                 ? 0
-                : isActive
+                : isActive || isHovered
                   ? 1
                   : abs === 1
                     ? 0.5
@@ -179,13 +184,15 @@ export function TeamDeck() {
                   onClick={() => {
                     if (shown && !isActive) jumpTo(i);
                   }}
+                  onMouseEnter={() => shown && !isActive && setHoveredIdx(i)}
+                  onMouseLeave={() => setHoveredIdx((cur) => (cur === i ? null : cur))}
                   style={{
-                    transform: `translate(-50%, -50%) translateX(calc(${off} * 56%)) translateY(${shiftY}px) scale(${scale})`,
+                    transform: `translate(-50%, -50%) translateX(calc(${off} * 44%)) translateY(${shiftY}px) scale(${scale})`,
                     opacity,
                     // Capped below the sticky header's z-30 (globals: Header.tsx)
                     // so the centred card can never out-stack it, even if this
                     // section's overflow-clipping is ever relaxed.
-                    zIndex: 20 - abs,
+                    zIndex: isHovered ? 19 : 20 - abs,
                     pointerEvents: shown ? "auto" : "none",
                   }}
                   className={cn(
@@ -195,75 +202,46 @@ export function TeamDeck() {
                     shown && !isActive && "cursor-pointer",
                   )}
                 >
+                  {/* Full-bleed portrait card: name + role sit as a white
+                      overlay on a bottom scrim; the centred card gets a red
+                      ring, side cards just fade back (2026-11-19 mock-up). */}
                   <div
                     className={cn(
-                      "relative aspect-[3/4] overflow-hidden rounded-2xl border shadow-brand transition-colors duration-500",
-                      isActive ? "border-brand-red" : "border-line",
+                      "relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#d9dbe0] transition-[box-shadow,outline-color] duration-500",
+                      isActive
+                        ? "outline outline-2 outline-offset-2 outline-brand-red shadow-[0_10px_26px_rgba(0,0,0,0.35)]"
+                        : isHovered
+                          ? "outline outline-2 outline-offset-2 outline-white/70 shadow-[0_8px_20px_rgba(0,0,0,0.25)]"
+                          : "shadow-[0_6px_16px_rgba(0,0,0,0.15)]",
                     )}
                   >
                     {m.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={m.photo}
-                        alt={isActive ? m.name : ""}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        alt={isActive || isHovered ? m.name : ""}
+                        className="absolute inset-0 h-full w-full object-cover object-top"
                       />
                     ) : (
                       <div className="absolute inset-0 grid place-items-center bg-brand-navy">
-                        <span className="font-display text-5xl text-white/85">
-                          {initials(m.name)}
-                        </span>
+                        <span className="font-display text-5xl text-white/85">{initials(m.name)}</span>
                       </div>
                     )}
-
-                    <span
-                      aria-hidden
-                      className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
-                    />
-
-                    {abs <= 1 && (
-                      <span className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-4 text-left">
-                        <b className="font-display text-base leading-tight font-semibold text-white">
-                          {m.name}
-                        </b>
-                        <small className="line-clamp-2 font-mono text-[10px] leading-snug tracking-wide text-white/70">
-                          {t(`${m.id}.role`)}
-                        </small>
-                      </span>
-                    )}
-
-                    {isActive && (
-                      <span
-                        aria-hidden
-                        className="absolute bottom-0 left-0 h-1 w-16 bg-brand-red"
-                      />
-                    )}
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-3 text-left sm:p-4">
+                      <b className="block truncate font-body text-lg leading-tight font-semibold text-white sm:text-xl">
+                        {m.name}
+                      </b>
+                      <small className="mt-0.5 block truncate font-body text-xs text-white/80 sm:text-sm">
+                        {t(`${m.id}.role`)}
+                      </small>
+                    </div>
                   </div>
                 </article>
               );
             })}
           </div>
 
-          {/* controls */}
-          <div className="relative z-10 mx-auto mt-3 flex items-center justify-center gap-4 sm:mt-0 md:-mt-14">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label="Anterior"
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-brand-navy transition-colors hover:border-brand-red hover:text-brand-red"
-            >
-              <ChevronLeft size={18} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label="Seguinte"
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-brand-navy transition-colors hover:border-brand-red hover:text-brand-red"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -311,7 +289,7 @@ function ContactRow({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
-          className="grid h-9 w-9 place-items-center rounded-full border border-line text-slate transition-colors hover:text-brand-red"
+          className="grid h-9 w-9 place-items-center rounded-full bg-brand-navy text-white transition-colors hover:bg-brand-red"
         >
           <LinkedinIcon size={15} />
         </a>
@@ -322,7 +300,7 @@ function ContactRow({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="WhatsApp"
-          className="grid h-9 w-9 place-items-center rounded-full border border-line text-slate transition-colors hover:text-brand-red"
+          className="grid h-9 w-9 place-items-center rounded-full bg-brand-navy text-white transition-colors hover:bg-brand-red"
         >
           <WhatsappIcon size={15} />
         </a>
@@ -331,7 +309,7 @@ function ContactRow({
         <a
           href={`mailto:${member.email}`}
           aria-label="Email"
-          className="grid h-9 w-9 place-items-center rounded-full border border-line text-slate transition-colors hover:text-brand-red"
+          className="grid h-9 w-9 place-items-center rounded-full bg-brand-navy text-white transition-colors hover:bg-brand-red"
         >
           <Mail size={15} />
         </a>

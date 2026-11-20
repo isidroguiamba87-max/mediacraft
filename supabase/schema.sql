@@ -131,6 +131,9 @@ create table event_overrides (
   live_info jsonb,
   -- private link token for the panelists' interaction space (unique)
   panel_token text unique,
+  -- the event's programme as a PDF (replaced on every update) + when
+  program_pdf_url text,
+  program_pdf_updated_at timestamptz,
   qa_enabled boolean not null default false,
   updated_at timestamptz not null default now()
 );

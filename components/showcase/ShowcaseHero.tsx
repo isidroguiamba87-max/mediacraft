@@ -7,6 +7,8 @@ import Image from "next/image";
 import { buttonVariants } from "@/components/ui/Button";
 import { usePageLoadSeed, pickStablePhoto } from "@/hooks/usePageLoadSeed";
 import { cn } from "@/lib/utils";
+import { pillarDetails } from "@/content/pillarDetails";
+import { PillarDetailModal } from "./PillarDetailModal";
 
 // One-page brief (2026-11-11): ~6 s per panel, loop, Eventos → Comunicação
 // → Reputação (the intro video only plays once, before the first loop).
@@ -14,13 +16,6 @@ const WORD_MS = 6000;
 /** Display order, as indexes into the i18n `showcase.pillars` arrays
  * (stored Comunicação, Reputação, Eventos). */
 const ORDER = [2, 0, 1] as const;
-/** Each panel's button, same display order: Eventos → "Explorar eventos"
- * (the #eventos section), the other two → "Saiba mais" (#o-que-fazemos). */
-const PANEL_CTA: { key: "secondaryCta" | "learnMore"; href: string }[] = [
-  { key: "secondaryCta", href: "#eventos" },
-  { key: "learnMore", href: "#o-que-fazemos" },
-  { key: "learnMore", href: "#o-que-fazemos" },
-];
 // 2026-11-17: client's new "Media Craft - Abertura.mp4" (desktop); mobile unchanged.
 const INTRO_VIDEO_SRC = "/video/hero-intro-2026.mp4";
 // Shot specifically for a tall/portrait screen (confirmed: vertical
@@ -130,7 +125,10 @@ export function ShowcaseHero() {
   // had already ticked to behind the video (2026-10-26: "logo aparece o
   // primeiro título").
   const [active, setActive] = useState(0);
-  const paused = hovered || focused || videoPhase !== "done" || !!reduceMotion;
+  // "Ver mais" popup (2026-11-19) — holds the pillar that was on screen
+  // when it was opened; the cycle stays paused while it's up.
+  const [detailFor, setDetailFor] = useState<number | null>(null);
+  const paused = hovered || focused || detailFor !== null || videoPhase !== "done" || !!reduceMotion;
   // Restarted on every change of `active` (auto or a dot click), so a jump
   // always gets a full 6 s before the next panel. Cleared on unmount.
   useEffect(() => {
@@ -138,6 +136,8 @@ export function ShowcaseHero() {
     const id = setTimeout(() => setActive((v) => (v + 1) % pillars.length), WORD_MS);
     return () => clearTimeout(id);
   }, [paused, active, pillars.length]);
+
+  const closeDetail = () => setDetailFor(null);
 
   // Autoplay (muted) on mount — tried ourselves rather than relying only
   // on the `autoPlay` attribute, so a browser that blocks it still falls
@@ -277,18 +277,44 @@ export function ShowcaseHero() {
         >
           <motion.span whileTap={{ scale: 0.95 }} className="inline-flex">
             <a
-              href={PANEL_CTA[active]?.href ?? "#eventos"}
+              // Always "Explorar eventos" (2026-11-19: only this and "Ver
+              // mais" — the per-panel "Saiba mais" was removed).
+              href="#eventos"
               className={buttonVariants(
                 "ghost",
                 "lg",
                 "border-transparent bg-white text-brand-navy uppercase tracking-wide hover:bg-white/90",
               )}
             >
-              {tHero(PANEL_CTA[active]?.key ?? "secondaryCta")}
+              {tHero("secondaryCta")}
             </a>
+          </motion.span>
+          {/* Full text for the pillar on screen, in a popup over its photo */}
+          <motion.span whileTap={{ scale: 0.95 }} className="inline-flex">
+            <button
+              type="button"
+              onClick={() => setDetailFor(active)}
+              aria-haspopup="dialog"
+              className={buttonVariants(
+                "ghost",
+                "lg",
+                "border-white/80 bg-transparent text-white uppercase tracking-wide hover:bg-white/10",
+              )}
+            >
+              {tHero("seeMore")}
+            </button>
           </motion.span>
         </div>
       </div>
+
+      {detailFor !== null && pillarDetails[ORDER[detailFor]] && (
+        <PillarDetailModal
+          detail={pillarDetails[ORDER[detailFor]]}
+          photo={photos[detailFor]?.[0]}
+          closeLabel={tHero("close")}
+          onClose={closeDetail}
+        />
+      )}
 
       {/* Segmented panel indicators removed (2026-11-17: "não é preciso
        * ter") — the pillars still cycle on their own. */}

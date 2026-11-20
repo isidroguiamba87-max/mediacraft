@@ -5,6 +5,7 @@ import {
   addGalleryImage,
   addGalleryVideo,
   deleteGalleryItem,
+  setGalleryCover,
   updateGalleryItem,
 } from "@/lib/supabase/gallery";
 
@@ -54,6 +55,24 @@ export async function updateGalleryItemAction(id: string, formData: FormData) {
     published: formData.get("published") === "on",
   });
   revalidatePath("/admin/galeria");
+}
+
+export async function setGalleryCoverAction(id: string, eventId: string) {
+  try {
+    await setGalleryCover(id, eventId);
+  } catch (err) {
+    const msg = typeof err === "object" && err && "message" in err ? String(err.message) : "";
+    if (/is_cover/.test(msg)) {
+      return {
+        error:
+          "Falta correr a migração supabase/migrations/2026-11-20_gallery_album_cover.sql no Supabase (SQL Editor).",
+      };
+    }
+    throw err;
+  }
+  revalidatePath("/admin/galeria");
+  revalidatePath("/", "layout");
+  return { error: null };
 }
 
 export async function deleteGalleryItemAction(id: string) {

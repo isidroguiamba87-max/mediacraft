@@ -55,7 +55,7 @@ export function ContactInfo() {
   ];
 
   return (
-    <div className="flex flex-col rounded-[1.75rem] bg-brand-navy font-body px-7 pt-9 pb-6 text-white sm:px-12">
+    <div className="flex flex-col rounded-[1.75rem] bg-[#74181b] font-body px-7 pt-9 pb-6 text-white sm:px-12">
       <div className="space-y-5 text-[15px] leading-snug sm:text-base">
         <p>{t("intro1")}</p>
         <p>{t("intro2")}</p>
@@ -65,7 +65,7 @@ export function ContactInfo() {
         {rows.map((r, i) => (
           <li
             key={r.label}
-            className={`flex items-center gap-4 py-4 ${i < rows.length - 1 ? "border-b border-white/45" : ""}`}
+            className={`flex items-center gap-4 py-4 ${i < rows.length - 1 ? "border-b border-dashed border-white/50" : ""}`}
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-white text-brand-red">
               {r.icon}
@@ -86,7 +86,7 @@ export function ContactInfo() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="grid h-11 w-11 place-items-center rounded-md bg-white text-brand-navy transition-opacity hover:opacity-85"
+            className="grid h-11 w-11 place-items-center rounded-md bg-white text-[#74181b] transition-opacity hover:opacity-85"
           >
             <Icon size={26} />
           </a>

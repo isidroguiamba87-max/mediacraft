@@ -10,6 +10,7 @@ import {
   clearEventOverrideAction,
 } from "@/app/admin/(protected)/eventos/actions";
 import { replaceFileField } from "@/lib/supabase/clientUpload";
+import { assertValidPdfUpload } from "@/lib/uploadValidation";
 import type { AdminEventOverride } from "@/lib/supabase/eventOverrides";
 
 const inputClass =
@@ -64,6 +65,8 @@ export function EventVisualForm({
     ? `linear-gradient(100deg, ${overlayHex}${alpha}, ${overlayHex2}${alpha})`
     : `${overlayHex}${alpha}`;
   const [removeLogo, setRemoveLogo] = useState(false);
+  const [removePdf, setRemovePdf] = useState(false);
+  const [category, setCategory] = useState(override?.category ?? "evento");
   const [pending, startTransition] = useTransition();
 
   const boundAction = saveEventOverrideAction.bind(
@@ -73,6 +76,8 @@ export function EventVisualForm({
     override?.logoUrl ?? null,
     override?.tagline ?? null,
     override?.liveInfo ?? null,
+    override?.category ?? "evento",
+    override?.channels ?? null,
   );
   const effectiveCover = override?.coverImageUrl ?? pulseCoverUrl;
 
@@ -96,14 +101,67 @@ export function EventVisualForm({
         try {
           await replaceFileField(formData, "cover");
           await replaceFileField(formData, "logo");
-          await boundAction(formData);
+          const pdf = formData.get("programPdf");
+          if (pdf instanceof File && pdf.size > 0) assertValidPdfUpload(pdf);
+          await replaceFileField(formData, "programPdf");
+          const result = await boundAction(formData);
+          if (result?.error) {
+            toast.error(result.error, { duration: 10000 });
+            return;
+          }
           toast.success("Alterações guardadas com sucesso!");
-        } catch {
-          toast.error("Não foi possível guardar as alterações.");
+        } catch (err) {
+          toast.error(
+            err instanceof Error && /PDF/.test(err.message) ? err.message : "Não foi possível guardar as alterações.",
+          );
         }
       }}
       className="flex flex-col gap-6"
     >
+      <div className="rounded-brand border border-line bg-paper p-5">
+        <h2 className="font-display text-lg text-brand-navy">Tipo</h2>
+        <p className="mt-1 text-sm text-slate">
+          Define em que secção da página inicial este evento aparece.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {(
+            [
+              ["evento", "Eventos"],
+              ["comunicacao", "Comunicação"],
+            ] as const
+          ).map(([value, label]) => (
+            <label
+              key={value}
+              className="flex cursor-pointer items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-ink has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5 has-[:checked]:font-semibold"
+            >
+              <input
+                type="radio"
+                name="category"
+                value={value}
+                defaultChecked={(override?.category ?? "evento") === value}
+                onChange={() => setCategory(value)}
+                className="accent-brand-red"
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+        {category === "comunicacao" && (
+          <div className="mt-4">
+            <label className={labelClass} htmlFor="channels">
+              Canais (aparece por baixo do título, ex.: &ldquo;TVM, YouTube, Redes Sociais&rdquo;)
+            </label>
+            <input
+              id="channels"
+              name="channels"
+              maxLength={120}
+              defaultValue={override?.channels ?? ""}
+              className={inputClass}
+            />
+          </div>
+        )}
+      </div>
+
       <div className="rounded-brand border border-line bg-paper p-5">
         <h2 className="font-display text-lg text-brand-navy">Capa</h2>
         <p className="mt-1 text-sm text-slate">
@@ -178,6 +236,37 @@ export function EventVisualForm({
             defaultValue={override?.tagline ?? ""}
             className="w-full rounded-brand border border-line bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors focus-visible:border-brand-red"
           />
+        </div>
+      </div>
+
+      <div className="rounded-brand border border-line bg-paper p-5">
+        <h2 className="font-display text-lg text-brand-navy">Programa em PDF</h2>
+        <p className="mt-1 text-sm text-slate">
+          Aparece no topo da secção &ldquo;Programa&rdquo; do evento, para abrir ou descarregar. Sempre que o programa
+          mudar, carregue aqui o PDF novo: substitui o anterior e a data de actualização fica registada.
+        </p>
+        {override?.programPdfUrl && !removePdf && (
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+            <a href={override.programPdfUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-red hover:underline">
+              Ver PDF actual
+            </a>
+            {override.programPdfUpdatedAt && (
+              <span className="text-xs text-slate">
+                actualizado a{" "}
+                {new Date(override.programPdfUpdatedAt).toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" })}
+              </span>
+            )}
+            <label className="flex items-center gap-2 text-xs text-slate">
+              <input type="checkbox" name="removeProgramPdf" onChange={(e) => setRemovePdf(e.target.checked)} />
+              Remover PDF
+            </label>
+          </div>
+        )}
+        <div className="mt-4">
+          <label className={labelClass} htmlFor="programPdf">
+            {override?.programPdfUrl ? "Carregar PDF actualizado" : "Carregar PDF do programa"} (até 25MB)
+          </label>
+          <input id="programPdf" name="programPdf" type="file" accept="application/pdf,.pdf" className={inputClass} />
         </div>
       </div>
 

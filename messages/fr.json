@@ -37,7 +37,8 @@
     "contact": "Contact",
     "cta": "Contactez-nous",
     "pulse": "Entrer (Pulse)",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "communication": "Communication"
   },
   "showcase": {
     "metaTitle": "Démo visuelle — MediaCraft",
@@ -103,9 +104,10 @@
         "hl": false
       }
     ],
-    "learnMore": "En savoir plus",
     "carousel": "Points forts",
-    "goTo": "Afficher le panneau {n}"
+    "goTo": "Afficher le panneau {n}",
+    "seeMore": "Voir plus",
+    "close": "Fermer"
   },
   "stats": {
     "title": "Notre portée",
@@ -358,7 +360,14 @@
     "liveNowLabel": "En ce moment",
     "liveNextLabel": "Ensuite",
     "liveSeeInProgram": "Voir dans le programme",
-    "backToEvents": "Retour"
+    "backToEvents": "Retour",
+    "programPdfTitle": "Programme complet (PDF)",
+    "programPdfUpdated": "Mis à jour le {date}",
+    "programPdfOpen": "Ouvrir le PDF",
+    "programPdfDownload": "Télécharger",
+    "learnMore": "En savoir plus",
+    "viewPrograms": "Voir les programmes",
+    "viewGallery": "Voir la galerie"
   },
   "panel": {
     "back": "Retour aux panneaux",
@@ -835,7 +844,14 @@
     "title": "Galerie",
     "allEvents": "Tous les événements",
     "eventFilter": "Filtrer par événement",
-    "empty": "Aucune photo publiée pour le moment."
+    "empty": "Aucune photo publiée pour le moment.",
+    "albums": "Albums",
+    "photoCount": "{count, plural, one {# photo} other {# photos}}",
+    "back": "Retour à la galerie",
+    "moments": "Moments",
+    "otherMoments": "Autres moments",
+    "videos": "Vidéos",
+    "openAlbum": "Ouvrir l’album"
   },
   "panelRoom": {
     "kicker": "Espace d’échange des panélistes",

@@ -21,6 +21,7 @@ export function PillDropdown({
   ariaLabel,
   align = "right",
   size = "lg",
+  tone = "red",
 }: {
   options: PillDropdownOption[];
   value: string;
@@ -28,6 +29,8 @@ export function PillDropdown({
   ariaLabel: string;
   align?: "left" | "right";
   size?: "md" | "lg";
+  /** "gold" = the Comunicação section's colour (client mock 2026-11-19). */
+  tone?: "red" | "gold";
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -59,7 +62,10 @@ export function PillDropdown({
         aria-controls={listId}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "inline-flex items-center justify-center rounded-full bg-brand-red font-body font-bold text-white transition-colors hover:bg-brand-red/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red",
+          "inline-flex items-center justify-center rounded-full font-body font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+          tone === "gold"
+            ? "bg-[#D4962B] hover:bg-[#D4962B]/90 focus-visible:outline-[#D4962B]"
+            : "bg-brand-red hover:bg-brand-red/90 focus-visible:outline-brand-red",
           size === "lg" ? "min-w-[8.5rem] gap-2 px-5 py-1.5 text-sm" : "gap-2 px-4 py-1.5 text-sm",
         )}
       >

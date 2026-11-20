@@ -18,7 +18,7 @@ import {
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Link } from "@/config/i18n";
-import { EventHero, EventTopBar } from "./EventHero";
+import { CommunicationChoice, EventHero, EventTopBar, type CommunicationHero } from "./EventHero";
 import { requestSessionFocus } from "@/lib/events/liveSession";
 import { EventFooter } from "./EventFooter";
 import { NetworkingPrompt } from "@/components/networking/NetworkingPrompt";
@@ -93,6 +93,7 @@ export function EventShell({
   initialKey,
   logoUrl = null,
   tagline = null,
+  communication = null,
 }: {
   event: PulseEventDetail;
   sections: EventSectionDef[];
@@ -100,8 +101,13 @@ export function EventShell({
   /** The event's own logo / theme line, from the admin's "Visual do Evento". */
   logoUrl?: string | null;
   tagline?: string | null;
+  /** Set when the admin marked this event as Comunicação — its first
+   * screen then shows dates | channels, the description and "Saiba mais". */
+  communication?: CommunicationHero | null;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const choiceRef = useRef<HTMLDivElement>(null);
+  const galleryIndex = sections.findIndex((s) => s.key === "gallery");
   const programIndex = sections.findIndex((s) => s.key === "program");
   const ticketsIndex = sections.findIndex((s) => s.key === "tickets");
   const t = useTranslations("eventTabs");
@@ -149,6 +155,10 @@ export function EventShell({
       <EventHero
         event={event}
         tagline={tagline}
+        communication={communication}
+        onMoreClick={() =>
+          (choiceRef.current ?? contentRef.current)?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
         onProgramClick={
           programIndex >= 0
             ? () => {
@@ -177,6 +187,31 @@ export function EventShell({
             : null
         }
       />
+
+      {communication && (
+        <div ref={choiceRef} className="scroll-mt-[4.5rem]">
+          <CommunicationChoice
+            event={event}
+            channels={communication.channels}
+            onProgramsClick={
+              programIndex >= 0
+                ? () => {
+                    goTo(programIndex);
+                    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                : null
+            }
+            onGalleryClick={
+              galleryIndex >= 0
+                ? () => {
+                    goTo(galleryIndex);
+                    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                : null
+            }
+          />
+        </div>
+      )}
 
       <NetworkingPrompt
         eventId={event.id}

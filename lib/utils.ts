@@ -41,6 +41,15 @@ export function stripHtml(html: string, maxLength = 160) {
   return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
 }
 
+/** Rich text (Pulse HTML) → plain paragraphs, keeping the author's breaks
+ * between blocks — for showing a description over a photo, unstyled. */
+export function htmlParagraphs(html: string): string[] {
+  return html
+    .split(/<\/(?:p|div|h[1-6]|li)>|<br\s*\/?>|\n\s*\n/i)
+    .map((chunk) => stripHtml(chunk, 5000))
+    .filter(Boolean);
+}
+
 /** Format an ISO date string for the given locale, e.g. "12 de março de 2026". */
 export function formatDate(
   iso: string,

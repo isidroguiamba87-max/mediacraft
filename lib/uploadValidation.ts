@@ -8,6 +8,20 @@
  * lib/supabase/mediaUpload.ts. */
 export const TEMP_UPLOAD_PREFIX = "tmp/";
 
+export const MAX_PDF_BYTES = 25 * 1024 * 1024;
+
+/** The programme PDF (admin "Visual do Evento") — extension, declared type
+ * and size, before it's uploaded. The server also checks the real bytes
+ * start with "%PDF-" (see finalizePdfUpload). */
+export function assertValidPdfUpload(file: File): void {
+  if (file.size === 0) return;
+  if (file.size > MAX_PDF_BYTES) throw new Error("O PDF excede o limite de 25MB.");
+  const ext = file.name.split(".").pop()?.toLowerCase();
+  if (ext !== "pdf" || (file.type && file.type !== "application/pdf")) {
+    throw new Error("O ficheiro tem de ser um PDF.");
+  }
+}
+
 export const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // matches next.config.ts serverActions.bodySizeLimit
 const ALLOWED_VIDEO_EXTENSIONS = new Set(["mp4", "webm", "mov"]);
 const ALLOWED_VIDEO_MIME_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);

@@ -14,6 +14,8 @@ export interface AdminGalleryItem {
   dayOrSession: string | null;
   sortOrder: number;
   published: boolean;
+  /** The event album's cover photo (one per event). */
+  isCover: boolean;
   createdAt: string;
 }
 
@@ -27,6 +29,8 @@ interface GalleryRow {
   day_or_session: string | null;
   sort_order: number;
   published: boolean;
+  /** Absent until supabase/migrations/2026-11-20_gallery_album_cover.sql runs. */
+  is_cover?: boolean | null;
   created_at: string;
 }
 
@@ -41,6 +45,7 @@ function mapRow(row: GalleryRow): AdminGalleryItem {
     dayOrSession: row.day_or_session,
     sortOrder: row.sort_order,
     published: row.published,
+    isCover: row.is_cover ?? false,
     createdAt: row.created_at,
   };
 }
@@ -139,6 +144,21 @@ export async function updateGalleryItem(
     .eq("id", id);
 
   if (error) throw error;
+}
+
+/** Makes this photo the cover of its event's album — clears the previous
+ * cover first (the database allows only one per event). */
+export async function setGalleryCover(id: string, eventId: string): Promise<void> {
+  const supabase = await createClient();
+  const { error: clearError } = await supabase
+    .from("gallery_media")
+    .update({ is_cover: false })
+    .eq("event_id", eventId)
+    .eq("is_cover", true);
+  if (clearError) throw clearError;
+  const { error } = await supabase.from("gallery_media").update({ is_cover: true }).eq("id", id);
+  if (error) throw error;
+  await logAdminAction("gallery.cover", `gallery_media:${id}`, { eventId });
 }
 
 export async function deleteGalleryItem(id: string): Promise<void> {
