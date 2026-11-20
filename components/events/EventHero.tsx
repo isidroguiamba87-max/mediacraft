@@ -21,7 +21,10 @@ import type { PulseEventDetail } from "@/lib/pulse/types";
 export function EventTopBar({ logoUrl, title }: { logoUrl: string | null; title: string }) {
   return (
     <div className="bg-white">
-      <div className="mx-auto flex h-[4.5rem] max-w-container items-center justify-between px-6 lg:px-10">
+      {/* Same full-width gutters as the hero card and the event content below
+          (px-4 / sm:px-6 / lg:px-10), so logo, photo and content line up at
+          any window width (2026-11-19). */}
+      <div className="flex h-[4.5rem] items-center justify-between px-4 sm:px-6 lg:px-10">
         <Link href="/" aria-label={title} className="flex h-full min-w-0 items-center gap-3 py-3">
           {logoUrl ? (
             <>
@@ -122,6 +125,13 @@ function LiveNowCard({
   );
 }
 
+export interface CommunicationHero {
+  /** e.g. "TVM" or "TVM, YouTube, Redes Sociais" (admin). */
+  channels: string | null;
+  /** The event's Pulse description, as plain paragraphs. */
+  paragraphs: string[];
+}
+
 /**
  * The event's first screen (client design 2026-11-13) — nothing else on it:
  * a big rounded card with the cover under the event's shadow colour (set in
@@ -135,9 +145,15 @@ export function EventHero({
   onProgramClick,
   onTicketsClick,
   onSessionClick = null,
+  communication = null,
+  onMoreClick,
 }: {
   event: PulseEventDetail;
   tagline: string | null;
+  /** Comunicação variant (client mock 2026-11-19): dates | channels, the
+   * name, the description and "Saiba mais" — no tickets/programme/live. */
+  communication?: CommunicationHero | null;
+  onMoreClick?: () => void;
   /** Opens the Programa on one session (the "Agora" card). */
   onSessionClick?: ((key: string) => void) | null;
   /** null when the event has no programme tab to open. */
@@ -162,7 +178,7 @@ export function EventHero({
 
   return (
     <section className="bg-white px-4 pb-4 sm:px-6 sm:pb-6 lg:px-10 lg:pb-10">
-      <div className="relative mx-auto flex min-h-[calc(100svh-4.5rem-1rem)] max-w-[1600px] items-center justify-center overflow-hidden rounded-[1.25rem] bg-brand-navy px-6 py-16 text-center text-white sm:min-h-[calc(100svh-4.5rem-1.5rem)] sm:rounded-[1.75rem] lg:min-h-[calc(100svh-4.5rem-2.5rem)]">
+      <div className="relative flex min-h-[calc(100svh-4.5rem-1rem)] items-center justify-center overflow-hidden rounded-[1.25rem] bg-brand-navy px-6 py-16 text-center text-white sm:min-h-[calc(100svh-4.5rem-1.5rem)] sm:rounded-[1.75rem] lg:min-h-[calc(100svh-4.5rem-2.5rem)]">
         {event.coverUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- remote Pulse / Supabase media
           <img src={event.coverUrl} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
@@ -173,6 +189,37 @@ export function EventHero({
           style={{ background: "var(--event-overlay, rgb(0 27 50 / 0.6))" }}
         />
 
+        {communication ? (
+          <div className="relative flex max-w-5xl flex-col items-center">
+            <CommunicationMeta event={event} channels={communication.channels} />
+
+            <h1 className="mt-5 text-white sm:mt-7">
+              <span className="block font-body text-4xl leading-[1.05] font-bold tracking-tight uppercase sm:text-6xl lg:text-7xl">
+                {event.title}
+              </span>
+            </h1>
+
+            {communication.paragraphs.length > 0 && (
+              <div className="mt-5 flex max-w-4xl flex-col gap-4 font-body text-sm leading-snug text-white/95 sm:mt-7 sm:gap-6 sm:text-lg lg:text-xl">
+                {communication.paragraphs.map((para, i) => (
+                  <p key={i} className="text-justify hyphens-auto [text-align-last:center]">
+                    {para}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {onMoreClick && (
+              <button
+                type="button"
+                onClick={onMoreClick}
+                className="mt-8 inline-flex items-center rounded-full bg-white px-8 py-2.5 font-body text-sm font-bold tracking-wide text-brand-navy uppercase shadow-sm transition-colors hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:mt-12 sm:text-base"
+              >
+                {t("learnMore")}
+              </button>
+            )}
+          </div>
+        ) : (
         <div className="relative flex max-w-5xl flex-col items-center">
           <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-body text-base uppercase sm:text-xl lg:text-2xl">
             {(day || range) && (
@@ -237,6 +284,86 @@ export function EventHero({
           </div>
 
           {live && <LiveNowCard live={live} onSessionClick={onSessionClick} />}
+        </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** "22 de Janeiro a 22 Fevereiro, 2027 | TVM" — the Comunicação screens' top line. */
+function CommunicationMeta({ event, channels }: { event: PulseEventDetail; channels: string | null }) {
+  const locale = useLocale();
+  const day = formatEventDays(
+    event.scheduleDates.map((d) => d.date),
+    locale,
+  );
+  const range = scheduleDateRange(event.scheduleDates);
+  const dates = day ? `${day.days} ${day.month}, ${day.year}` : range ? formatDateRange(range.start, range.end, locale) : null;
+  if (!dates && !channels) return null;
+  return (
+    <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-body text-base sm:text-xl lg:text-2xl">
+      {dates && <span>{dates}</span>}
+      {dates && channels && <span aria-hidden className="h-6 w-0.5 bg-white/90 sm:h-8" />}
+      {channels && <strong className="font-bold uppercase">{channels}</strong>}
+    </p>
+  );
+}
+
+/**
+ * Comunicação's second screen (client mock 2026-11-19), reached by
+ * scrolling (or "Saiba mais"): the same cover card with dates | channels and
+ * the name, then two big white buttons — "Ver programas" and "Ver galeria" —
+ * that open those sections below. A button only shows when its section
+ * exists for this event.
+ */
+export function CommunicationChoice({
+  event,
+  channels,
+  onProgramsClick,
+  onGalleryClick,
+}: {
+  event: PulseEventDetail;
+  channels: string | null;
+  onProgramsClick: (() => void) | null;
+  onGalleryClick: (() => void) | null;
+}) {
+  const t = useTranslations("eventTabs");
+  const choice =
+    "group flex w-full items-center justify-center gap-3 rounded-[1.25rem] bg-white px-6 py-5 font-body text-xl font-bold tracking-wide text-[#D4962B] uppercase shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto sm:min-w-[20rem] sm:py-7 sm:text-3xl";
+  return (
+    <section className="bg-white px-4 pb-4 sm:px-6 sm:pb-6 lg:px-10 lg:pb-10">
+      <div className="relative flex min-h-[calc(100svh-4.5rem-1rem)] items-center justify-center overflow-hidden rounded-[1.25rem] bg-brand-navy px-6 py-16 text-center text-white sm:min-h-[calc(100svh-4.5rem-1.5rem)] sm:rounded-[1.75rem] lg:min-h-[calc(100svh-4.5rem-2.5rem)]">
+        {event.coverUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- remote Pulse / Supabase media
+          <img src={event.coverUrl} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <span aria-hidden className="absolute inset-0" style={{ background: "var(--event-overlay, rgb(0 27 50 / 0.6))" }} />
+
+        <div className="relative flex w-full max-w-5xl flex-col items-center">
+          <CommunicationMeta event={event} channels={channels} />
+          <h2 className="mt-5 text-white sm:mt-7">
+            <span className="block font-body text-4xl leading-[1.05] font-bold tracking-tight uppercase sm:text-6xl lg:text-7xl">
+              {event.title}
+            </span>
+          </h2>
+
+          {(onProgramsClick || onGalleryClick) && (
+            <div className="mt-10 flex w-full flex-col items-center justify-center gap-5 sm:mt-16 sm:flex-row sm:gap-10">
+              {onProgramsClick && (
+                <button type="button" onClick={onProgramsClick} className={choice}>
+                  {t("viewPrograms")}
+                  <ChevronRight aria-hidden className="h-8 w-8 transition-transform group-hover:translate-x-1 sm:h-11 sm:w-11" strokeWidth={2.6} />
+                </button>
+              )}
+              {onGalleryClick && (
+                <button type="button" onClick={onGalleryClick} className={choice}>
+                  {t("viewGallery")}
+                  <ChevronRight aria-hidden className="h-8 w-8 transition-transform group-hover:translate-x-1 sm:h-11 sm:w-11" strokeWidth={2.6} />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -35,6 +35,7 @@ export function GalleryGrid({
   documentsSlot,
   leading,
   sectionOrder,
+  hideFilter = false,
 }: {
   items: EventGalleryItem[];
   documentsSlot?: React.ReactNode;
@@ -44,6 +45,8 @@ export function GalleryGrid({
   /** Section names in the order the event defines them (its Pulse agenda
    * sections); tags not in the list follow, in first-seen order. */
   sectionOrder?: string[];
+  /** No dropdown — the album page already splits photos by moment. */
+  hideFilter?: boolean;
 }) {
   const t = useTranslations("eventTabs");
   const photos = items.filter((i) => i.type === "image");
@@ -105,7 +108,7 @@ export function GalleryGrid({
 
   return (
     <div>
-      {(filterOptions.length > 1 || leading) && (
+      {!hideFilter && (filterOptions.length > 1 || leading) && (
         <div className="mb-5 flex flex-wrap items-center gap-3">
           {leading}
           {filterOptions.length > 1 && (

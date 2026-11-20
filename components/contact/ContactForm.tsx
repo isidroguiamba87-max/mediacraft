@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 // Client design (2026-11-11): thin red-tinted borders, rounded corners,
 // small grey placeholders; focus deepens the border to full brand red.
 const fieldClass =
-  "w-full rounded-[10px] border border-brand-red/55 bg-white px-3.5 text-sm text-ink outline-none transition-colors placeholder:text-slate/80 focus-visible:border-brand-red focus-visible:ring-2 focus-visible:ring-brand-red/15";
+  "w-full rounded-[10px] border border-brand-navy/40 bg-white px-3.5 text-sm text-ink outline-none transition-colors placeholder:text-slate/80 focus-visible:border-brand-red focus-visible:ring-2 focus-visible:ring-brand-red/15";
 const labelClass = "mb-1.5 block text-[13px] font-bold text-brand-navy";
 
 export function ContactForm() {
@@ -56,7 +56,7 @@ export function ContactForm() {
     <form
       noValidate
       onSubmit={onSubmit}
-      className="relative rounded-[1.75rem] font-body border border-brand-red/70 bg-white px-6 pt-7 pb-6 sm:px-8"
+      className="relative rounded-[1.75rem] font-body border border-brand-navy bg-white px-6 pt-7 pb-6 sm:px-8"
     >
       {/* Honeypot — invisible to real visitors (off-screen, not display:none
           or aria-hidden, which some bots skip on purpose), caught
@@ -70,11 +70,11 @@ export function ContactForm() {
         aria-hidden="true"
       />
 
-      <h2 className="text-brand-navy">
+      <h2 className="text-brand-red">
         <span className="font-body text-xl font-medium uppercase sm:text-2xl">{t("title")}</span>
       </h2>
       <p className="mt-1.5 font-body text-xs text-slate">{t("subtitle")}</p>
-      <span aria-hidden className="mt-2.5 block h-px bg-brand-red/70" />
+      <span aria-hidden className="mt-2.5 block h-px bg-brand-navy/40" />
 
       <div className="mt-6 grid gap-x-3 gap-y-4 sm:grid-cols-2">
         <label className="block">

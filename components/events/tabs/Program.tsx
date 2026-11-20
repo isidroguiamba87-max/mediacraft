@@ -1,4 +1,5 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Download, ExternalLink, FileText } from "lucide-react";
 import { initials } from "@/lib/utils";
 import { buildPanels, buildSpeakerDirectory, groupPanelsByDay, speakerSlug } from "@/lib/pulse/panels";
 import { ProgramDayTabs } from "./ProgramDayTabs";
@@ -26,6 +27,8 @@ export async function Program({
   speakers,
   eventTitle,
   logoUrl,
+  pdfUrl = null,
+  pdfUpdatedAt = null,
 }: {
   eventId: string;
   sections: PulseEventSection[];
@@ -34,6 +37,9 @@ export async function Program({
    * to PanelPosters for the exact same popup. */
   eventTitle: string;
   logoUrl: string | null;
+  /** The programme PDF from the admin, shown on top when set. */
+  pdfUrl?: string | null;
+  pdfUpdatedAt?: string | null;
 }) {
   const [t, tSpeakers] = await Promise.all([
     getTranslations("eventTabs"),
@@ -47,8 +53,48 @@ export async function Program({
   );
   const others = speakers.filter((sp) => !assigned.has(speakerSlug(sp.name, sp.company)));
 
+  const locale = await getLocale();
+  const pdfCard = pdfUrl ? (
+    <div className="flex flex-col gap-4 rounded-[1.25rem] border border-brand-red/40 bg-brand-red/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-4">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand-red text-white">
+          <FileText aria-hidden className="h-6 w-6" />
+        </span>
+        <div>
+          <p className="font-body text-base font-bold text-brand-navy">{t("programPdfTitle")}</p>
+          {pdfUpdatedAt && (
+            <p className="text-xs text-slate">
+              {t("programPdfUpdated", {
+                date: new Intl.DateTimeFormat(locale, { dateStyle: "long", timeStyle: "short" }).format(new Date(pdfUpdatedAt)),
+              })}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={pdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-red-deep"
+        >
+          <ExternalLink aria-hidden className="h-4 w-4" />
+          {t("programPdfOpen")}
+        </a>
+        <a
+          href={pdfUrl}
+          download
+          className="inline-flex items-center gap-1.5 rounded-full border-2 border-brand-red px-5 py-2 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-red/10"
+        >
+          <Download aria-hidden className="h-4 w-4" />
+          {t("programPdfDownload")}
+        </a>
+      </div>
+    </div>
+  ) : null;
+
   if (panels.length === 0 && others.length === 0) {
-    return <p className="text-sm text-slate">{t("programEmpty")}</p>;
+    return pdfCard ?? <p className="text-sm text-slate">{t("programEmpty")}</p>;
   }
 
   // Every session a speaker is on, by slug — same identity (name+company)
@@ -68,6 +114,7 @@ export async function Program({
 
   return (
     <div className="flex flex-col gap-12">
+      {pdfCard}
       {panels.length > 0 && (
         <ProgramDayTabs
           eventId={eventId}

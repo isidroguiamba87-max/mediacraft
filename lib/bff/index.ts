@@ -23,7 +23,11 @@ export interface EventOverride {
   logoUrl: string | null;
   tagline: string | null;
   liveInfo: EventLiveInfo | null;
+  programPdfUrl: string | null;
+  programPdfUpdatedAt: string | null;
   qaEnabled: boolean;
+  category: "evento" | "comunicacao";
+  channels: string | null;
 }
 
 export interface EventGalleryItem {
@@ -74,10 +78,42 @@ export async function getEventOverride(eventId: string): Promise<EventOverride |
       logoUrl: data.logo_url ?? null,
       tagline: data.tagline ?? null,
       liveInfo: cleanLiveInfo(data.live_info),
+      programPdfUrl: data.program_pdf_url ?? null,
+      programPdfUpdatedAt: data.program_pdf_updated_at ?? null,
       qaEnabled: data.qa_enabled ?? false,
+      category: data.category === "comunicacao" ? "comunicacao" : "evento",
+      channels: data.channels ?? null,
     };
   } catch {
     return null;
+  }
+}
+
+export interface EventPlacement {
+  category: "evento" | "comunicacao";
+  channels: string | null;
+}
+
+/** Eventos vs Comunicação for a whole list (one query) — set by the admin
+ * in "Visual do Evento". Events with no override row (or a database that
+ * hasn't run the category migration) are simply "evento". */
+export async function getEventPlacements(eventIds: string[]): Promise<Map<string, EventPlacement>> {
+  if (!isSupabaseConfigured || eventIds.length === 0) return new Map();
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("event_overrides").select("*").in("event_id", eventIds);
+    if (error) throw error;
+    return new Map(
+      (data ?? []).map((row) => [
+        row.event_id as string,
+        {
+          category: row.category === "comunicacao" ? "comunicacao" : "evento",
+          channels: (row.channels as string | null | undefined) ?? null,
+        },
+      ]),
+    );
+  } catch {
+    return new Map();
   }
 }
 

@@ -4,6 +4,7 @@ import type { EventGalleryItem } from "./index";
 
 export interface AllGalleryItem extends EventGalleryItem {
   eventId: string;
+  isCover: boolean;
 }
 
 /** Every published gallery item across ALL events, for the general
@@ -16,7 +17,8 @@ export async function getAllGallery(): Promise<AllGalleryItem[]> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("gallery_media")
-      .select("id, event_id, type, storage_url, external_video_url, caption, day_or_session")
+      // "*" so a database without the is_cover migration still works
+      .select("*")
       .eq("published", true)
       .order("created_at", { ascending: false })
       .order("sort_order", { ascending: true });
@@ -31,6 +33,7 @@ export async function getAllGallery(): Promise<AllGalleryItem[]> {
       externalVideoUrl: row.external_video_url,
       caption: row.caption,
       dayOrSession: row.day_or_session,
+      isCover: row.is_cover ?? false,
     }));
   } catch {
     return [];

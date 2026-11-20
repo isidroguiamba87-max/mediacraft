@@ -553,7 +553,8 @@ body {
  * original warm beige for consistency — "peço para mudar essa imagem de
  * fundo" / "cor lisa... paper-2"). */
 .team-deck {
-  background: var(--paper-2);
+  /* plain white since the 2026-11-19 redesign (navy title band above) */
+  background: transparent;
 }
 
 /* Footer (client design 2026-11-11): its own deep navy (#17223a, sampled

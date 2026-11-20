@@ -37,7 +37,8 @@
     "contact": "Contact",
     "cta": "Talk to us",
     "pulse": "Sign in (Pulse)",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "communication": "Communication"
   },
   "showcase": {
     "metaTitle": "Visual demo — MediaCraft",
@@ -103,9 +104,10 @@
         "hl": false
       }
     ],
-    "learnMore": "Learn more",
     "carousel": "Highlights",
-    "goTo": "Show panel {n}"
+    "goTo": "Show panel {n}",
+    "seeMore": "See more",
+    "close": "Close"
   },
   "stats": {
     "title": "Our reach",
@@ -358,7 +360,14 @@
     "liveNowLabel": "Now",
     "liveNextLabel": "Up next",
     "liveSeeInProgram": "See in the programme",
-    "backToEvents": "Back"
+    "backToEvents": "Back",
+    "programPdfTitle": "Full programme (PDF)",
+    "programPdfUpdated": "Updated {date}",
+    "programPdfOpen": "Open PDF",
+    "programPdfDownload": "Download",
+    "learnMore": "Learn more",
+    "viewPrograms": "View programmes",
+    "viewGallery": "View gallery"
   },
   "panel": {
     "back": "Back to panels",
@@ -836,7 +845,14 @@
     "title": "Gallery",
     "allEvents": "All events",
     "eventFilter": "Filter by event",
-    "empty": "No photos published yet."
+    "empty": "No photos published yet.",
+    "albums": "Albums",
+    "photoCount": "{count, plural, one {# photo} other {# photos}}",
+    "back": "Back to gallery",
+    "moments": "Moments",
+    "otherMoments": "Other moments",
+    "videos": "Videos",
+    "openAlbum": "Open album"
   },
   "panelRoom": {
     "kicker": "Panelists' interaction space",

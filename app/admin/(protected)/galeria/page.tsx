@@ -20,7 +20,7 @@ export default async function AdminGalleryPage() {
     <div>
       <h1 className="font-display text-2xl text-brand-navy">Galeria</h1>
       <p className="mt-1 text-sm text-slate">
-        Imagens e vídeos dos eventos — publicados aqui aparecem na aba &ldquo;Galeria&rdquo; do evento e na Galeria geral do site (/galeria), filtráveis por evento e por secção.
+        Imagens e vídeos dos eventos. Cada evento é um álbum na Galeria do site: a foto com a ⭐ é a capa do álbum, e dentro dele as fotos ficam organizadas por momento (o campo &ldquo;Dia/sessão&rdquo;).
       </p>
 
       <div className="mt-6">
@@ -32,10 +32,29 @@ export default async function AdminGalleryPage() {
           <p className="text-sm text-slate">Ainda não há nada na galeria.</p>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((item) => (
-            <GalleryItemCard key={item.id} item={item} eventTitle={eventTitle.get(item.eventId) ?? item.eventId} />
-          ))}
+        // One block per event (= one album on the site); the star on a photo
+        // makes it that album's cover.
+        <div className="mt-8 flex flex-col gap-10">
+          {[...new Set(items.map((i) => i.eventId))].map((eventId) => {
+            const albumItems = items.filter((i) => i.eventId === eventId);
+            const hasCover = albumItems.some((i) => i.isCover);
+            return (
+              <section key={eventId}>
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h2 className="font-display text-lg text-brand-navy">{eventTitle.get(eventId) ?? eventId}</h2>
+                  <span className="text-xs text-slate">
+                    {albumItems.length} {albumItems.length === 1 ? "item" : "itens"}
+                    {hasCover ? "" : " · sem capa escolhida (usa a 1.ª foto) — carrega na ⭐ de uma foto"}
+                  </span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                  {albumItems.map((item) => (
+                    <GalleryItemCard key={item.id} item={item} eventTitle={eventTitle.get(item.eventId) ?? item.eventId} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

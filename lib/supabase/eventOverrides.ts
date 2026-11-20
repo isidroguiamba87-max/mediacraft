@@ -14,9 +14,18 @@ export interface AdminEventOverride {
   /** Theme / subtitle line under the event name on its first screen. */
   tagline: string | null;
   liveInfo: EventLiveInfo | null;
+  /** The programme PDF (public Storage URL) and when it was last replaced. */
+  programPdfUrl: string | null;
+  programPdfUpdatedAt: string | null;
   qaEnabled: boolean;
+  /** Which home-page section lists it: "Eventos" (default) or "Comunicação". */
+  category: EventCategory;
+  /** Comunicação only: where it aired, e.g. "TVM, YouTube, Redes Sociais". */
+  channels: string | null;
   updatedAt: string;
 }
+
+export type EventCategory = "evento" | "comunicacao";
 
 interface EventOverrideRow {
   event_id: string;
@@ -29,7 +38,13 @@ interface EventOverrideRow {
   tagline?: string | null;
   /** Absent until supabase/migrations/2026-11-13_event_live_info.sql runs. */
   live_info?: unknown;
+  /** Absent until supabase/migrations/2026-11-19_event_program_pdf.sql runs. */
+  program_pdf_url?: string | null;
+  program_pdf_updated_at?: string | null;
   qa_enabled: boolean | null;
+  /** Absent until supabase/migrations/2026-11-19_event_category.sql runs. */
+  category?: string | null;
+  channels?: string | null;
   updated_at: string;
 }
 
@@ -42,7 +57,11 @@ function mapRow(row: EventOverrideRow): AdminEventOverride {
     logoUrl: row.logo_url ?? null,
     tagline: row.tagline ?? null,
     liveInfo: cleanLiveInfo(row.live_info),
+    programPdfUrl: row.program_pdf_url ?? null,
+    programPdfUpdatedAt: row.program_pdf_updated_at ?? null,
     qaEnabled: row.qa_enabled ?? false,
+    category: row.category === "comunicacao" ? "comunicacao" : "evento",
+    channels: row.channels ?? null,
     updatedAt: row.updated_at,
   };
 }
@@ -82,6 +101,12 @@ export interface EventOverrideInput {
   logoUrl?: string | null;
   tagline?: string | null;
   liveInfo?: EventLiveInfo | null;
+  /** undefined = leave as is; null = remove. Setting it stamps the date. */
+  programPdfUrl?: string | null;
+  /** undefined = leave as is (keeps saving working before the category
+   * migration has run). */
+  category?: EventCategory;
+  channels?: string | null;
 }
 
 /** Upsert on `event_id` — there's at most one override row per Pulse
@@ -104,6 +129,14 @@ export async function saveEventOverride(
         ...(input.logoUrl !== undefined ? { logo_url: input.logoUrl } : {}),
         ...(input.tagline !== undefined ? { tagline: input.tagline } : {}),
         ...(input.liveInfo !== undefined ? { live_info: input.liveInfo } : {}),
+        ...(input.programPdfUrl !== undefined
+          ? {
+              program_pdf_url: input.programPdfUrl,
+              program_pdf_updated_at: input.programPdfUrl ? new Date().toISOString() : null,
+            }
+          : {}),
+        ...(input.category !== undefined ? { category: input.category } : {}),
+        ...(input.channels !== undefined ? { channels: input.channels } : {}),
         updated_at: new Date().toISOString(),
       },
       { onConflict: "event_id" },

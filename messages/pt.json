@@ -37,7 +37,8 @@
     "contact": "Contacto",
     "cta": "Fale connosco",
     "pulse": "Entrar (Pulse)",
-    "gallery": "Galeria"
+    "gallery": "Galeria",
+    "communication": "Comunicação"
   },
   "showcase": {
     "metaTitle": "Demonstração visual — MediaCraft",
@@ -103,9 +104,10 @@
         "hl": false
       }
     ],
-    "learnMore": "Saiba mais",
     "carousel": "Destaques",
-    "goTo": "Mostrar painel {n}"
+    "goTo": "Mostrar painel {n}",
+    "seeMore": "Ver mais",
+    "close": "Fechar"
   },
   "stats": {
     "title": "O nosso alcance",
@@ -358,7 +360,14 @@
     "liveNowLabel": "Agora",
     "liveNextLabel": "A seguir",
     "liveSeeInProgram": "Ver no programa",
-    "backToEvents": "Voltar"
+    "backToEvents": "Voltar",
+    "programPdfTitle": "Programa completo (PDF)",
+    "programPdfUpdated": "Actualizado a {date}",
+    "programPdfOpen": "Abrir PDF",
+    "programPdfDownload": "Descarregar",
+    "learnMore": "Saiba mais",
+    "viewPrograms": "Ver programas",
+    "viewGallery": "Ver galeria"
   },
   "panel": {
     "back": "Voltar aos painéis",
@@ -836,7 +845,14 @@
     "title": "Galeria",
     "allEvents": "Todos os eventos",
     "eventFilter": "Filtrar por evento",
-    "empty": "Ainda não há fotografias publicadas."
+    "empty": "Ainda não há fotografias publicadas.",
+    "albums": "Álbuns",
+    "photoCount": "{count, plural, one {# foto} other {# fotos}}",
+    "back": "Voltar à galeria",
+    "moments": "Momentos",
+    "otherMoments": "Outros momentos",
+    "videos": "Vídeos",
+    "openAlbum": "Abrir álbum"
   },
   "panelRoom": {
     "kicker": "Espaço de interação dos painelistas",

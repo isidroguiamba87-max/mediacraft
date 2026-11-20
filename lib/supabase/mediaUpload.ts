@@ -98,6 +98,24 @@ export async function finalizeImageUpload(
 }
 
 /**
+ * The programme PDF: checks the temp object really is a PDF (its first bytes
+ * are "%PDF-", whatever the name says), then moves it to programs/.
+ */
+export async function finalizePdfUpload(supabase: SupabaseClient, tempPath: string): Promise<string> {
+  const { data: blob, error: dlError } = await supabase.storage.from("media").download(tempPath);
+  if (dlError || !blob) throw dlError ?? new Error("Não foi possível ler o PDF.");
+  const head = Buffer.from(await blob.slice(0, 5).arrayBuffer()).toString("latin1");
+  if (head !== "%PDF-") {
+    await supabase.storage.from("media").remove([tempPath]);
+    throw new Error("O ficheiro não é um PDF válido.");
+  }
+  const finalPath = `programs/${crypto.randomUUID()}.pdf`;
+  const { error } = await supabase.storage.from("media").move(tempPath, finalPath);
+  if (error) throw error;
+  return supabase.storage.from("media").getPublicUrl(finalPath).data.publicUrl;
+}
+
+/**
  * Video's half of the same flow — no re-encoding (sharp can't touch
  * video), just a metadata-only move from the temp path to its real one,
  * so the actual bytes never transit through this Function either way.

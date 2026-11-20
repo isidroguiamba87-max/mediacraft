@@ -9,7 +9,16 @@ import type { PulseEvent } from "@/lib/pulse/types";
  * "place | dates" caption. Soft dark shadow all round; the whole card is
  * the link.
  */
-export function EventTile({ event }: { event: PulseEvent }) {
+export function EventTile({
+  event,
+  caption: captionOverride,
+  tone = "red",
+}: {
+  event: PulseEvent;
+  /** Replaces the "place | dates" line (Comunicação: its channels). */
+  caption?: string | null;
+  tone?: "red" | "gold";
+}) {
   const locale = useLocale();
   const t = useTranslations("events");
   const dates = formatEventDates(
@@ -17,7 +26,7 @@ export function EventTile({ event }: { event: PulseEvent }) {
     locale,
   );
   const place = event.location?.name ? formatEventLocation(event.location) : "";
-  const caption = [place, dates].filter(Boolean).join(" | ");
+  const caption = captionOverride || [place, dates].filter(Boolean).join(" | ");
 
   return (
     <Link
@@ -36,7 +45,7 @@ export function EventTile({ event }: { event: PulseEvent }) {
         )}
       </div>
       <div className="px-5 pt-3 pb-4 sm:px-5">
-        <h3 className="truncate font-body text-lg leading-tight font-bold tracking-tight text-brand-red uppercase sm:text-xl">
+        <h3 className={`truncate font-body text-lg leading-tight font-bold tracking-tight uppercase sm:text-xl ${tone === "gold" ? "text-[#D4962B]" : "text-brand-red"}`}>
           {event.title}
         </h3>
         {caption && (

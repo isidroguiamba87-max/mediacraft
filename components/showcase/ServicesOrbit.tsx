@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 import { services } from "@/content/services";
 import type { Service } from "@/types";
 import { cn } from "@/lib/utils";
+import { serviceDetails } from "@/content/serviceDetails";
+import { PillarDetailModal } from "./PillarDetailModal";
 
 const N = services.length;
 const STEP = 360 / N; // 72° between areas
@@ -57,6 +59,10 @@ export function ServicesOrbit() {
   // In view right now — rotation pauses while the section is off-screen and
   // resumes on the same service when it comes back.
   const [visible, setVisible] = useState(false);
+  // "Ver mais" popup (2026-11-19): the service id it's showing, if open —
+  // rotation pauses while it's up so the card behind doesn't change.
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const tHero = useTranslations("hero");
   const [turn, setTurn] = useState(0);
   const active = ((turn % N) + N) % N;
 
@@ -78,10 +84,10 @@ export function ServicesOrbit() {
   // from that service. Never holds the page's scroll — this only ever
   // changes which service is shown.
   useEffect(() => {
-    if (!armed || !visible || reduce || paused || focused) return;
+    if (!armed || !visible || reduce || paused || focused || detailId) return;
     const id = setTimeout(() => setTurn((v) => v + 1), AUTO_MS);
     return () => clearTimeout(id);
-  }, [armed, visible, reduce, paused, focused, turn]);
+  }, [armed, visible, reduce, paused, focused, detailId, turn]);
 
   const goTo = useCallback((i: number) => {
     setTurn((v) => {
@@ -105,6 +111,18 @@ export function ServicesOrbit() {
       <span aria-hidden className="what-rule mt-3 block h-px bg-brand-red" />
     </div>
   );
+
+  const seeMore = serviceDetails[activeSvc.id] ? (
+    <button
+      type="button"
+      onClick={() => setDetailId(activeSvc.id)}
+      aria-haspopup="dialog"
+      className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-white/80 px-4 py-1.5 font-body text-xs font-bold tracking-wide text-white uppercase transition-colors hover:bg-white hover:text-brand-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+    >
+      {tHero("seeMore")}
+      <ChevronRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+    </button>
+  ) : null;
 
   const dashes = (
     <div className="mt-6 flex items-center gap-2">
@@ -272,6 +290,7 @@ export function ServicesOrbit() {
               {t(`items.${activeSvc.id}.description`)}
             </p>
             {dashes}
+            {seeMore}
           </div>
         </div>
       </div>
@@ -328,6 +347,7 @@ export function ServicesOrbit() {
             {t(`items.${activeSvc.id}.description`)}
           </p>
           {dashes}
+          {seeMore}
         </article>
 
         {/* phone-only side arrows, straddling the card's edges */}
@@ -352,6 +372,14 @@ export function ServicesOrbit() {
         ))}
         </div>
       </div>
+      {detailId && serviceDetails[detailId] && (
+        <PillarDetailModal
+          detail={serviceDetails[detailId]}
+          photo={stageOf(services.findIndex((sv) => sv.id === detailId)).src}
+          closeLabel={tHero("close")}
+          onClose={() => setDetailId(null)}
+        />
+      )}
     </section>
   );
 }
