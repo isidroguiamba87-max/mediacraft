@@ -95,7 +95,7 @@ export function TeamDeck() {
 
   return (
     <div
-      className="team-deck relative overflow-hidden pt-8 pb-2 sm:pt-12 sm:pb-4"
+      className="team-deck relative overflow-hidden pt-8 pb-0 sm:pt-12"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

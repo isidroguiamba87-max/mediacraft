@@ -25,7 +25,7 @@ export async function ContactSection() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-container px-6 pt-8 pb-14 sm:pb-20 lg:px-10">
+      <div className="mx-auto max-w-container px-6 pt-6 pb-4 sm:pt-8 sm:pb-6 lg:px-10">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1fr)]">
           <ContactInfo />
           <ContactForm />

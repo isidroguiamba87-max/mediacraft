@@ -18,7 +18,7 @@ export function Team() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-container px-6 pb-4 sm:pb-6 lg:px-10">
+      <div className="mx-auto max-w-container px-6 pb-2 sm:pb-2 lg:px-10">
         <TeamDeck />
       </div>
     </section>

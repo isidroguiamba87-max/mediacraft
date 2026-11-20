@@ -25,7 +25,7 @@ export function MissionVision() {
   const t = useTranslations("about");
 
   return (
-    <section className="pb-14 sm:pb-20">
+    <section className="pb-8 sm:pb-12">
       <div className="mx-auto flex max-w-container flex-col gap-6 px-6 sm:gap-8 lg:px-10">
         {(["mission", "vision"] as const).map((id) => (
           <article key={id} className={cardClass}>

@@ -296,7 +296,7 @@ export function ServicesOrbit() {
       </div>
 
       {/* =================== fallback (<lg / reduced motion) =================== */}
-      <div className="orbit-list relative mx-auto max-w-container px-6 pt-14 pb-14 sm:pb-20">
+      <div className="orbit-list relative mx-auto max-w-container px-6 py-8 sm:py-12">
         {heading}
 
         {/* the five numbered chips as a sideways-scrolling strip — tablet

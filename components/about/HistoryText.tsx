@@ -46,12 +46,15 @@ export function HistoryText({
           type="button"
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
-          className="flex items-center gap-1.5 self-start font-body text-base font-bold text-brand-red hover:underline"
+          // Solid red pill (client 2026-11-20: "destacar melhor") — centred
+          // on phones, full width there so it's an easy tap target.
+          className="inline-flex w-full items-center justify-center gap-2 self-center rounded-full bg-brand-red px-7 py-3 font-body text-sm font-bold tracking-wide text-white uppercase shadow-[0_6px_18px_rgba(191,38,46,0.35)] transition-[background-color,transform,box-shadow] hover:-translate-y-0.5 hover:bg-brand-red-deep hover:shadow-[0_10px_24px_rgba(191,38,46,0.4)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-red sm:w-auto sm:self-start sm:text-base"
         >
           {expanded ? readLess : readMore}
           <ChevronDown
             aria-hidden
-            size={16}
+            size={18}
+            strokeWidth={2.75}
             className={cn("transition-transform", expanded && "rotate-180")}
           />
         </button>

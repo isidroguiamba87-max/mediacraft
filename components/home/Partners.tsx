@@ -40,12 +40,12 @@ export function Partners() {
   const t = useTranslations("partners");
 
   return (
-    <section className="mx-auto max-w-container px-6 pt-14 pb-12 sm:pt-20 sm:pb-14 lg:px-10">
+    <section className="mx-auto max-w-container px-6 pt-4 pb-8 sm:pt-6 sm:pb-10 lg:px-10">
       <h2 className="inline-block border-b-[1.5px] border-brand-red pb-2 font-body text-2xl leading-none font-bold tracking-tight text-brand-navy sm:text-3xl">
         {t("title")}
       </h2>
 
-      <Marquee className="mt-8 sm:mt-10">
+      <Marquee className="mt-6 sm:mt-8">
         {partners.map((p) => (
           <PartnerMark key={p.id} partner={p} className="h-20 w-40 sm:h-24 sm:w-52" />
         ))}

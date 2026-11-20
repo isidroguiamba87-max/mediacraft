@@ -30,7 +30,7 @@ export async function GallerySection() {
   });
 
   return (
-    <div className="mx-auto max-w-container px-6 pt-6 pb-14 sm:pt-10 sm:pb-20 lg:px-10">
+    <div className="mx-auto max-w-container px-6 pt-4 pb-8 sm:pt-6 sm:pb-12 lg:px-10">
       <div className="inline-block">
         <h2 className="text-brand-navy">
           <span className="font-body text-4xl font-bold uppercase sm:text-5xl">{t("title")}</span>
@@ -39,9 +39,9 @@ export async function GallerySection() {
       </div>
 
       {albums.length === 0 ? (
-        <p className="mt-8 text-sm text-slate">{t("empty")}</p>
+        <p className="mt-6 text-sm text-slate">{t("empty")}</p>
       ) : (
-        <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-6 sm:mt-12 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6 sm:mt-8 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-3">
           {albums.map((album) => (
             <li key={album.eventId}>
               <Link

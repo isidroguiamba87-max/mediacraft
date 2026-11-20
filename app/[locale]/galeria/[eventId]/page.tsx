@@ -64,7 +64,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
           <img src={cover.storageUrl} alt="" aria-hidden className="absolute inset-0 -z-10 h-full w-full object-cover" />
         )}
         <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-brand-navy via-brand-navy/70 to-brand-navy/30" />
-        <div className="mx-auto max-w-container px-6 pt-10 pb-12 sm:pt-14 sm:pb-16 lg:px-10">
+        <div className="mx-auto max-w-container px-6 pt-8 pb-8 sm:pt-10 sm:pb-12 lg:px-10">
           <Link
             href="/#galeria"
             className="inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-brand-navy shadow transition-colors hover:bg-white"
@@ -72,7 +72,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             <ArrowLeft aria-hidden size={15} strokeWidth={2.6} />
             {t("back")}
           </Link>
-          <h1 className="mt-16 max-w-4xl text-white sm:mt-28">
+          <h1 className="mt-10 max-w-4xl text-white sm:mt-16">
             <span className="block text-3xl leading-tight font-bold uppercase sm:text-5xl">{event?.title ?? t("title")}</span>
           </h1>
           <p className="mt-3 inline-flex items-center gap-2 text-sm text-white/85 sm:text-base">
@@ -103,13 +103,13 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
         </nav>
       )}
 
-      <div className="mx-auto flex max-w-container flex-col gap-14 px-6 py-12 sm:py-16 lg:px-10">
+      <div className="mx-auto flex max-w-container flex-col gap-10 px-6 py-8 sm:gap-12 sm:py-12 lg:px-10">
         {moments.map((m) => (
           <section key={m.id} id={m.id} className="scroll-mt-40">
             <h2 className="inline-block border-b-2 border-brand-red pb-1 text-brand-navy">
               <span className="text-xl font-bold uppercase sm:text-2xl">{m.name}</span>
             </h2>
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <GalleryGrid items={m.items} hideFilter />
             </div>
           </section>
