@@ -62,7 +62,7 @@ export function PillarDetailModal({
         aria-modal="true"
         aria-labelledby="pillar-detail-title"
         onClick={(e) => e.stopPropagation()}
-        className="reveal-up relative max-h-[88svh] w-full max-w-3xl overflow-y-auto rounded-[1.25rem] bg-white px-6 pt-5 pb-7 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:px-8 sm:pb-8"
+        className="reveal-up relative flex max-h-[88svh] w-full max-w-3xl flex-col overflow-hidden rounded-[1.25rem] bg-white px-6 pt-5 pb-7 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:px-8 sm:pb-8"
       >
         <div className="flex items-start justify-between gap-4">
           <h2 id="pillar-detail-title" className="pt-2 font-display text-xl leading-tight text-brand-navy sm:text-2xl">
@@ -80,14 +80,17 @@ export function PillarDetailModal({
         </div>
         <span aria-hidden className="mt-2 block h-0.5 w-12 bg-brand-red" />
 
-        <div className="mt-5 grid gap-5 sm:grid-cols-[1fr_13rem] sm:items-start sm:gap-7">
+        {/* Title and photo stay put; only the text scrolls (2026-11-23: "as
+            imagens não se moverem quando faço o scroll"). Phone: photo on
+            top, text scrolling under it. sm+: text left, photo right. */}
+        <div className="mt-5 grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-5 sm:grid-cols-[1fr_13rem] sm:grid-rows-[minmax(0,1fr)] sm:gap-7">
           {photo && (
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-line sm:order-2 sm:aspect-[4/5]">
+            <div className="relative aspect-[16/9] max-h-[28svh] shrink-0 self-start overflow-hidden rounded-2xl border border-line sm:order-2 sm:aspect-[4/5] sm:max-h-none">
               <Image src={photo} alt="" fill sizes="(min-width: 640px) 13rem, 100vw" className="object-cover" />
             </div>
           )}
 
-          <div className={`flex flex-col gap-2.5 sm:order-1 ${photo ? "" : "sm:col-span-2"}`}>
+          <div className={`flex min-h-0 flex-col gap-2.5 overflow-y-auto overscroll-contain pr-1 sm:order-1 ${photo ? "" : "row-span-2 sm:col-span-2"}`}>
             {detail.intro.map((p, i) => (
               <p key={`i${i}`} className={paragraph}>
                 {p}
