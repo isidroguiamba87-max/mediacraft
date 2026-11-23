@@ -375,7 +375,6 @@ export function ServicesOrbit() {
       {detailId && serviceDetails[detailId] && (
         <PillarDetailModal
           detail={serviceDetails[detailId]}
-          photo={stageOf(services.findIndex((sv) => sv.id === detailId)).src}
           closeLabel={tHero("close")}
           onClose={() => setDetailId(null)}
         />

@@ -43,7 +43,7 @@ export const team: TeamMember[] = [
   {
     id: "joaquina-novela",
     name: "Joaquina Novela",
-    photo: "/images/team/joaquina-novela-2026.webp",
+    photo: "/images/team/joaquina-novela-v2.webp",
     linkedin: "https://www.linkedin.com/company/mediacraftmz",
   },
   {

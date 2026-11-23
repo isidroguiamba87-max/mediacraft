@@ -155,7 +155,10 @@ export function TeamDeck() {
                 go(-1);
               }
             }}
-            className="relative mx-auto h-[300px] cursor-grab touch-pan-y select-none outline-none focus-visible:ring-2 focus-visible:ring-brand-red active:cursor-grabbing sm:h-[360px] md:h-[380px]"
+            // Tall enough for the centred card (w-56 → 299px / w-72 → 384px
+            // tall) plus its red outline (2px + 2px offset) and drop shadow,
+            // which the overflow-hidden wrapper used to clip (2026-11-23).
+            className="relative mx-auto h-[352px] cursor-grab touch-pan-y select-none outline-none focus-visible:ring-2 focus-visible:ring-brand-red active:cursor-grabbing sm:h-[456px]"
           >
             {team.map((m, i) => {
               let off = mod(i - active);
@@ -246,15 +249,17 @@ export function TeamDeck() {
       </div>
 
       <Modal open={bioOpen} onClose={() => setBioOpen(false)} title={member.name} className="max-w-3xl">
-        <div className="grid gap-6 sm:grid-cols-[1fr_11rem] sm:items-start">
+        {/* 2026-11-20: tighter spacing + justified text (client: "remover
+            esses espaços grandes e justificar o texto") */}
+        <div className="-mt-3 grid gap-5 sm:grid-cols-[1fr_11rem] sm:items-start">
           <div className="order-2 sm:order-1">
             <p className="font-mono text-xs tracking-wide text-slate">{t(`${member.id}.role`)}</p>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate">
+            <div className="mt-3 space-y-2 text-sm leading-[1.6] text-justify text-ink/80 hyphens-auto">
               {bioParagraphs.map((para, k) => (
                 <p key={k}>{para}</p>
               ))}
             </div>
-            <ContactRow member={member} className="mt-6 justify-start" />
+            <ContactRow member={member} className="mt-4 justify-start" />
           </div>
 
           <div className="order-1 aspect-[3/4] w-32 overflow-hidden rounded-2xl border border-line sm:order-2 sm:w-full">
