@@ -7,10 +7,10 @@ import { X } from "lucide-react";
 import type { PillarDetail } from "@/content/pillarDetails";
 
 /**
- * "Ver mais" popup for one home-hero pillar (2026-11-19): the full text
- * for Comunicação / Reputação / Eventos, justified, set over that same
- * pillar's hero photo under a navy wash. Esc, the ✕ or a click on the
- * backdrop close it; page scroll is locked while open.
+ * "Ver mais" popup (home hero pillars and "O que fazemos?" services): the
+ * full text, justified, in a white card styled like the team bio popup
+ * (2026-11-20), with the theme's photo on the right. Esc, the ✕ or a click
+ * on the backdrop close it; page scroll is locked while open.
  */
 export function PillarDetailModal({
   detail,
@@ -47,11 +47,14 @@ export function PillarDetailModal({
     };
   }, []);
 
-  const paragraph = "font-body text-[15px] leading-relaxed text-white/90 text-justify hyphens-auto sm:text-base";
+  // Same look as the team bio popup (2026-11-20: "replicar essa forma… um
+  // fundo branco"): white card, title + ✕ on top, justified text on the left,
+  // the theme's photo in a rounded card on the right (on top on phones).
+  const paragraph = "font-body text-sm leading-[1.6] text-ink/80 text-justify hyphens-auto sm:text-[15px]";
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-brand-navy/60 p-3 backdrop-blur-sm sm:p-6"
       onClick={onClose}
     >
       <div
@@ -59,43 +62,32 @@ export function PillarDetailModal({
         aria-modal="true"
         aria-labelledby="pillar-detail-title"
         onClick={(e) => e.stopPropagation()}
-        className="reveal-up relative flex max-h-[90svh] w-full max-w-3xl flex-col overflow-hidden rounded-[1.5rem] bg-brand-navy text-white shadow-[0_30px_80px_rgba(0,0,0,0.5)]"
+        className="reveal-up relative max-h-[88svh] w-full max-w-3xl overflow-y-auto rounded-[1.25rem] bg-white px-6 pt-5 pb-7 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:px-8 sm:pb-8"
       >
-        {/* The pillar's own hero photo as the text's backdrop, washed dark
-            enough for long white copy to stay comfortable to read. */}
-        {photo && (
-          <Image
-            src={photo}
-            alt=""
-            aria-hidden
-            fill
-            sizes="(min-width: 768px) 48rem, 100vw"
-            className="object-cover"
-            style={{ objectPosition: "50% 60%" }}
-          />
-        )}
-        <span aria-hidden className="absolute inset-0 bg-brand-navy/85" />
-
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={onClose}
-          aria-label={closeLabel}
-          className="absolute top-3 right-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white hover:text-brand-navy focus-visible:outline-2 focus-visible:outline-white"
-        >
-          <X aria-hidden className="h-5 w-5" strokeWidth={2.5} />
-        </button>
-
-        <div className="relative overflow-y-auto px-6 pt-12 pb-8 sm:px-10 sm:pt-14 sm:pb-10">
-          <h2
-            id="pillar-detail-title"
-            className="font-body text-xl leading-tight font-bold tracking-wide uppercase sm:text-2xl"
-          >
+        <div className="flex items-start justify-between gap-4">
+          <h2 id="pillar-detail-title" className="pt-2 font-display text-xl leading-tight text-brand-navy sm:text-2xl">
             {detail.title}
           </h2>
-          <span aria-hidden className="mt-3 block h-0.5 w-12 bg-brand-red" />
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label={closeLabel}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-slate transition-colors hover:bg-paper-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-brand-red"
+          >
+            <X aria-hidden className="h-5 w-5" strokeWidth={2.2} />
+          </button>
+        </div>
+        <span aria-hidden className="mt-2 block h-0.5 w-12 bg-brand-red" />
 
-          <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-5 grid gap-5 sm:grid-cols-[1fr_13rem] sm:items-start sm:gap-7">
+          {photo && (
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-line sm:order-2 sm:aspect-[4/5]">
+              <Image src={photo} alt="" fill sizes="(min-width: 640px) 13rem, 100vw" className="object-cover" />
+            </div>
+          )}
+
+          <div className={`flex flex-col gap-2.5 sm:order-1 ${photo ? "" : "sm:col-span-2"}`}>
             {detail.intro.map((p, i) => (
               <p key={`i${i}`} className={paragraph}>
                 {p}
@@ -104,12 +96,12 @@ export function PillarDetailModal({
 
             {detail.listLead && <p className={paragraph}>{detail.listLead}</p>}
             {detail.points && (
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2">
                 {detail.points.map((pt) => (
-                  <li key={pt.label} className={`flex gap-3 ${paragraph}`}>
+                  <li key={pt.label} className={`flex gap-2.5 ${paragraph}`}>
                     <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-brand-red" />
                     <span>
-                      <strong className="font-bold text-white">{pt.label}:</strong> {pt.text}
+                      <strong className="font-bold text-brand-navy">{pt.label}:</strong> {pt.text}
                     </span>
                   </li>
                 ))}
@@ -117,14 +109,14 @@ export function PillarDetailModal({
             )}
 
             {detail.sections && (
-              <ol className="flex flex-col gap-5">
+              <ol className="flex flex-col gap-3">
                 {detail.sections.map((sec, i) => (
                   <li key={sec.title}>
-                    <h3 className="flex items-baseline gap-2 font-body text-base font-bold text-white sm:text-lg">
+                    <h3 className="flex items-baseline gap-2 font-body text-[15px] font-bold text-brand-navy sm:text-base">
                       <span className="text-brand-red tabular-nums">{i + 1}.</span>
                       {sec.title}
                     </h3>
-                    <p className={`mt-1.5 ${paragraph}`}>{sec.text}</p>
+                    <p className={`mt-1 ${paragraph}`}>{sec.text}</p>
                   </li>
                 ))}
               </ol>

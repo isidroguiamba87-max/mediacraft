@@ -31,7 +31,7 @@ export function NumbersStation() {
     // the content centred in it) opened a big blank gap between the hero
     // and this title (2026-11-17, mobile then desktop).
     <section className="bg-white text-brand-navy">
-      <div className="mx-auto w-full max-w-container px-6 pt-4 pb-14 sm:pt-6 sm:pb-20 lg:px-10">
+      <div className="mx-auto w-full max-w-container px-6 pt-4 pb-8 sm:pt-6 sm:pb-12 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-body text-2xl leading-[1.1] font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl">
             {tShow("numbersTitle").replace(/\.$/, "")}

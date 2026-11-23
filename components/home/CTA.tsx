@@ -7,7 +7,7 @@ export function CTA() {
   const t = useTranslations("cta");
 
   return (
-    <section className="mx-auto max-w-container px-6 pb-20 lg:px-10">
+    <section className="mx-auto max-w-container px-6 pb-10 sm:pb-12 lg:px-10">
       <div className="relative overflow-hidden rounded-[1.25rem] bg-brand-navy px-6 py-10 text-center text-white sm:px-16 sm:py-12">
         <MouseGlow />
         <div className="relative flex flex-col items-center">

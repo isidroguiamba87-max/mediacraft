@@ -41,7 +41,7 @@ export default async function PanelPage({ params }: PanelPageProps) {
   return (
     <div>
       <section className="bg-brand-navy text-white">
-        <div className="mx-auto max-w-container px-6 py-14 lg:px-10 lg:py-20">
+        <div className="mx-auto max-w-container px-6 py-10 lg:px-10 lg:py-14">
           <Link
             href={`/eventos/${eventId}?tab=program`}
             className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
@@ -62,7 +62,7 @@ export default async function PanelPage({ params }: PanelPageProps) {
       {/* "Intervenientes" first — it's what people open a panel for
           (client mock 2026-11-17: title, day pill, card carousel). */}
       {panel.speakers.length > 0 && (
-        <div className="mx-auto max-w-container px-6 pt-14 lg:px-10">
+        <div className="mx-auto max-w-container px-6 pt-8 sm:pt-12 lg:px-10">
           <PanelSpeakersCarousel
             eventId={eventId}
             sessionId={panel.key}
@@ -73,7 +73,7 @@ export default async function PanelPage({ params }: PanelPageProps) {
         </div>
       )}
 
-      <div className="mx-auto grid max-w-container gap-12 px-6 py-14 lg:grid-cols-[340px_1fr] lg:px-10">
+      <div className="mx-auto grid max-w-container gap-8 px-6 py-8 sm:py-12 lg:grid-cols-[340px_1fr] lg:gap-12 lg:px-10">
         <div>
           {/* Repeats the hero's quick facts as a scannable card — the
               description alone left this column reading mostly empty for

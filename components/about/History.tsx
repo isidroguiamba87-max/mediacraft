@@ -14,7 +14,7 @@ export function History() {
   const paragraphs = th.raw("paragraphs") as string[];
 
   return (
-    <section id="historia" className="bg-white pb-16 sm:pb-24">
+    <section id="historia" className="bg-white pt-8 pb-8 sm:pt-12 sm:pb-12">
       <div className="mx-auto max-w-container px-6 lg:px-10">
         <h2 className="inline-block border-b-[1.5px] border-brand-red pr-16 pb-2 font-body text-3xl leading-none font-bold tracking-tight text-brand-navy uppercase sm:text-4xl">
           {th("eyebrow")}
@@ -34,7 +34,7 @@ export function History() {
 
 function QuoteCard({ quote, signatureRole }: { quote: string; signatureRole: string }) {
   return (
-    <figure className="mt-10 grid overflow-hidden rounded-[1.5rem] border border-black/15 bg-white shadow-[2px_4px_10px_rgba(0,0,0,0.18)] sm:mt-12 md:grid-cols-[1fr_1.15fr]">
+    <figure className="mt-6 grid overflow-hidden rounded-[1.5rem] border border-black/15 bg-white shadow-[2px_4px_10px_rgba(0,0,0,0.18)] sm:mt-8 md:grid-cols-[1fr_1.15fr]">
       <div className="flex flex-col justify-center px-7 py-8 sm:px-10 sm:py-10">
         <span aria-hidden className="font-display text-5xl leading-none text-brand-red">
           “

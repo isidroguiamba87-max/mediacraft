@@ -20,7 +20,7 @@ export function Intro() {
   return (
     // Sits on the event photo backdrop (see the home page's #sobre-nos).
     <section>
-      <div className="mx-auto max-w-container px-6 pt-12 pb-8 sm:pt-16 sm:pb-10 lg:px-10">
+      <div className="mx-auto max-w-container px-6 pt-8 pb-6 sm:pt-12 sm:pb-8 lg:px-10">
         <h2 className="inline-block border-b-[1.5px] border-white/80 pb-2 font-body text-3xl leading-none font-bold tracking-tight text-white uppercase sm:text-4xl">
           {tNav("about")}
         </h2>

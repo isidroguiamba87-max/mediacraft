@@ -136,7 +136,7 @@ export default async function HomePage({
         </ThreadStation>
       </Anchor>
 
-      <Anchor id="eventos" className="bg-white lg:flex lg:min-h-[calc(100svh-5rem)] lg:items-center">
+      <Anchor id="eventos" className="bg-white">
         <HomeEventsGrid
           events={ordered}
           years={years}

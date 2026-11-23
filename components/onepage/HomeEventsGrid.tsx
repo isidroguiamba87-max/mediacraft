@@ -48,7 +48,7 @@ export function HomeEventsGrid({
   };
 
   return (
-    <div className="mx-auto w-full max-w-container px-6 pt-8 pb-14 sm:py-20 lg:px-10">
+    <div className="mx-auto w-full max-w-container px-6 py-8 sm:py-12 lg:px-10">
       <div className="flex flex-wrap items-center justify-between gap-6">
         <h2
           aria-live="polite"
@@ -88,7 +88,7 @@ export function HomeEventsGrid({
       </div>
 
       {shown.length > 0 ? (
-        <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-12 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-1 gap-x-8 gap-y-8 sm:mt-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3">
           {shown.map(({ event, channels }) => (
             <li key={event.id}>
               <EventTile event={event} caption={gold ? channels : undefined} tone={gold ? "gold" : "red"} />
